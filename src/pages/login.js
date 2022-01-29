@@ -1,38 +1,67 @@
-import Head from 'next/head';
-import NextLink from 'next/link';
-import { useRouter } from 'next/router';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Facebook as FacebookIcon } from '../icons/facebook';
-import { Google as GoogleIcon } from '../icons/google';
+import Head from "next/head";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import {
+  Alert,
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  Grid,
+  Link,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import GoogleIcon from "@mui/icons-material/Google";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import {
+  useSignInWithEmailAndPassword,
+  useSignInWithGoogle,
+  useSignInWithFacebook,
+  useSignInWithGithub,
+} from "react-firebase-hooks/auth";
+import { getAuth } from "firebase/auth";
+import { useEffect, useState } from "react";
 
 const Login = () => {
+  const [showError, setShowError] = useState(false);
+  const auth = getAuth();
+  const [signInWithEmailAndPassword, emailUser, emailLoading, emailError] =
+    useSignInWithEmailAndPassword(auth);
+  const [signInWithGoogle, googleUser, googleLoading, googleError] = useSignInWithGoogle(auth);
+  const [signInWithFacebook, facebookUser, facebookLoading, facebookError] =
+    useSignInWithFacebook(auth);
+  const [signInWithGithub, githubUser, githubLoading, githubError] = useSignInWithGithub(auth);
+
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      email: 'demo@devias.io',
-      password: 'Password123'
+      email: "",
+      password: "",
     },
     validationSchema: Yup.object({
-      email: Yup
-        .string()
-        .email(
-          'Must be a valid email')
-        .max(255)
-        .required(
-          'Email is required'),
-      password: Yup
-        .string()
-        .max(255)
-        .required(
-          'Password is required')
+      email: Yup.string().email("Must be a valid email").max(255).required("Email is required"),
+      password: Yup.string().max(255).required("Password is required"),
     }),
-    onSubmit: () => {
-      router.push('/');
-    }
+    onSubmit: (values) => {
+      return signInWithEmailAndPassword(values.email, values.password);
+    },
   });
+
+  useEffect(() => {
+    if (emailError || googleError || facebookError || githubError) setShowError(true);
+  }, [emailError, googleError, facebookError, githubError]);
+
+  if (emailUser || googleUser || facebookUser || githubUser) {
+    console.log({ emailUser, googleUser, facebookUser, githubUser });
+    router.push("/");
+    return null;
+  }
 
   return (
     <>
@@ -42,88 +71,72 @@ const Login = () => {
       <Box
         component="main"
         sx={{
-          alignItems: 'center',
-          display: 'flex',
+          alignItems: "center",
+          display: "flex",
           flexGrow: 1,
-          minHeight: '100%'
+          minHeight: "100%",
         }}
       >
         <Container maxWidth="sm">
-          <NextLink
-            href="/"
-            passHref
-          >
-            <Button
-              component="a"
-              startIcon={<ArrowBackIcon fontSize="small" />}
-            >
+          <NextLink href="/" passHref>
+            <Button component="a" startIcon={<ArrowBackIcon fontSize="small" />}>
               Dashboard
             </Button>
           </NextLink>
           <form onSubmit={formik.handleSubmit}>
             <Box sx={{ my: 3 }}>
-              <Typography
-                color="textPrimary"
-                variant="h4"
-              >
+              <Typography color="textPrimary" variant="h4">
                 Sign in
               </Typography>
-              <Typography
-                color="textSecondary"
-                gutterBottom
-                variant="body2"
-              >
+              <Typography color="textSecondary" gutterBottom variant="body2">
                 Sign in on the internal platform
               </Typography>
             </Box>
-            <Grid
-              container
-              spacing={3}
-            >
-              <Grid
-                item
-                xs={12}
-                md={6}
-              >
+            <Grid container columnSpacing={3} rowSpacing={2}>
+              <Grid item xs={12} md={4}>
                 <Button
                   color="info"
                   fullWidth
                   startIcon={<FacebookIcon />}
-                  onClick={formik.handleSubmit}
+                  onClick={(e) => signInWithFacebook()}
                   size="large"
                   variant="contained"
                 >
-                  Login with Facebook
+                  Facebook
                 </Button>
               </Grid>
-              <Grid
-                item
-                xs={12}
-                md={6}
-              >
+              <Grid item xs={12} md={4}>
                 <Button
                   fullWidth
                   color="error"
                   startIcon={<GoogleIcon />}
-                  onClick={formik.handleSubmit}
+                  onClick={(e) => signInWithGoogle()}
                   size="large"
                   variant="contained"
                 >
-                  Login with Google
+                  Google
+                </Button>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Button
+                  color="black"
+                  fullWidth
+                  startIcon={<GitHubIcon />}
+                  onClick={(e) => signInWithGithub()}
+                  size="large"
+                  variant="contained"
+                >
+                  Github
                 </Button>
               </Grid>
             </Grid>
             <Box
               sx={{
                 pb: 1,
-                pt: 3
+                pt: 3,
               }}
             >
-              <Typography
-                align="center"
-                color="textSecondary"
-                variant="body1"
-              >
+              <Typography align="center" color="textSecondary" variant="body1">
                 or login with email address
               </Typography>
             </Box>
@@ -153,6 +166,9 @@ const Login = () => {
               value={formik.values.password}
               variant="outlined"
             />
+            <Link color="primary" variant="subtitle2" underline="hover">
+              Forgot password?
+            </Link>
             <Box sx={{ py: 2 }}>
               <Button
                 color="primary"
@@ -165,21 +181,15 @@ const Login = () => {
                 Sign In Now
               </Button>
             </Box>
-            <Typography
-              color="textSecondary"
-              variant="body2"
-            >
-              Don&apos;t have an account?
-              {' '}
-              <NextLink
-                href="/register"
-              >
+            <Typography color="textSecondary" variant="body2">
+              Don&apos;t have an account?{" "}
+              <NextLink href="/register">
                 <Link
                   to="/register"
                   variant="subtitle2"
                   underline="hover"
                   sx={{
-                    cursor: 'pointer'
+                    cursor: "pointer",
                   }}
                 >
                   Sign Up
@@ -189,6 +199,23 @@ const Login = () => {
           </form>
         </Container>
       </Box>
+      {(emailError || googleError || facebookError || githubError) && (
+        <Snackbar open={showError}>
+          <Alert severity="error" sx={{ width: "100%" }} onClose={(e) => setShowError(!showError)}>
+            <Typography variant="p" component="p" color="inherit">
+              {emailError
+                ? emailError.message
+                : googleError
+                ? googleError.message
+                : facebookError
+                ? facebookError.message
+                : githubError
+                ? githubError.message
+                : "Something went wrong"}
+            </Typography>
+          </Alert>
+        </Snackbar>
+      )}
     </>
   );
 };
