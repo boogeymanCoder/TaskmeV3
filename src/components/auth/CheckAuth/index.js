@@ -11,11 +11,16 @@ export default function CheckAuth({ children }) {
   const [shouldRender, setShouldRender] = useState(true);
 
   useEffect(() => {
-    if (user && !userLoading && user.providerId === "firebase" && !user.emailVerified) {
+    if (
+      user &&
+      !userLoading &&
+      user.providerData[0].providerId === "password" &&
+      !user.emailVerified
+    ) {
       setShouldRender(false);
-      logOutAccount().then((res) => {
-        router.push("/verify");
-      });
+      // logOutAccount().then((res) => {
+      router.push("/verify");
+      // });
     }
   }, [user, userLoading]);
 
