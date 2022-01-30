@@ -4,17 +4,18 @@ import { DashboardLayout } from "../components/dashboard-layout";
 import { SettingsNotifications } from "../components/settings/settings-notifications";
 import { SettingsPassword } from "../components/settings/settings-password";
 import { useRouter } from "next/router";
+import { getAuth } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useEffect } from "react";
 
 const Settings = () => {
   const router = useRouter();
   const auth = getAuth();
   const [user, userLoading, userError] = useAuthState(auth);
 
-  if (!userLoading && !user) {
-    router.push("/login");
-  }
-
-  if (userLoading || !user) return null;
+  useEffect(() => {
+    if (!user && !userLoading) router.push("/login");
+  }, [user, userLoading]);
 
   return (
     <>

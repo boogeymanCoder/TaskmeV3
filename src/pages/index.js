@@ -12,17 +12,17 @@ import { DashboardLayout } from "../components/dashboard-layout";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const Dashboard = () => {
   const router = useRouter();
   const auth = getAuth();
   const [user, userLoading, userError] = useAuthState(auth);
 
-  if (!userLoading && !user) {
-    router.push("/login");
-  }
-
-  if (userLoading || !user) return null;
+  useEffect(() => {
+    console.log({ user, userLoading, userError });
+    if (!user && !userLoading) router.push("/login");
+  }, [user, userLoading]);
 
   return (
     <>

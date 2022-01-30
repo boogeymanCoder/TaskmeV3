@@ -7,18 +7,16 @@ import { customers } from "../__mocks__/customers";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import router, { useRouter } from "next/router";
+import { useEffect } from "react";
 
 function Customers() {
   const router = useRouter();
   const auth = getAuth();
   const [user, userLoading, userError] = useAuthState(auth);
 
-  if (!userLoading && !user) {
-    router.push("/login");
-  }
-
-  if (userLoading || !user) return null;
-
+  useEffect(() => {
+    if (!user && !userLoading) router.push("/login");
+  }, [user, userLoading]);
   return (
     <>
       <Head>

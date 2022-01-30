@@ -21,7 +21,7 @@ import { Users as UsersIcon } from "../icons/users";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import { set } from "nprogress";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { logOutAccount } from "src/services/user";
 import { useRouter } from "next/router";
 import { useDocumentData } from "react-firebase-hooks/firestore";
@@ -57,11 +57,6 @@ export const DashboardNavbar = (props) => {
       .then((res) => router.push("/login"))
       .catch((err) => console.log(err));
   }
-
-  if (!accountLoading && !account) {
-    router.push("/login");
-  }
-  if (accountLoading || !account) return null;
 
   return (
     <>
@@ -114,7 +109,7 @@ export const DashboardNavbar = (props) => {
             </IconButton>
           </Tooltip>
 
-          {userLoading ? (
+          {userLoading || accountLoading ? (
             <Skeleton
               variant="circular"
               animation="pulse"
@@ -127,7 +122,7 @@ export const DashboardNavbar = (props) => {
           ) : (
             <IconButton onClick={handleShowProfileMenu} sx={{ p: 0 }}>
               <Avatar
-                src={account ? account.image : user.photoURl}
+                src={account ? account.image : user ? user.photoURL : ""}
                 sx={{
                   height: 40,
                   ml: 1,
