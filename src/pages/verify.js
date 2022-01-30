@@ -6,13 +6,14 @@ import { logOutAccount } from "src/services/user";
 import CheckAuth from "src/components/auth/CheckAuth";
 import { useRouter } from "next/router";
 import { getAuth } from "firebase/auth";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { useAuthState, useSendEmailVerification } from "react-firebase-hooks/auth";
 import { useEffect } from "react";
 
 const NotFound = () => {
   const router = useRouter();
   const auth = getAuth();
   const [user, userLoading, userError] = useAuthState(auth);
+  const [sendEmailVerification, sending, error] = useSendEmailVerification(auth);
 
   useEffect(() => {
     if ((!user && !userLoading) || userError) router.push("/login");
@@ -50,11 +51,13 @@ const NotFound = () => {
               address by clicking the link we sent, click{" "}
               <Link
                 variant="subtitle2"
-                underline="hover"
+                underline={sending ? "none" : "hover"}
                 sx={{
                   cursor: "pointer",
                 }}
-                onClick={(e) => console.log("Clicked!")}
+                disabled={sending}
+                color={sending ? "text" : "primary"}
+                onClick={async (e) => await sendEmailVerification()}
               >
                 here
               </Link>{" "}
