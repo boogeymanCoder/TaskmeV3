@@ -8,25 +8,30 @@ import {
   Divider,
   Skeleton,
   Typography,
+  Icon,
+  Input,
+  Stack,
 } from "@mui/material";
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
+import { useUploadFile, useDownloadURL } from "react-firebase-hooks/storage";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
-import { doc, getFirestore } from "firebase/firestore";
+import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import { useDocumentData, useDocumentDataOnce } from "react-firebase-hooks/firestore";
 import { useEffect, useState } from "react";
 
 export function AccountProfile(props) {
   const auth = getAuth();
   const [user, loading, error] = useAuthState(auth);
+  const storage = getStorage();
+  const [uploadFile, uploading, snapshot, uploadError] = useUploadFile();
   const firestore = getFirestore();
 
-  const [account, accountLoading, accountError] = useDocumentDataOnce(
-    doc(firestore, "accounts", user ? user.uid : "dummy"),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    }
-  );
+  const accountRef = doc(firestore, "accounts", user ? user.uid : "dummy");
+  const [account, accountLoading, accountError] = useDocumentDataOnce(accountRef, {
+    snapshotListenOptions: { includeMetadataChanges: true },
+  });
 
   const [values, setValues] = useState({
     fullname: account ? account.fullname : "",
@@ -60,6 +65,20 @@ export function AccountProfile(props) {
     }
   }, [account, accountLoading]);
 
+  async function handleUpload(e) {
+    console.log(e);
+    // setAvatar(e.target.files ? e.target.files[0] : values.image);
+    const result = await uploadFile(
+      ref(storage, `/avatar/${user.uid}.jpg`),
+      e.target.files ? e.target.files[0] : undefined,
+      {
+        contentType: "image/jpeg",
+      }
+    );
+    getDownloadURL(result.ref).then((res) => updateDoc(accountRef, { image: res }));
+    console.log({ result });
+  }
+
   return (
     <Card {...props}>
       <CardContent>
@@ -70,7 +89,7 @@ export function AccountProfile(props) {
             flexDirection: "column",
           }}
         >
-          {loading ? (
+          {loading || uploading ? (
             <Skeleton
               variant="circular"
               animation="pulse"
@@ -103,8 +122,15 @@ export function AccountProfile(props) {
       </CardContent>
       <Divider />
       <CardActions>
-        <Button color="primary" fullWidth variant="text" disabled={loading || accountLoading}>
+        <Button
+          fullWidth
+          variant="text"
+          color="primary"
+          component="label"
+          disabled={loading || accountLoading || uploading}
+        >
           Upload picture
+          <input type="file" hidden multiple={false} onChange={handleUpload} />
         </Button>
       </CardActions>
     </Card>
