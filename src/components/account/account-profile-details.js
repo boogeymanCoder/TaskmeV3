@@ -109,6 +109,27 @@ export const AccountProfileDetails = (props) => {
               />
             </Grid>
             <Grid item md={6} xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                <Select
+                  error={Boolean(formik.touched.gender && formik.errors.gender)}
+                  fullWidth
+                  helperText={formik.touched.gender && formik.errors.gender}
+                  label="Gender"
+                  name="gender"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  type="text"
+                  value={formik.values.gender}
+                  variant="outlined"
+                  required
+                >
+                  <MenuItem value="Male">Male</MenuItem>
+                  <MenuItem value="Female">Female</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
               <TextField
                 error={Boolean(formik.touched.address && formik.errors.address)}
                 fullWidth
@@ -152,27 +173,6 @@ export const AccountProfileDetails = (props) => {
                 variant="outlined"
                 required
               />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Gender</InputLabel>
-                <Select
-                  error={Boolean(formik.touched.gender && formik.errors.gender)}
-                  fullWidth
-                  helperText={formik.touched.gender && formik.errors.gender}
-                  label="Gender"
-                  name="gender"
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  type="text"
-                  value={formik.values.gender}
-                  variant="outlined"
-                  required
-                >
-                  <MenuItem value="Male">Male</MenuItem>
-                  <MenuItem value="Female">Female</MenuItem>
-                </Select>
-              </FormControl>
             </Grid>
           </Grid>
         </CardContent>
