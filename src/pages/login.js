@@ -10,6 +10,8 @@ import {
   Checkbox,
   Container,
   Grid,
+  IconButton,
+  InputAdornment,
   Link,
   Snackbar,
   TextField,
@@ -27,9 +29,11 @@ import {
 } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Login = () => {
   const [showError, setShowError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const auth = getAuth();
   const [signInWithEmailAndPassword, emailUser, emailLoading, emailError] =
     useSignInWithEmailAndPassword(auth);
@@ -162,9 +166,18 @@ const Login = () => {
               name="password"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={formik.values.password}
               variant="outlined"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={(e) => setShowPassword(!showPassword)} edge="end">
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
             <Link color="primary" variant="subtitle2" underline="hover">
               Forgot password?
