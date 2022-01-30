@@ -43,7 +43,14 @@ const Register = () => {
     },
     validationSchema: Yup.object({
       email: Yup.string().email("Must be a valid email").max(255).required("Email is required"),
-      password: Yup.string().max(255).required("Password is required"),
+      password: Yup.string()
+        .max(255)
+        .required("Password is required")
+        .matches(/.{8,}/, "Password must have at eight characters")
+        .matches(/[0-9]+/, "Password must have at least one [0-9] numerical character")
+        .matches(/[a-z]+/, "Password must have at least one [a-z] lower case alphabet")
+        .matches(/[A-Z]+/, "Password must have at least one [A-Z] upper case alphabet")
+        .matches(/[^a-zA-Z0-9]+/, "Password must have at least one [!$*...] special character"),
       policy: Yup.boolean().oneOf([true], "This field must be checked"),
     }),
     onSubmit: (values) => {
