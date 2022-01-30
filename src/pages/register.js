@@ -1,6 +1,5 @@
 import Head from "next/head";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -22,6 +21,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import CheckNonAuth from "src/components/auth/CheckNonAuth";
 
 const Register = () => {
   const [showError, setShowError] = useState(false);
@@ -59,7 +59,7 @@ const Register = () => {
   });
 
   return (
-    <>
+    <CheckNonAuth>
       <Head>
         <title>Register | Material Kit</title>
       </Head>
@@ -191,7 +191,7 @@ const Register = () => {
           </Alert>
         </Snackbar>
       )}
-    </>
+    </CheckNonAuth>
   );
 };
 

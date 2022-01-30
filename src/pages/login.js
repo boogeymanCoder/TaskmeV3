@@ -7,7 +7,6 @@ import {
   Alert,
   Box,
   Button,
-  Checkbox,
   Container,
   Grid,
   IconButton,
@@ -30,6 +29,7 @@ import {
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import CheckNonAuth from "src/components/auth/CheckNonAuth";
 
 const Login = () => {
   const [showError, setShowError] = useState(false);
@@ -68,7 +68,7 @@ const Login = () => {
   }
 
   return (
-    <>
+    <CheckNonAuth>
       <Head>
         <title>Login | Material Kit</title>
       </Head>
@@ -229,7 +229,7 @@ const Login = () => {
           </Alert>
         </Snackbar>
       )}
-    </>
+    </CheckNonAuth>
   );
 };
 

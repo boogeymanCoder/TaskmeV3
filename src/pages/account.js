@@ -3,21 +3,11 @@ import { Box, Container, Grid, Typography } from "@mui/material";
 import { AccountProfile } from "../components/account/account-profile";
 import { AccountProfileDetails } from "../components/account/account-profile-details";
 import { DashboardLayout } from "../components/dashboard-layout";
-import { getAuth } from "firebase/auth";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import CheckAuth from "src/components/auth/CheckAuth";
 
 const Account = () => {
-  const router = useRouter();
-  const auth = getAuth();
-  const [user, userLoading, userError] = useAuthState(auth);
-
-  useEffect(() => {
-    if (!user && !userLoading) router.push("/login");
-  }, [user, userLoading]);
   return (
-    <>
+    <CheckAuth>
       <Head>
         <title>Account | Material Kit</title>
       </Head>
@@ -42,7 +32,7 @@ const Account = () => {
           </Grid>
         </Container>
       </Box>
-    </>
+    </CheckAuth>
   );
 };
 
