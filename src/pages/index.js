@@ -9,23 +9,11 @@ import { TotalCustomers } from "../components/dashboard/total-customers";
 import { TotalProfit } from "../components/dashboard/total-profit";
 import { TrafficByDevice } from "../components/dashboard/traffic-by-device";
 import { DashboardLayout } from "../components/dashboard-layout";
-import { getAuth } from "firebase/auth";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import CheckAuth from "src/components/auth/CheckAuth";
 
 const Dashboard = () => {
-  const router = useRouter();
-  const auth = getAuth();
-  const [user, userLoading, userError] = useAuthState(auth);
-
-  useEffect(() => {
-    console.log({ user, userLoading, userError });
-    if (!user && !userLoading) router.push("/login");
-  }, [user, userLoading]);
-
   return (
-    <>
+    <CheckAuth>
       <Head>
         <title>Dashboard | Material Kit</title>
       </Head>
@@ -65,7 +53,7 @@ const Dashboard = () => {
           </Grid>
         </Container>
       </Box>
-    </>
+    </CheckAuth>
   );
 };
 

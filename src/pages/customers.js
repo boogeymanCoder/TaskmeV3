@@ -4,21 +4,11 @@ import { CustomerListResults } from "../components/customer/customer-list-result
 import { CustomerListToolbar } from "../components/customer/customer-list-toolbar";
 import { DashboardLayout } from "../components/dashboard-layout";
 import { customers } from "../__mocks__/customers";
-import { getAuth } from "firebase/auth";
-import { useAuthState } from "react-firebase-hooks/auth";
-import router, { useRouter } from "next/router";
-import { useEffect } from "react";
+import CheckAuth from "src/components/auth/CheckAuth";
 
 function Customers() {
-  const router = useRouter();
-  const auth = getAuth();
-  const [user, userLoading, userError] = useAuthState(auth);
-
-  useEffect(() => {
-    if (!user && !userLoading) router.push("/login");
-  }, [user, userLoading]);
   return (
-    <>
+    <CheckAuth>
       <Head>
         <title>Customers | Material Kit</title>
       </Head>
@@ -36,7 +26,7 @@ function Customers() {
           </Box>
         </Container>
       </Box>
-    </>
+    </CheckAuth>
   );
 }
 Customers.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;

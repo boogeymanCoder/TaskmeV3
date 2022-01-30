@@ -4,22 +4,11 @@ import { products } from "../__mocks__/products";
 import { ProductListToolbar } from "../components/product/product-list-toolbar";
 import { ProductCard } from "../components/product/product-card";
 import { DashboardLayout } from "../components/dashboard-layout";
-import { useRouter } from "next/router";
-import { getAuth } from "firebase/auth";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useEffect } from "react";
+import CheckAuth from "src/components/auth/CheckAuth";
 
 const Products = () => {
-  const router = useRouter();
-  const auth = getAuth();
-  const [user, userLoading, userError] = useAuthState(auth);
-
-  useEffect(() => {
-    if (!user && !userLoading) router.push("/login");
-  }, [user, userLoading]);
-
   return (
-    <>
+    <CheckAuth>
       <Head>
         <title>Products | Material Kit</title>
       </Head>
@@ -52,7 +41,7 @@ const Products = () => {
           </Box>
         </Container>
       </Box>
-    </>
+    </CheckAuth>
   );
 };
 
