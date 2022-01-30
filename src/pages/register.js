@@ -51,6 +51,9 @@ const Register = () => {
         .matches(/[a-z]+/, "Password must have at least one [a-z] lower case alphabet")
         .matches(/[A-Z]+/, "Password must have at least one [A-Z] upper case alphabet")
         .matches(/[^a-zA-Z0-9]+/, "Password must have at least one [!$*...] special character"),
+      confirmationPassword: Yup.string()
+        .required("Confirmation Password is required")
+        .oneOf([Yup.ref("password")], "Passwords must match"),
       policy: Yup.boolean().oneOf([true], "This field must be checked"),
     }),
     onSubmit: (values) => {
@@ -113,6 +116,31 @@ const Register = () => {
               onChange={formik.handleChange}
               type={showPassword ? "text" : "password"}
               value={formik.values.password}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={(e) => setShowPassword(!showPassword)} edge="end">
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              variant="outlined"
+              required
+            />
+            <TextField
+              error={Boolean(
+                formik.touched.confirmationPassword && formik.errors.confirmationPassword
+              )}
+              fullWidth
+              helperText={formik.touched.confirmationPassword && formik.errors.confirmationPassword}
+              label="Confirmation Password"
+              margin="normal"
+              name="confirmationPassword"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              type={showPassword ? "text" : "password"}
+              value={formik.values.confirmationPassword}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
