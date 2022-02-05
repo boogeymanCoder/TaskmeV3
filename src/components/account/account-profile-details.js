@@ -15,10 +15,10 @@ import {
 } from "@mui/material";
 import { getFirestore, doc } from "firebase/firestore";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { useAuthState, useUpdateEmail, useUpdateProfile } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import { useEffect } from "react";
-import { createAccount } from "../../services/user";
+import { setAccount } from "../../services/user";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -29,12 +29,14 @@ export const AccountProfileDetails = (props) => {
   const auth = getAuth();
   const [user, userLoading, userError] = useAuthState(auth);
 
+  const [updateEmail, updateEmailLoading, updateEmailError] = useUpdateEmail(auth);
   const [account, accountLoading, accountError] = useDocumentData(
     doc(firestore, "accounts", user ? user.uid : "dummy"),
     {
       snapshotListenOptions: { includeMetadataChanges: true },
     }
   );
+  const [updateProfile, updateProfileLoading, updateProfileError] = useUpdateProfile(auth);
 
   const formik = useFormik({
     initialValues: {
@@ -52,13 +54,26 @@ export const AccountProfileDetails = (props) => {
       gender: Yup.string().oneOf(["Male", "Female"]).required("Gender is required"),
     }),
     onSubmit: async (values) => {
-      return createAccount(user.uid, values).catch((err) => {
-        console.log({ err });
-        setShowError(true);
-        setError(err);
-      });
+      return setAccount(user.uid, values)
+        .then(async () => {
+          await updateEmail(values.email);
+          await updateProfile({ displayName: values.fullname });
+        })
+        .catch((err) => {
+          console.log({ err });
+          setShowError(true);
+          setError(err);
+        });
     },
   });
+
+  useEffect(() => {
+    console.log({ updateEmailError });
+  }, [updateEmailError]);
+
+  useEffect(() => {
+    console.log({ updateProfileError });
+  }, [updateProfileError]);
 
   const [error, setError] = useState();
   const [showError, setShowError] = useState(false);

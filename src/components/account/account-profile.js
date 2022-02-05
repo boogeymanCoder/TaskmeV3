@@ -15,10 +15,10 @@ import {
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import { useUploadFile, useDownloadURL } from "react-firebase-hooks/storage";
 
-import { useAuthState } from "react-firebase-hooks/auth";
+import { useAuthState, useUpdateProfile } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import { doc, getFirestore, updateDoc } from "firebase/firestore";
-import { useDocumentData, useDocumentDataOnce } from "react-firebase-hooks/firestore";
+import { useDocumentDataOnce } from "react-firebase-hooks/firestore";
 import { useEffect, useState } from "react";
 
 export function AccountProfile(props) {
@@ -32,6 +32,7 @@ export function AccountProfile(props) {
   const [account, accountLoading, accountError] = useDocumentDataOnce(accountRef, {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
+  const [updateProfile, updateProfileLoading, updateProfileError] = useUpdateProfile(auth);
 
   const [values, setValues] = useState({
     fullname: account ? account.fullname : "",
@@ -75,7 +76,10 @@ export function AccountProfile(props) {
         contentType: "image/jpeg",
       }
     );
-    getDownloadURL(result.ref).then((res) => updateDoc(accountRef, { image: res }));
+    getDownloadURL(result.ref).then(async (res) => {
+      updateDoc(accountRef, { image: res });
+      await updateProfile({ photoURL: res });
+    });
     console.log({ result });
   }
 
