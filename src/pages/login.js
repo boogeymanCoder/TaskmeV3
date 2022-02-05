@@ -25,8 +25,9 @@ import {
   useSignInWithGoogle,
   useSignInWithFacebook,
   useSignInWithGithub,
+  useSendPasswordResetEmail,
 } from "react-firebase-hooks/auth";
-import { getAuth } from "firebase/auth";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import CheckNonAuth from "src/components/auth/CheckNonAuth";
@@ -65,6 +66,14 @@ const Login = () => {
     console.log({ emailUser, googleUser, facebookUser, githubUser });
     router.push("/");
     return null;
+  }
+
+  async function forgotPassword() {
+    const email = prompt("Please enter your email");
+
+    await sendPasswordResetEmail(auth, email);
+
+    // sendPasswordResetEmail(email);
   }
 
   return (
@@ -179,7 +188,15 @@ const Login = () => {
                 ),
               }}
             />
-            <Link color="primary" variant="subtitle2" underline="hover">
+            <Link
+              color="primary"
+              variant="subtitle2"
+              underline="hover"
+              sx={{
+                cursor: "pointer",
+              }}
+              onClick={forgotPassword}
+            >
               Forgot password?
             </Link>
             <Box sx={{ py: 2 }}>
