@@ -44,6 +44,7 @@ export function AccountProfile(props) {
   });
 
   useEffect(() => {
+    console.log({ account, loading, error, user });
     if (account)
       setValues({
         fullname: account.fullname,
@@ -66,6 +67,13 @@ export function AccountProfile(props) {
     }
   }, [account, accountLoading]);
 
+  useEffect(() => {
+    console.log({ user });
+    return setValues({
+      image: user && user.photoURL ? user.photoURL : "",
+    });
+  }, [updateProfileLoading, user]);
+
   async function handleUpload(e) {
     console.log(e);
     // setAvatar(e.target.files ? e.target.files[0] : values.image);
@@ -77,7 +85,7 @@ export function AccountProfile(props) {
       }
     );
     getDownloadURL(result.ref).then(async (res) => {
-      updateDoc(accountRef, { image: res });
+      if (account) updateDoc(accountRef, { image: res });
       await updateProfile({ photoURL: res });
     });
     console.log({ result });
