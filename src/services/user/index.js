@@ -1,7 +1,7 @@
 import { getAuth } from "firebase/auth";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
 
-export function createAccount(uid, account) {
+export function setAccount(uid, account) {
   console.log({ uid, account });
   const firestore = getFirestore();
   const accountRef = doc(firestore, `accounts/${uid}`);
