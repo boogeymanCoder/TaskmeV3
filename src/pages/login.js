@@ -25,7 +25,6 @@ import {
   useSignInWithGoogle,
   useSignInWithFacebook,
   useSignInWithGithub,
-  useSendPasswordResetEmail,
 } from "react-firebase-hooks/auth";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { useEffect, useState } from "react";
@@ -72,6 +71,7 @@ const Login = () => {
     const email = prompt("Please enter your email");
 
     await sendPasswordResetEmail(auth, email);
+    alert("Password reset email has been sent");
 
     // sendPasswordResetEmail(email);
   }
