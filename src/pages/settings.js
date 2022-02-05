@@ -4,8 +4,22 @@ import { DashboardLayout } from "../components/dashboard-layout";
 import { SettingsNotifications } from "../components/settings/settings-notifications";
 import { SettingsPassword } from "../components/settings/settings-password";
 import CheckAuth from "src/components/auth/CheckAuth";
+import { getAuth } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useEffect, useState } from "react";
 
 const Settings = () => {
+  const auth = getAuth();
+  const [user, loading, error] = useAuthState(auth);
+
+  const [showUpdatePassword, setShowUpdatePassword] = useState(false);
+
+  useEffect(() => {
+    if (user && user.providerData[0].providerId == "password") {
+      setShowUpdatePassword(true);
+    }
+  }, [user]);
+
   return (
     <CheckAuth>
       <Head>
@@ -23,9 +37,12 @@ const Settings = () => {
             Settings
           </Typography>
           <SettingsNotifications />
-          <Box sx={{ pt: 3 }}>
-            <SettingsPassword />
-          </Box>
+
+          {showUpdatePassword && (
+            <Box sx={{ pt: 3 }}>
+              <SettingsPassword />
+            </Box>
+          )}
         </Container>
       </Box>
     </CheckAuth>
