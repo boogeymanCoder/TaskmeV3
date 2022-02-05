@@ -44,7 +44,6 @@ export function AccountProfile(props) {
   });
 
   useEffect(() => {
-    console.log({ account, loading, error, user });
     if (account)
       setValues({
         fullname: account.fullname,
@@ -68,14 +67,12 @@ export function AccountProfile(props) {
   }, [account, accountLoading]);
 
   useEffect(() => {
-    console.log({ user });
     return setValues({
       image: user && user.photoURL ? user.photoURL : "",
     });
   }, [updateProfileLoading, user]);
 
   async function handleUpload(e) {
-    console.log(e);
     // setAvatar(e.target.files ? e.target.files[0] : values.image);
     const result = await uploadFile(
       ref(storage, `/avatar/${user.uid}.jpg`),
