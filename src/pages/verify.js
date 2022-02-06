@@ -6,8 +6,8 @@ import { logOutAccount } from "src/services/user";
 import { useRouter } from "next/router";
 import { getAuth } from "firebase/auth";
 import { useAuthState, useSendEmailVerification } from "react-firebase-hooks/auth";
-import CheckNonAuth from "src/components/auth/CheckNonAuth";
-import CheckAuth from "src/components/auth/CheckAuth";
+import { useEffect } from "react";
+import RedirectPage from "src/components/redirect-page";
 
 const NotFound = () => {
   const router = useRouter();
@@ -15,75 +15,39 @@ const NotFound = () => {
   const [user, userLoading, userError] = useAuthState(auth);
   const [sendEmailVerification, sending, error] = useSendEmailVerification(auth);
 
+  useEffect(() => {
+    if ((!user && !userLoading) || userError) router.push("/login");
+  }, [user, userLoading, userError]);
+
+  if (userLoading || !user) return null;
+
   return (
-    <CheckAuth>
-      <Head>
-        <title>Verify | TaskME</title>
-      </Head>
-      <Box
-        component="main"
-        sx={{
-          alignItems: "center",
-          display: "flex",
-          flexGrow: 1,
-          minHeight: "100%",
-        }}
-      >
-        <Container maxWidth="md">
-          <Box
+    <RedirectPage
+      title="Verify Email"
+      mainText="Verify Your Email"
+      secondaryText={
+        <Typography align="center" color="textPrimary" variant="subtitle2">
+          Before being able to use your account you need to verify that this is your email address
+          by clicking the link we sent, click{" "}
+          <Link
+            variant="subtitle2"
+            underline={sending ? "none" : "hover"}
             sx={{
-              alignItems: "center",
-              display: "flex",
-              flexDirection: "column",
+              cursor: "pointer",
             }}
+            disabled={sending}
+            color={sending ? "text" : "primary"}
+            onClick={async (e) => await sendEmailVerification()}
           >
-            <Typography align="center" color="textPrimary" variant="h1">
-              Verify Your Email
-            </Typography>
-            <Typography align="center" color="textPrimary" variant="subtitle2">
-              Before being able to use your account you need to verify that this is your email
-              address by clicking the link we sent, click{" "}
-              <Link
-                variant="subtitle2"
-                underline={sending ? "none" : "hover"}
-                sx={{
-                  cursor: "pointer",
-                }}
-                disabled={sending}
-                color={sending ? "text" : "primary"}
-                onClick={async (e) => await sendEmailVerification()}
-              >
-                here
-              </Link>{" "}
-              to resend.
-            </Typography>
-            <Box sx={{ textAlign: "center" }}>
-              <img
-                alt="Under development"
-                src="/static/images/undraw_mailbox_re_dvds.svg"
-                style={{
-                  marginTop: 50,
-                  display: "inline-block",
-                  maxWidth: "100%",
-                  width: 560,
-                }}
-              />
-            </Box>
-            <NextLink href="/login" passHref>
-              <Button
-                component="a"
-                startIcon={<ArrowBackIcon fontSize="small" />}
-                sx={{ mt: 3 }}
-                variant="contained"
-                onClick={(e) => logOutAccount()}
-              >
-                Go to Log in
-              </Button>
-            </NextLink>
-          </Box>
-        </Container>
-      </Box>
-    </CheckAuth>
+            here
+          </Link>{" "}
+          to resend.
+        </Typography>
+      }
+      image="/static/images/undraw_mailbox_re_dvds.svg"
+      buttonText="Go to Login"
+      continueUrl="/login"
+    />
   );
 };
 
