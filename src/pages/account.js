@@ -9,7 +9,7 @@ const Account = () => {
   return (
     <CheckAuth>
       <Head>
-        <title>Account | Material Kit</title>
+        <title>Account | TaskME</title>
       </Head>
       <Box
         component="main"

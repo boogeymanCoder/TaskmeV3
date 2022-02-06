@@ -15,7 +15,7 @@ const Dashboard = () => {
   return (
     <CheckAuth>
       <Head>
-        <title>Dashboard | Material Kit</title>
+        <title>Dashboard | TaskME</title>
       </Head>
       <Box
         component="main"

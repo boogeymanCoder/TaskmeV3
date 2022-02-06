@@ -10,7 +10,7 @@ function Customers() {
   return (
     <CheckAuth>
       <Head>
-        <title>Customers | Material Kit</title>
+        <title>Customers | TaskME</title>
       </Head>
       <Box
         component="main"

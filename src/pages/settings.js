@@ -23,7 +23,7 @@ const Settings = () => {
   return (
     <CheckAuth>
       <Head>
-        <title>Settings | Material Kit</title>
+        <title>Settings | TaskME</title>
       </Head>
       <Box
         component="main"
