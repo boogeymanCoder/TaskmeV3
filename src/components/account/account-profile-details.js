@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { getFirestore, doc } from "firebase/firestore";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import { useAuthState, useUpdateEmail, useUpdateProfile } from "react-firebase-hooks/auth";
+import { useAuthState, useUpdateProfile } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import { useEffect } from "react";
 import { setAccount } from "../../services/user";
@@ -29,7 +29,6 @@ export const AccountProfileDetails = (props) => {
   const auth = getAuth();
   const [user, userLoading, userError] = useAuthState(auth);
 
-  const [updateEmail, updateEmailLoading, updateEmailError] = useUpdateEmail(auth);
   const [account, accountLoading, accountError] = useDocumentData(
     doc(firestore, "accounts", user ? user.uid : "dummy"),
     {
@@ -56,7 +55,6 @@ export const AccountProfileDetails = (props) => {
     onSubmit: async (values) => {
       return setAccount(user.uid, values)
         .then(async () => {
-          await updateEmail(values.email);
           await updateProfile({ displayName: values.fullname });
         })
         .catch((err) => {
@@ -66,10 +64,6 @@ export const AccountProfileDetails = (props) => {
         });
     },
   });
-
-  useEffect(() => {
-    console.log({ updateEmailError });
-  }, [updateEmailError]);
 
   useEffect(() => {
     console.log({ updateProfileError });
@@ -164,7 +158,7 @@ export const AccountProfileDetails = (props) => {
                 error={Boolean(formik.touched.email && formik.errors.email)}
                 fullWidth
                 helperText={formik.touched.email && formik.errors.email}
-                label="Email Address"
+                label="Contact Email"
                 name="email"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
