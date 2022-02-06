@@ -24,7 +24,7 @@ const NotFound = () => {
   return (
     <>
       <Head>
-        <title>404 | Material Kit</title>
+        <title>Verify | TaskME</title>
       </Head>
       <Box
         component="main"

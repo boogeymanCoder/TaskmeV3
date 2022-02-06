@@ -64,7 +64,7 @@ const Register = () => {
   return (
     <CheckNonAuth>
       <Head>
-        <title>Register | Material Kit</title>
+        <title>Register | TaskME</title>
       </Head>
       <Box
         component="main"

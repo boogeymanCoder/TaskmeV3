@@ -79,7 +79,7 @@ const Login = () => {
   return (
     <CheckNonAuth>
       <Head>
-        <title>Login | Material Kit</title>
+        <title>Login | TaskME</title>
       </Head>
       <Box
         component="main"

@@ -10,7 +10,7 @@ const Products = () => {
   return (
     <CheckAuth>
       <Head>
-        <title>Products | Material Kit</title>
+        <title>Products | TaskME</title>
       </Head>
       <Box
         component="main"
