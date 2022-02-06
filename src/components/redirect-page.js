@@ -3,7 +3,15 @@ import NextLink from "next/link";
 import { Box, Button, Container, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-export default function RedirectPage({ title, mainText, secondaryText, image, continueUrl }) {
+export default function RedirectPage({
+  title,
+  mainText,
+  secondaryText,
+  secondaryTypography,
+  image,
+  continueUrl,
+  buttonText,
+}) {
   return (
     <>
       <Head>
@@ -29,9 +37,12 @@ export default function RedirectPage({ title, mainText, secondaryText, image, co
             <Typography align="center" color="textPrimary" variant="h1">
               {mainText}
             </Typography>
-            <Typography align="center" color="textPrimary" variant="subtitle2">
-              {secondaryText}
-            </Typography>
+            {secondaryTypography && { secondaryTypography }}
+            {secondaryText && (
+              <Typography align="center" color="textPrimary" variant="subtitle2">
+                {secondaryText}
+              </Typography>
+            )}
             <Box sx={{ textAlign: "center" }}>
               <img
                 alt="Under development"
@@ -51,7 +62,7 @@ export default function RedirectPage({ title, mainText, secondaryText, image, co
                 sx={{ mt: 3 }}
                 variant="contained"
               >
-                Go back to dashboard
+                {buttonText || "Go back to dashboard"}
               </Button>
             </NextLink>
           </Box>
