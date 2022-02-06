@@ -70,9 +70,10 @@ const Login = () => {
   async function forgotPassword() {
     const email = prompt("Please enter your email");
 
-    await sendPasswordResetEmail(auth, email);
-    alert("Password reset email has been sent");
-
+    if (email) {
+      await sendPasswordResetEmail(auth, email);
+      alert("Password reset email has been sent");
+    }
     // sendPasswordResetEmail(email);
   }
 
