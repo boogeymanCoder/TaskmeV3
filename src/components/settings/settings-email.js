@@ -4,6 +4,7 @@ import { getAuth } from "firebase/auth";
 import { useUpdateEmail } from "react-firebase-hooks/auth";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { logOutAccount } from "src/services/user";
 
 export function SettingsEmail(props) {
   const auth = getAuth();
@@ -21,7 +22,10 @@ export function SettingsEmail(props) {
       email: Yup.string().email("Must be a valid email").max(255).required("Email is required"),
     }),
     onSubmit: async (values) => {
-      return updateEmail(values.email);
+      return updateEmail(values.email).then(() => {
+        alert("Email has been updated");
+        logOutAccount();
+      });
     },
   });
 
