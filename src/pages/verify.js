@@ -3,11 +3,11 @@ import NextLink from "next/link";
 import { Box, Button, Container, Link, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { logOutAccount } from "src/services/user";
-import CheckAuth from "src/components/auth/CheckAuth";
 import { useRouter } from "next/router";
 import { getAuth } from "firebase/auth";
 import { useAuthState, useSendEmailVerification } from "react-firebase-hooks/auth";
-import { useEffect } from "react";
+import CheckNonAuth from "src/components/auth/CheckNonAuth";
+import CheckAuth from "src/components/auth/CheckAuth";
 
 const NotFound = () => {
   const router = useRouter();
@@ -15,14 +15,8 @@ const NotFound = () => {
   const [user, userLoading, userError] = useAuthState(auth);
   const [sendEmailVerification, sending, error] = useSendEmailVerification(auth);
 
-  useEffect(() => {
-    if ((!user && !userLoading) || userError) router.push("/login");
-  }, [user, userLoading, userError]);
-
-  if (userLoading || !user) return null;
-
   return (
-    <>
+    <CheckAuth>
       <Head>
         <title>Verify | TaskME</title>
       </Head>
@@ -89,7 +83,7 @@ const NotFound = () => {
           </Box>
         </Container>
       </Box>
-    </>
+    </CheckAuth>
   );
 };
 
