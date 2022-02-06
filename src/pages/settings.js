@@ -7,16 +7,17 @@ import CheckAuth from "src/components/auth/CheckAuth";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useEffect, useState } from "react";
+import { SettingsEmail } from "src/components/settings/settings-email";
 
 const Settings = () => {
   const auth = getAuth();
   const [user, loading, error] = useAuthState(auth);
 
-  const [showUpdatePassword, setShowUpdatePassword] = useState(false);
+  const [showUpdate, setShowUpdate] = useState(false);
 
   useEffect(() => {
     if (user && user.providerData[0].providerId == "password") {
-      setShowUpdatePassword(true);
+      setShowUpdate(true);
     }
   }, [user]);
 
@@ -38,7 +39,12 @@ const Settings = () => {
           </Typography>
           <SettingsNotifications />
 
-          {showUpdatePassword && (
+          {showUpdate && (
+            <Box sx={{ pt: 3 }}>
+              <SettingsEmail />
+            </Box>
+          )}
+          {showUpdate && (
             <Box sx={{ pt: 3 }}>
               <SettingsPassword />
             </Box>
