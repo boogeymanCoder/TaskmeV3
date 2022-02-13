@@ -31,8 +31,11 @@ import { useEffect, useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import CheckNonAuth from "src/components/auth/CheckNonAuth";
 import AlertMessage from "../components/AlertMessage";
+import PromptMessage from "src/components/PromptMessage";
 
 const Login = () => {
+  const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState(null);
   const [alertPasswordReset, setAlertPasswordReset] = useState(false);
   const [passwordResetSent, setPasswordResetSent] = useState(false);
   const [error, setError] = useState("");
@@ -72,8 +75,6 @@ const Login = () => {
   }
 
   function forgotPassword() {
-    const email = prompt("Please enter your email");
-
     if (email) {
       sendPasswordResetEmail(auth, email)
         .then((res) => {
@@ -207,7 +208,7 @@ const Login = () => {
               sx={{
                 cursor: "pointer",
               }}
-              onClick={forgotPassword}
+              onClick={(e) => setOpen(true)}
             >
               Forgot password?
             </Link>
@@ -265,6 +266,15 @@ const Login = () => {
         message={passwordResetSent ? "Password reset email has been sent" : `${error}`}
         open={alertPasswordReset}
         setOpen={setAlertPasswordReset}
+      />
+
+      <PromptMessage
+        title="Password Recovery"
+        message="Please enter your registered email."
+        open={open}
+        handleClose={(e) => setOpen(false)}
+        setValue={setEmail}
+        handleSubmit={forgotPassword}
       />
     </CheckNonAuth>
   );
