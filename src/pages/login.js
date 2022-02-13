@@ -30,8 +30,16 @@ import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import CheckNonAuth from "src/components/auth/CheckNonAuth";
+import AlertMessage from "../components/AlertMessage";
+import PromptMessage from "src/components/PromptMessage";
 
 const Login = () => {
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState(null);
+  const [alertPasswordReset, setAlertPasswordReset] = useState(false);
+  const [passwordResetSent, setPasswordResetSent] = useState(false);
+  const [error, setError] = useState("");
   const [showError, setShowError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const auth = getAuth();
@@ -68,13 +76,21 @@ const Login = () => {
   }
 
   function forgotPassword() {
-    const email = prompt("Please enter your email");
-
     if (email) {
+      setSendingEmail(true);
       sendPasswordResetEmail(auth, email)
-        .then((res) => alert("Password reset email has been sent"))
+        .then((res) => {
+          setPasswordResetSent(true);
+          setAlertPasswordReset(true);
+          setEmail(null);
+          setSendingEmail(false);
+        })
         .catch((err) => {
-          alert(err.message);
+          setPasswordResetSent(false);
+          setAlertPasswordReset(true);
+          setError(err.message);
+          setEmail(null);
+          setSendingEmail(false);
         });
     }
   }
@@ -192,13 +208,14 @@ const Login = () => {
               }}
             />
             <Link
-              color="primary"
               variant="subtitle2"
-              underline="hover"
+              underline={sendingEmail ? "none" : "hover"}
               sx={{
                 cursor: "pointer",
               }}
-              onClick={forgotPassword}
+              onClick={(e) => setOpen(true)}
+              disabled={sendingEmail}
+              color={sendingEmail ? "text" : "primary"}
             >
               Forgot password?
             </Link>
@@ -249,6 +266,29 @@ const Login = () => {
           </Alert>
         </Snackbar>
       )}
+
+      <AlertMessage
+        severity={passwordResetSent ? "success" : "error"}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        message={passwordResetSent ? "Password reset email has been sent" : `${error}`}
+        open={alertPasswordReset}
+        setOpen={setAlertPasswordReset}
+      />
+
+      <PromptMessage
+        title="Password Recovery"
+        message="Please enter your registered email."
+        open={open}
+        handleClose={(e) => setOpen(false)}
+        setValue={(e) => {
+          setEmail(e.target.value);
+        }}
+        value={email}
+        handleSubmit={(e) => {
+          forgotPassword();
+          setOpen(false);
+        }}
+      />
     </CheckNonAuth>
   );
 };

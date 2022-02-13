@@ -2,8 +2,15 @@ import { applyActionCode, checkActionCode, sendPasswordResetEmail } from "fireba
 import React, { useEffect, useState } from "react";
 import Error from "../../pages/error";
 import EmailRecoveredMessage from "./EmailRecoveredMessage";
+import AlertMessage from "../AlertMessage";
+import ConfirmMessage from "../ConfirmMessage";
 
 export default function EmailRecovery({ auth, actionCode, lang }) {
+  const [restoredEmail, setRestoredEmail] = useState(null);
+  const [openConfirmation, setOpenConfirmation] = useState(false);
+  const [agree, setAgree] = useState(false);
+  const [alertPasswordReset, setAlertPasswordReset] = useState(false);
+  const [passwordResetSent, setPasswordResetSent] = useState(false);
   const [page, setPage] = useState(null);
   useEffect(() => {
     // Localize the UI to the selected language as determined by the lang
@@ -13,7 +20,7 @@ export default function EmailRecovery({ auth, actionCode, lang }) {
     checkActionCode(auth, actionCode)
       .then((info) => {
         // Get the restored email address.
-        restoredEmail = info["data"]["email"];
+        setRestoredEmail(info["data"]["email"]);
 
         // Revert to the old email.
         return applyActionCode(auth, actionCode);
@@ -25,17 +32,8 @@ export default function EmailRecovery({ auth, actionCode, lang }) {
 
         // You might also want to give the user the option to reset their password
         // in case the account was compromised:
-        if (confirm("Reset password?")) {
-          sendPasswordResetEmail(auth, restoredEmail)
-            .then(() => {
-              // Password reset confirmation sent. Ask user to check their email.
-              alert("Password reset email sent");
-            })
-            .catch((error) => {
-              // Error encountered while sending password reset code.
-              alert("Password reset email not sent");
-            });
-        }
+
+        setOpenConfirmation(true);
 
         setPage(<EmailRecoveredMessage />);
       })
@@ -51,5 +49,48 @@ export default function EmailRecovery({ auth, actionCode, lang }) {
       });
   }, []);
 
-  return page;
+  function resetPassword() {
+    sendPasswordResetEmail(auth, restoredEmail)
+      .then(() => {
+        // Password reset confirmation sent. Ask user to check their email.
+        setPasswordResetSent(true);
+        setAlertPasswordReset(true);
+      })
+      .catch((error) => {
+        // Error encountered while sending password reset code.
+        setPasswordResetSent(false);
+        setAlertPasswordReset(true);
+      });
+  }
+
+  return (
+    <>
+      {page}
+
+      <AlertMessage
+        severity={passwordResetSent ? "success" : "error"}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        message={
+          passwordResetSent
+            ? "Password reset email has been sent"
+            : "Password reset email not sent, please try again"
+        }
+        open={alertPasswordReset}
+        setOpen={setAlertPasswordReset}
+      />
+      <ConfirmMessage
+        title="Reset account password?"
+        message="Your account might be compromised, it suggested to change password."
+        onAgree={(e) => {
+          setOpenConfirmation(false);
+          resetPassword();
+        }}
+        onDisagree={(e) => {
+          setOpenConfirmation(false);
+        }}
+        open={openConfirmation}
+        handleClose={(e) => setOpenConfirmation(false)}
+      />
+    </>
+  );
 }

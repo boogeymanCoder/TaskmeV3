@@ -1,12 +1,25 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Card, CardContent, CardHeader, Divider, TextField } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { useUpdateEmail, useSendEmailVerification } from "react-firebase-hooks/auth";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { logOutAccount } from "src/services/user";
+import AlertMessage from "../AlertMessage";
 
 export function SettingsEmail(props) {
+  const [alertEmailUpdated, setAlertEmailUpdated] = useState(false);
   const auth = getAuth();
   const [updateEmail, updating, error] = useUpdateEmail(auth);
   const [sendEmailVerification, sendingEmailVerification, sendEmailVerificationError] =
@@ -26,7 +39,8 @@ export function SettingsEmail(props) {
     onSubmit: async (values) => {
       return updateEmail(values.email).then(async () => {
         await sendEmailVerification();
-        alert("Email has been updated, please verify your email");
+        setAlertEmailUpdated(true);
+
         logOutAccount();
       });
     },
@@ -60,13 +74,25 @@ export function SettingsEmail(props) {
             justifyContent: "flex-end",
             p: 2,
           }}
-          disabled={formik.isSubmitting || sendingEmailVerification}
         >
-          <Button type="submit" color="primary" variant="contained">
+          <Button
+            disabled={formik.isSubmitting || sendingEmailVerification}
+            type="submit"
+            color="primary"
+            variant="contained"
+          >
             Update
           </Button>
         </Box>
       </Card>
+
+      <AlertMessage
+        severity="success"
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        message="Email updated successfully, logging out"
+        open={alertEmailUpdated}
+        setOpen={setAlertEmailUpdated}
+      />
     </form>
   );
 }

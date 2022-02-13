@@ -16,8 +16,10 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { logOutAccount } from "src/services/user";
+import AlertMessage from "../AlertMessage";
 
 export function SettingsPassword(props) {
+  const [alertPasswordUpdated, setAlertPasswordUpdated] = useState(false);
   const auth = getAuth();
   const [updatePassword, updating, error] = useUpdatePassword(auth);
 
@@ -47,7 +49,7 @@ export function SettingsPassword(props) {
     }),
     onSubmit: async (values) => {
       return updatePassword(values.password).then(() => {
-        alert("Password has been updated");
+        setAlertPasswordUpdated(true);
         logOutAccount();
       });
     },
@@ -115,13 +117,20 @@ export function SettingsPassword(props) {
             justifyContent: "flex-end",
             p: 2,
           }}
-          disabled={formik.isSubmitting}
         >
-          <Button type="submit" color="primary" variant="contained">
+          <Button disabled={formik.isSubmitting} type="submit" color="primary" variant="contained">
             Update
           </Button>
         </Box>
       </Card>
+
+      <AlertMessage
+        severity="success"
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        message="Password updated successfully, logging out"
+        open={alertPasswordUpdated}
+        setOpen={setAlertPasswordUpdated}
+      />
     </form>
   );
 }
