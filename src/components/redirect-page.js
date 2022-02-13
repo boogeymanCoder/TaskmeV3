@@ -38,8 +38,8 @@ export default function RedirectPage({
             <Typography align="center" color="textPrimary" variant="h1">
               {mainText}
             </Typography>
-            {secondaryTypography && { secondaryTypography }}
-            {secondaryText && (
+            {secondaryTypography}
+            {!secondaryTypography && (
               <Typography align="center" color="textPrimary" variant="subtitle2">
                 {secondaryText}
               </Typography>

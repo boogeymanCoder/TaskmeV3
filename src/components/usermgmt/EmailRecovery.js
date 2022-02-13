@@ -8,14 +8,12 @@ import ConfirmMessage from "../ConfirmMessage";
 export default function EmailRecovery({ auth, actionCode, lang }) {
   const [restoredEmail, setRestoredEmail] = useState(null);
   const [openConfirmation, setOpenConfirmation] = useState(false);
-  const [agree, setAgree] = useState(false);
   const [alertPasswordReset, setAlertPasswordReset] = useState(false);
   const [passwordResetSent, setPasswordResetSent] = useState(false);
   const [page, setPage] = useState(null);
   useEffect(() => {
     // Localize the UI to the selected language as determined by the lang
     // parameter.
-    let restoredEmail = null;
     // Confirm the action code is valid.
     checkActionCode(auth, actionCode)
       .then((info) => {
@@ -35,7 +33,7 @@ export default function EmailRecovery({ auth, actionCode, lang }) {
 
         setOpenConfirmation(true);
 
-        setPage(<EmailRecoveredMessage />);
+        setPage(<EmailRecoveredMessage showResetPassword={() => setOpenConfirmation(true)} />);
       })
       .catch((error) => {
         // Invalid code.
