@@ -8,7 +8,7 @@ const EmailVerifiedMessage = () => (
     secondaryText="You can now sign in with your new account"
     image="/static/images/undraw_subscriber_re_om92.svg"
     onContinue={(e) => logOutAccount()}
-    buttonMessage="Login"
+    buttonText="Go to Login"
     continueUrl="/login"
   />
 );

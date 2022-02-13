@@ -64,7 +64,7 @@ export default function RedirectPage({
                 variant="contained"
                 onClick={onContinue}
               >
-                {buttonText || "Go back to dashboard"}
+                {buttonText}
               </Button>
             </NextLink>
           </Box>
