@@ -8,7 +8,7 @@ export default function EmailRecoveredMessage() {
       mainText="Your email has been recovered"
       secondaryText="You can now sign in with this email"
       image="/static/images/undraw_new_message_re_fp03.svg"
-      buttonMessage="Login"
+      buttonText="Go to Login"
       continueUrl="/login"
     />
   );
