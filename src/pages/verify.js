@@ -25,7 +25,7 @@ const NotFound = () => {
     <RedirectPage
       title="Verify Email"
       mainText="Verify Your Email"
-      secondaryText={
+      secondaryTypography={
         <Typography align="center" color="textPrimary" variant="subtitle2">
           Before being able to use your account you need to verify that this is your email address
           by clicking the link we sent, click{" "}
