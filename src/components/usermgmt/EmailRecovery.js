@@ -49,21 +49,19 @@ export default function EmailRecovery({ auth, actionCode, lang }) {
       });
   }, []);
 
-  useEffect(() => {
-    if (agree) {
-      sendPasswordResetEmail(auth, restoredEmail)
-        .then(() => {
-          // Password reset confirmation sent. Ask user to check their email.
-          setPasswordResetSent(true);
-          setAlertPasswordReset(true);
-        })
-        .catch((error) => {
-          // Error encountered while sending password reset code.
-          setPasswordResetSent(false);
-          setAlertPasswordReset(true);
-        });
-    }
-  }, [agree]);
+  function resetPassword() {
+    sendPasswordResetEmail(auth, restoredEmail)
+      .then(() => {
+        // Password reset confirmation sent. Ask user to check their email.
+        setPasswordResetSent(true);
+        setAlertPasswordReset(true);
+      })
+      .catch((error) => {
+        // Error encountered while sending password reset code.
+        setPasswordResetSent(false);
+        setAlertPasswordReset(true);
+      });
+  }
 
   return (
     <>
@@ -81,12 +79,13 @@ export default function EmailRecovery({ auth, actionCode, lang }) {
         setOpen={setAlertPasswordReset}
       />
       <ConfirmMessage
+        title="Reset account password?"
+        message="Your account might be compromised, it suggested to change password."
         onAgree={(e) => {
-          setAgree(true);
           setOpenConfirmation(false);
+          resetPassword();
         }}
         onDisagree={(e) => {
-          setAgree(true);
           setOpenConfirmation(false);
         }}
         open={openConfirmation}
