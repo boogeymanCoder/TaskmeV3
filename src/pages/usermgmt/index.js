@@ -3,6 +3,7 @@ import React from "react";
 import Error from "../error";
 import ResetPassword from "../../components/usermgmt/ResetPassword";
 import { getAuth } from "firebase/auth";
+import EmailVerification from "src/components/usermgmt/EmailVerification";
 
 export default function UserMgmt() {
   const auth = getAuth();
@@ -31,7 +32,14 @@ export default function UserMgmt() {
     case "verifyEmail":
       // Display email verification handler and UI.
       //   handleVerifyEmail(auth, actionCode, continueUrl, lang);
-      break;
+      return (
+        <EmailVerification
+          auth={auth}
+          actionCode={actionCode}
+          continueUrl={continueUrl}
+          lang={lang}
+        />
+      );
     default:
       return null;
   }
