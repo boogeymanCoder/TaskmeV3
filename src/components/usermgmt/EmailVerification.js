@@ -1,6 +1,6 @@
 import { applyActionCode } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import Error from "src/pages/error";
+import Error from "../../pages/error";
 import EmailVerifiedMessage from "./EmailVerifiedMessage";
 
 export default function EmailVerification({ auth, actionCode, continueUrl, lang }) {
