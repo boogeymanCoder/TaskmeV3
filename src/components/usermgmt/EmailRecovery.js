@@ -2,8 +2,11 @@ import { applyActionCode, checkActionCode, sendPasswordResetEmail } from "fireba
 import React, { useEffect, useState } from "react";
 import Error from "../../pages/error";
 import EmailRecoveredMessage from "./EmailRecoveredMessage";
+import AlertMessage from "../AlertMessage";
 
 export default function EmailRecovery({ auth, actionCode, lang }) {
+  const [alertPasswordReset, setAlertPasswordReset] = useState(false);
+  const [passwordResetSent, setPasswordResetSent] = useState(false);
   const [page, setPage] = useState(null);
   useEffect(() => {
     // Localize the UI to the selected language as determined by the lang
@@ -29,11 +32,13 @@ export default function EmailRecovery({ auth, actionCode, lang }) {
           sendPasswordResetEmail(auth, restoredEmail)
             .then(() => {
               // Password reset confirmation sent. Ask user to check their email.
-              alert("Password reset email sent");
+              setPasswordResetSent(true);
+              setAlertPasswordReset(true);
             })
             .catch((error) => {
               // Error encountered while sending password reset code.
-              alert("Password reset email not sent");
+              setPasswordResetSent(false);
+              setAlertPasswordReset(true);
             });
         }
 
@@ -51,5 +56,21 @@ export default function EmailRecovery({ auth, actionCode, lang }) {
       });
   }, []);
 
-  return page;
+  return (
+    <>
+      {page}
+
+      <AlertMessage
+        severity={passwordResetSent ? "success" : "error"}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        message={
+          passwordResetSent
+            ? "Password reset email has been sent"
+            : "Password reset email not sent, please try again"
+        }
+        open={alertPasswordReset}
+        setOpen={setAlertPasswordReset}
+      />
+    </>
+  );
 }

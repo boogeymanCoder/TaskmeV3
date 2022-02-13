@@ -30,8 +30,12 @@ import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import CheckNonAuth from "src/components/auth/CheckNonAuth";
+import AlertMessage from "../components/AlertMessage";
 
 const Login = () => {
+  const [alertPasswordReset, setAlertPasswordReset] = useState(false);
+  const [passwordResetSent, setPasswordResetSent] = useState(false);
+  const [error, setError] = useState("");
   const [showError, setShowError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const auth = getAuth();
@@ -72,9 +76,14 @@ const Login = () => {
 
     if (email) {
       sendPasswordResetEmail(auth, email)
-        .then((res) => alert("Password reset email has been sent"))
+        .then((res) => {
+          setPasswordResetSent(true);
+          setAlertPasswordReset(true);
+        })
         .catch((err) => {
-          alert(err.message);
+          setPasswordResetSent(false);
+          setAlertPasswordReset(true);
+          setError(err.message);
         });
     }
   }
@@ -249,6 +258,14 @@ const Login = () => {
           </Alert>
         </Snackbar>
       )}
+
+      <AlertMessage
+        severity={passwordResetSent ? "success" : "error"}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        message={passwordResetSent ? "Password reset email has been sent" : `${error}`}
+        open={alertPasswordReset}
+        setOpen={setAlertPasswordReset}
+      />
     </CheckNonAuth>
   );
 };
