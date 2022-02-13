@@ -26,14 +26,28 @@ export default function ResetPassword({ auth, actionCode, continueUrl, lang }) {
       .then((email) => {
         const accountEmail = email;
 
-        setPage(<NewPassword setPassword={setPassword} email={accountEmail} />);
+        setPage(
+          <Grid
+            container
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            style={{ minHeight: "100vh" }}
+          >
+            <Grid item xs={3}>
+              <NewPassword setPassword={setPassword} email={accountEmail} />
+            </Grid>
+          </Grid>
+        );
       })
       .catch((error) => {
         console.log({ error });
         setPage(
           <Error
             title="Password recovery failed"
-            message="Recovery link may have been used or expired, if this is not the case please try again."
+            mainText="Password recovery failed"
+            secondaryText="Recovery link may have been used or expired, if this is not the case please try again."
           />
         );
       });
@@ -51,7 +65,20 @@ export default function ResetPassword({ auth, actionCode, continueUrl, lang }) {
           // TODO: If a continue URL is available, display a button which on
           // click redirects the user back to the app via continueUrl with
           // additional state determined from that URL's parameters.
-          setPage(<PasswordRecovered />);
+          setPage(
+            <Grid
+              container
+              spacing={0}
+              direction="column"
+              alignItems="center"
+              justifyContent="center"
+              style={{ minHeight: "100vh" }}
+            >
+              <Grid item xs={3}>
+                <PasswordRecovered />
+              </Grid>
+            </Grid>
+          );
         })
         .catch((error) => {
           console.log({ error });
@@ -60,18 +87,5 @@ export default function ResetPassword({ auth, actionCode, continueUrl, lang }) {
     }
   }, [password]);
 
-  return (
-    <Grid
-      container
-      spacing={0}
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      style={{ minHeight: "100vh" }}
-    >
-      <Grid item xs={3}>
-        {page}
-      </Grid>
-    </Grid>
-  );
+  return page;
 }

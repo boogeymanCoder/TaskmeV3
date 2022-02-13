@@ -46,6 +46,7 @@ const NotFound = () => {
       }
       image="/static/images/undraw_mailbox_re_dvds.svg"
       buttonText="Go to Login"
+      onContinue={(e) => logOutAccount()}
       continueUrl="/login"
     />
   );

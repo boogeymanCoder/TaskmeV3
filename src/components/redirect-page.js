@@ -11,6 +11,7 @@ export default function RedirectPage({
   image,
   continueUrl,
   buttonText,
+  onContinue,
 }) {
   return (
     <>
@@ -61,6 +62,7 @@ export default function RedirectPage({
                 startIcon={<ArrowBackIcon fontSize="small" />}
                 sx={{ mt: 3 }}
                 variant="contained"
+                onClick={onContinue}
               >
                 {buttonText || "Go back to dashboard"}
               </Button>
