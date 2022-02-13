@@ -16,6 +16,7 @@ export default function PromptMessage({
   handleClose,
   setValue,
   handleSubmit,
+  value,
 }) {
   return (
     <Dialog open={open} onClose={handleClose}>

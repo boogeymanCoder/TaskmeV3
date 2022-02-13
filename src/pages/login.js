@@ -34,6 +34,7 @@ import AlertMessage from "../components/AlertMessage";
 import PromptMessage from "src/components/PromptMessage";
 
 const Login = () => {
+  const [sendingEmail, setSendingEmail] = useState(false);
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState(null);
   const [alertPasswordReset, setAlertPasswordReset] = useState(false);
@@ -76,15 +77,20 @@ const Login = () => {
 
   function forgotPassword() {
     if (email) {
+      setSendingEmail(true);
       sendPasswordResetEmail(auth, email)
         .then((res) => {
           setPasswordResetSent(true);
           setAlertPasswordReset(true);
+          setEmail(null);
+          setSendingEmail(false);
         })
         .catch((err) => {
           setPasswordResetSent(false);
           setAlertPasswordReset(true);
           setError(err.message);
+          setEmail(null);
+          setSendingEmail(false);
         });
     }
   }
@@ -202,13 +208,14 @@ const Login = () => {
               }}
             />
             <Link
-              color="primary"
               variant="subtitle2"
-              underline="hover"
+              underline={sendingEmail ? "none" : "hover"}
               sx={{
                 cursor: "pointer",
               }}
               onClick={(e) => setOpen(true)}
+              disabled={sendingEmail}
+              color={sendingEmail ? "text" : "primary"}
             >
               Forgot password?
             </Link>
@@ -273,8 +280,14 @@ const Login = () => {
         message="Please enter your registered email."
         open={open}
         handleClose={(e) => setOpen(false)}
-        setValue={setEmail}
-        handleSubmit={forgotPassword}
+        setValue={(e) => {
+          setEmail(e.target.value);
+        }}
+        value={email}
+        handleSubmit={(e) => {
+          forgotPassword();
+          setOpen(false);
+        }}
       />
     </CheckNonAuth>
   );
