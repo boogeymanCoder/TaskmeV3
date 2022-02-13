@@ -67,14 +67,16 @@ const Login = () => {
     return null;
   }
 
-  async function forgotPassword() {
+  function forgotPassword() {
     const email = prompt("Please enter your email");
 
     if (email) {
-      await sendPasswordResetEmail(auth, email);
-      alert("Password reset email has been sent");
+      sendPasswordResetEmail(auth, email)
+        .then((res) => alert("Password reset email has been sent"))
+        .catch((err) => {
+          alert(err.message);
+        });
     }
-    // sendPasswordResetEmail(email);
   }
 
   return (
