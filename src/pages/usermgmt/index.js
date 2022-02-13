@@ -4,6 +4,7 @@ import Error from "../error";
 import ResetPassword from "../../components/usermgmt/ResetPassword";
 import { getAuth } from "firebase/auth";
 import EmailVerification from "src/components/usermgmt/EmailVerification";
+import EmailRecovery from "src/components/usermgmt/EmailRecovery";
 
 export default function UserMgmt() {
   const auth = getAuth();
@@ -28,7 +29,7 @@ export default function UserMgmt() {
     case "recoverEmail":
       // Display email recovery handler and UI.
       //   handleRecoverEmail(auth, actionCode, lang);
-      break;
+      return <EmailRecovery auth={auth} actionCode={actionCode} lang={lang} />;
     case "verifyEmail":
       // Display email verification handler and UI.
       //   handleVerifyEmail(auth, actionCode, continueUrl, lang);
