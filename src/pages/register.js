@@ -22,6 +22,8 @@ import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import CheckNonAuth from "src/components/auth/CheckNonAuth";
+import SnackbarMessage from "src/components/SnackbarMessage";
+import SnackbarErrorMessage from "src/components/SnackbarErrorMessage";
 
 const Register = () => {
   const [showError, setShowError] = useState(false);
@@ -181,7 +183,7 @@ const Register = () => {
             <Box sx={{ py: 2 }}>
               <Button
                 color="primary"
-                disabled={formik.isSubmitting}
+                disabled={formik.isSubmitting || emailLoading}
                 fullWidth
                 size="large"
                 type="submit"
@@ -201,24 +203,14 @@ const Register = () => {
           </form>
         </Container>
       </Box>
-      {emailUser && (
-        <Snackbar open={true}>
-          <Alert severity="success" sx={{ width: "100%" }}>
-            <Typography variant="p" component="p" color="inherit">
-              Account successfully created! - <Link href="/login">Sign in</Link>
-            </Typography>
-          </Alert>
-        </Snackbar>
-      )}
-      {emailError && (
-        <Snackbar open={showError}>
-          <Alert severity="error" sx={{ width: "100%" }} onClose={(e) => setShowError(!showError)}>
-            <Typography variant="p" component="p" color="inherit">
-              {emailError.message}
-            </Typography>
-          </Alert>
-        </Snackbar>
-      )}
+      <SnackbarMessage
+        message={
+          <>
+            Account successfully created! - <Link href="/login">Sign in</Link>
+          </>
+        }
+      />
+      <SnackbarErrorMessage error={emailError} />
     </CheckNonAuth>
   );
 };

@@ -2,8 +2,8 @@ import { applyActionCode, checkActionCode, sendPasswordResetEmail } from "fireba
 import React, { useEffect, useState } from "react";
 import Error from "../../pages/error";
 import EmailRecoveredMessage from "./EmailRecoveredMessage";
-import AlertMessage from "../AlertMessage";
 import ConfirmMessage from "../ConfirmMessage";
+import SnackbarMessage from "../SnackbarMessage";
 
 export default function EmailRecovery({ auth, actionCode, lang }) {
   const [restoredEmail, setRestoredEmail] = useState(null);
@@ -65,16 +65,20 @@ export default function EmailRecovery({ auth, actionCode, lang }) {
     <>
       {page}
 
-      <AlertMessage
-        severity={passwordResetSent ? "success" : "error"}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      <SnackbarMessage
         message={
           passwordResetSent
             ? "Password reset email has been sent"
             : "Password reset email not sent, please try again"
         }
-        open={alertPasswordReset}
-        setOpen={setAlertPasswordReset}
+        snackbarProps={{
+          open: alertPasswordReset,
+          anchorOrigin: { vertical: "top", horizontal: "center" },
+        }}
+        alertProps={{
+          severity: passwordResetSent ? "success" : "error",
+          onClose: () => setAlertPasswordReset(!alertPasswordReset),
+        }}
       />
       <ConfirmMessage
         title="Reset account password?"

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -11,7 +12,9 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Snackbar,
   TextField,
+  Typography,
 } from "@mui/material";
 import { getFirestore, doc } from "firebase/firestore";
 import { useDocumentData } from "react-firebase-hooks/firestore";
@@ -22,6 +25,7 @@ import { setAccount } from "../../services/user";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import SnackbarErrorMessage from "../SnackbarErrorMessage";
 
 export const AccountProfileDetails = (props) => {
   const firestore = getFirestore();
@@ -202,6 +206,10 @@ export const AccountProfileDetails = (props) => {
             Save details
           </Button>
         </Box>
+
+        <SnackbarErrorMessage error={userError} />
+        <SnackbarErrorMessage error={accountError} />
+        <SnackbarErrorMessage error={updateProfileError} />
       </Card>
     </form>
   );

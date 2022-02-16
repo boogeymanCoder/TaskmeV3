@@ -16,7 +16,7 @@ import { useUpdateEmail, useSendEmailVerification } from "react-firebase-hooks/a
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { logOutAccount } from "src/services/user";
-import AlertMessage from "../AlertMessage";
+import SnackbarMessage from "../SnackbarMessage";
 
 export function SettingsEmail(props) {
   const [alertEmailUpdated, setAlertEmailUpdated] = useState(false);
@@ -86,12 +86,13 @@ export function SettingsEmail(props) {
         </Box>
       </Card>
 
-      <AlertMessage
-        severity="success"
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      <SnackbarMessage
         message="Email updated successfully, logging out"
-        open={alertEmailUpdated}
-        setOpen={setAlertEmailUpdated}
+        snackbarProps={{
+          open: alertEmailUpdated,
+          anchorOrigin: { vertical: "top", horizontal: "center" },
+        }}
+        alertProps={{ onClose: () => setAlertEmailUpdated(!alertEmailUpdated) }}
       />
     </form>
   );
