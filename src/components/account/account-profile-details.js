@@ -196,7 +196,7 @@ export const AccountProfileDetails = (props) => {
           <Button
             color="primary"
             variant="contained"
-            disabled={userLoading || accountLoading}
+            disabled={userLoading || accountLoading || formik.isSubmitting}
             type="submit"
           >
             Save details
