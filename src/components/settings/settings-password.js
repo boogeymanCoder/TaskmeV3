@@ -16,7 +16,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { logOutAccount } from "src/services/user";
-import AlertMessage from "../AlertMessage";
+import SnackbarMessage from "../SnackbarMessage";
 
 export function SettingsPassword(props) {
   const [alertPasswordUpdated, setAlertPasswordUpdated] = useState(false);
@@ -124,12 +124,13 @@ export function SettingsPassword(props) {
         </Box>
       </Card>
 
-      <AlertMessage
-        severity="success"
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      <SnackbarMessage
         message="Password updated successfully, logging out"
-        open={alertPasswordUpdated}
-        setOpen={setAlertPasswordUpdated}
+        snackbarProps={{
+          open: alertPasswordUpdated,
+          anchorOrigin: { vertical: "top", horizontal: "center" },
+        }}
+        alertProps={{ onClose: () => setAlertPasswordUpdated(!alertPasswordUpdated) }}
       />
     </form>
   );

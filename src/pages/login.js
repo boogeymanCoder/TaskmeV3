@@ -30,8 +30,8 @@ import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import CheckNonAuth from "src/components/auth/CheckNonAuth";
-import AlertMessage from "../components/AlertMessage";
 import PromptMessage from "src/components/PromptMessage";
+import SnackbarMessage from "src/components/SnackbarMessage";
 
 const Login = () => {
   const [sendingEmail, setSendingEmail] = useState(false);
@@ -267,12 +267,16 @@ const Login = () => {
         </Snackbar>
       )}
 
-      <AlertMessage
-        severity={passwordResetSent ? "success" : "error"}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      <SnackbarMessage
         message={passwordResetSent ? "Password reset email has been sent" : `${error}`}
-        open={alertPasswordReset}
-        setOpen={setAlertPasswordReset}
+        snackbarProps={{
+          open: alertPasswordReset,
+          anchorOrigin: { vertical: "top", horizontal: "center" },
+        }}
+        alertProps={{
+          severity: passwordResetSent ? "success" : "error",
+          onClose: () => setAlertPasswordReset(!alertPasswordReset),
+        }}
       />
 
       <PromptMessage
