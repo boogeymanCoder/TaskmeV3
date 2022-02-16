@@ -12,15 +12,19 @@ import {
   Typography,
 } from "@mui/material";
 import { getAuth } from "firebase/auth";
-import { useUpdateEmail, useSendEmailVerification } from "react-firebase-hooks/auth";
+import { useUpdateEmail, useSendEmailVerification, useAuthState } from "react-firebase-hooks/auth";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { logOutAccount } from "src/services/user";
 import SnackbarMessage from "../SnackbarMessage";
+import SnackbarErrorMessage from "../SnackbarErrorMessage";
 
 export function SettingsEmail(props) {
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [alertEmailUpdated, setAlertEmailUpdated] = useState(false);
   const auth = getAuth();
+  const [user, loading, userError] = useAuthState(auth);
   const [updateEmail, updating, error] = useUpdateEmail(auth);
   const [sendEmailVerification, sendingEmailVerification, sendEmailVerificationError] =
     useSendEmailVerification(auth);
@@ -37,6 +41,11 @@ export function SettingsEmail(props) {
       email: Yup.string().email("Must be a valid email").max(255).required("Email is required"),
     }),
     onSubmit: async (values) => {
+      if (values.email === user.email) {
+        setShowErrorMessage(true);
+        setErrorMessage({ message: "Cant update to current email" });
+        return;
+      }
       return updateEmail(values.email).then(async () => {
         await sendEmailVerification();
         setAlertEmailUpdated(true);
@@ -93,6 +102,13 @@ export function SettingsEmail(props) {
           anchorOrigin: { vertical: "top", horizontal: "center" },
         }}
         alertProps={{ onClose: () => setAlertEmailUpdated(!alertEmailUpdated) }}
+      />
+      <SnackbarErrorMessage error={error} />
+      <SnackbarErrorMessage error={userError} />
+      <SnackbarErrorMessage
+        error={errorMessage}
+        snackbarProps={{ open: showErrorMessage }}
+        alertProps={{ onClose: () => setShowErrorMessage(!showErrorMessage) }}
       />
     </form>
   );
