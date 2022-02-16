@@ -203,13 +203,15 @@ const Register = () => {
           </form>
         </Container>
       </Box>
-      <SnackbarMessage
-        message={
-          <>
-            Account successfully created! - <Link href="/login">Sign in</Link>
-          </>
-        }
-      />
+      {emailUser && (
+        <SnackbarMessage
+          message={
+            <>
+              Account successfully created! - <Link href="/login">Sign in</Link>
+            </>
+          }
+        />
+      )}
       <SnackbarErrorMessage error={emailError} />
     </CheckNonAuth>
   );
