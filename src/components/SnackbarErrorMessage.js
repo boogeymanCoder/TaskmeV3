@@ -8,7 +8,7 @@ export default function SnackbarErrorMessage({ error, alertProps, snackbarProps 
     <SnackbarMessage
       message={error.message}
       alertProps={{ severity: "error", ...alertProps }}
-      snackbarProps={{ ...snackbarProps }}
+      snackbarProps={{ anchorOrigin: { vertical: "top", horizontal: "center" }, ...snackbarProps }}
     />
   );
 }
