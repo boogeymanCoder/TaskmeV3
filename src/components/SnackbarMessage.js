@@ -4,7 +4,11 @@ import React, { useState } from "react";
 function SnackbarMessage({ message, alertProps, snackbarProps }) {
   const [open, setOpen] = useState(true);
   return (
-    <Snackbar open={open} {...snackbarProps}>
+    <Snackbar
+      open={open}
+      anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      {...snackbarProps}
+    >
       <Alert
         severity="success"
         sx={{ width: "100%" }}
