@@ -26,6 +26,7 @@ import { setAccount } from "../../services/user";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";
+import SnackbarMessage from "../SnackbarMessage";
 
 export const AccountProfileDetails = (props) => {
   const firestore = getFirestore();
@@ -40,6 +41,7 @@ export const AccountProfileDetails = (props) => {
     }
   );
   const [updateProfile, updateProfileLoading, updateProfileError] = useUpdateProfile(auth);
+  const [showSuccessUpdate, setShowSuccessUpdate] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -59,7 +61,9 @@ export const AccountProfileDetails = (props) => {
     onSubmit: async (values) => {
       return setAccount(user.uid, values)
         .then(async () => {
-          await updateProfile({ displayName: values.fullname });
+          await updateProfile({ displayName: values.fullname }).then(() =>
+            setShowSuccessUpdate(true)
+          );
         })
         .catch((err) => {
           console.log({ err });
@@ -207,6 +211,11 @@ export const AccountProfileDetails = (props) => {
           </Button>
         </Box>
 
+        <SnackbarMessage
+          message="Updated successfully"
+          snackbarProps={{ open: showSuccessUpdate }}
+          alertProps={{ onClose: () => setShowSuccessUpdate(false) }}
+        />
         <SnackbarErrorMessage error={userError} />
         <SnackbarErrorMessage error={accountError} />
         <SnackbarErrorMessage error={updateProfileError} />
