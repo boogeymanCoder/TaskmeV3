@@ -112,6 +112,7 @@ export const AccountProfileDetails = (props) => {
           <Grid container spacing={3}>
             <Grid item md={6} xs={12}>
               <TextField
+                disabled={userLoading || accountLoading || formik.isSubmitting}
                 error={Boolean(formik.touched.fullname && formik.errors.fullname)}
                 fullWidth
                 helperText={formik.touched.fullname && formik.errors.fullname}
@@ -129,6 +130,7 @@ export const AccountProfileDetails = (props) => {
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Gender</InputLabel>
                 <Select
+                  disabled={userLoading || accountLoading || formik.isSubmitting}
                   error={Boolean(formik.touched.gender && formik.errors.gender)}
                   fullWidth
                   helperText={formik.touched.gender && formik.errors.gender}
@@ -148,6 +150,7 @@ export const AccountProfileDetails = (props) => {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                disabled={userLoading || accountLoading || formik.isSubmitting}
                 error={Boolean(formik.touched.address && formik.errors.address)}
                 fullWidth
                 helperText={formik.touched.address && formik.errors.address}
@@ -163,6 +166,7 @@ export const AccountProfileDetails = (props) => {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
+                disabled={userLoading || accountLoading || formik.isSubmitting}
                 error={Boolean(formik.touched.email && formik.errors.email)}
                 fullWidth
                 helperText={formik.touched.email && formik.errors.email}
@@ -178,6 +182,7 @@ export const AccountProfileDetails = (props) => {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
+                disabled={userLoading || accountLoading || formik.isSubmitting}
                 error={Boolean(formik.touched.contact && formik.errors.contact)}
                 fullWidth
                 helperText={formik.touched.contact && formik.errors.contact}
