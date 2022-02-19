@@ -1,3 +1,4 @@
+import { Add } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -11,6 +12,7 @@ import {
   Grid,
   FormControl,
   InputLabel,
+  Fab,
 } from "@mui/material";
 import { Search as SearchIcon } from "../../icons/search";
 
@@ -28,11 +30,6 @@ export const TaskListToolbar = ({ handleAddTask, ...props }) => (
       <Typography sx={{ m: 1 }} variant="h4">
         Tasks
       </Typography>
-      <Box sx={{ m: 1 }}>
-        <Button color="primary" variant="contained" onClick={handleAddTask}>
-          Add task
-        </Button>
-      </Box>
     </Box>
     <Box sx={{ mt: 3 }}>
       <Card>
@@ -64,5 +61,19 @@ export const TaskListToolbar = ({ handleAddTask, ...props }) => (
         </CardContent>
       </Card>
     </Box>
+    <Fab
+      onClick={handleAddTask}
+      size="large"
+      sx={{
+        position: "fixed",
+        bottom: "5%",
+        right: "5%",
+        boxShadow: 3,
+      }}
+      color="primary"
+      aria-label="add"
+    >
+      <Add />
+    </Fab>
   </Box>
 );

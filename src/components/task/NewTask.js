@@ -7,64 +7,225 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TagInput from "../TagInput";
-import { FormControl, FormControlLabel, Grid, InputLabel, Select, Switch } from "@mui/material";
+import {
+  FormControl,
+  FormControlLabel,
+  Grid,
+  InputAdornment,
+  InputLabel,
+  Select,
+  Switch,
+} from "@mui/material";
 import { DateTimePicker } from "@mui/lab";
 import { useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { setTask } from "src/services/task";
+import { getAuth } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { doc, getFirestore } from "firebase/firestore";
+import SnackbarMessage from "../SnackbarMessage";
+import SnackbarErrorMessage from "../SnackbarErrorMessage";
 
 export default function NewTask({ open, handleClose }) {
-  const [date, setDate] = useState(new Date());
+  const [showSuccessAdd, setShowSuccessAdd] = useState(false);
+  const [showErrorAdd, setShowErrorAdd] = useState(false);
+  const [error, setError] = useState({ message: null });
+  const auth = getAuth();
+  const firestore = getFirestore();
+  const [user, userLoading, userError] = useAuthState(auth);
 
-  const handleDateChange = (newDate) => {
-    setDate(newDate);
-  };
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      details: "",
+      tags: [],
+      currency: "",
+      price: 0,
+      skills: [],
+      date: new Date(),
+      location: "",
+      open: true,
+    },
+    validationSchema: Yup.object({
+      title: Yup.string().max(255).required("Title is required"),
+      details: Yup.string().max(255).required("Details is required"),
+      currency: Yup.string().required("Currency is required"),
+      price: Yup.number().required("Price is required"),
+      date: Yup.date().required("Date is required"),
+      location: Yup.string().max(255).required("Location is required"),
+    }),
+    onSubmit: async (values) => {
+      const employer = doc(firestore, `accounts/${user.uid}`);
+      const promise = setTask({ ...values, employer: employer, ups: [] })
+        .then((res) => {
+          handleClose();
+          formik.resetForm();
+          setShowSuccessAdd(true);
+          console.log({ res });
+        })
+        .catch((err) => {
+          console.log({ err });
+          setError(err);
+          setShowErrorAdd(true);
+        });
+
+      return promise;
+    },
+  });
+
   return (
     <div>
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm" scroll="body">
-        <DialogTitle>Add task</DialogTitle>
-        <DialogContent>
-          <DialogContentText>Fields marked with (*) are required.</DialogContentText>
-          <TextField margin="dense" label="Name" type="text" fullWidth variant="outlined" />
-          <TextField
-            margin="dense"
-            label="Details"
-            type="text"
-            fullWidth
-            variant="outlined"
-            multiline={true}
-            minRows={3}
-          />
-          <TagInput label="Tags (press space to add tag)" />
-          <Grid container spacing={1}>
-            <Grid item xs={3}>
-              <TextField label="Currency" type="text" fullWidth variant="outlined" required />
+        <form onSubmit={formik.handleSubmit} noValidate>
+          <DialogTitle>Add task</DialogTitle>
+          <DialogContent>
+            <DialogContentText>Fields marked with (*) are required.</DialogContentText>
+            <TextField
+              error={Boolean(formik.touched.title && formik.errors.title)}
+              helperText={formik.touched.title && formik.errors.title}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              value={formik.values.title}
+              disabled={formik.isSubmitting}
+              name="title"
+              sx={{ my: 1 }}
+              label="Title"
+              type="text"
+              fullWidth
+              variant="outlined"
+              required
+            />
+            <TextField
+              error={Boolean(formik.touched.details && formik.errors.details)}
+              helperText={formik.touched.details && formik.errors.details}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              value={formik.values.details}
+              disabled={formik.isSubmitting}
+              name="details"
+              sx={{ mb: 1 }}
+              label="Details"
+              type="text"
+              fullWidth
+              variant="outlined"
+              multiline={true}
+              minRows={3}
+              required
+            />
+            <TagInput
+              disabled={formik.isSubmitting}
+              label="Tags (press space to add tag)"
+              sx={{ mb: 1 }}
+            />
+            <Grid container spacing={1} sx={{ mb: 1 }}>
+              <Grid item sm={3} xs={12}>
+                <TextField
+                  error={Boolean(formik.touched.currency && formik.errors.currency)}
+                  helperText={formik.touched.currency && formik.errors.currency}
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.currency}
+                  disabled={formik.isSubmitting}
+                  name="currency"
+                  label="Currency"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  required
+                />
+              </Grid>
+              <Grid item sm={6} xs={12}>
+                <TextField
+                  error={Boolean(formik.touched.price && formik.errors.price)}
+                  helperText={formik.touched.price && formik.errors.price}
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.price}
+                  disabled={formik.isSubmitting}
+                  name="price"
+                  label="Price"
+                  type="number"
+                  fullWidth
+                  variant="outlined"
+                  required
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <TextField label="Price" type="text" fullWidth variant="outlined" required />
-            </Grid>
-          </Grid>
-          <TagInput label="Skills (press space to add skill)" />
-          <DateTimePicker
-            value={date}
-            onChange={handleDateChange}
-            label="Date"
-            renderInput={(params) => <TextField {...params} />}
-          />
-          <TextField
-            margin="dense"
-            label="Location"
-            type="text"
-            fullWidth
-            variant="outlined"
-            required
-          />
-
-          <FormControlLabel control={<Switch defaultChecked />} label="Open" />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Subscribe</Button>
-        </DialogActions>
+            <TagInput
+              disabled={formik.isSubmitting}
+              sx={{ mb: 1 }}
+              label="Skills (press space to add skill)"
+            />
+            <DateTimePicker
+              onChange={(value) => {
+                formik.setFieldValue("date", value, true);
+              }}
+              disabled={formik.isSubmitting}
+              value={formik.values.date}
+              label="Date"
+              renderInput={(params) => (
+                <TextField
+                  error={Boolean(formik.touched.date && formik.errors.date)}
+                  helperText={formik.touched.date && formik.errors.date}
+                  onBlur={formik.handleBlur}
+                  name="date"
+                  fullWidth
+                  required
+                  sx={{ mb: 1 }}
+                  {...params}
+                />
+              )}
+              required
+            />
+            <TextField
+              error={Boolean(formik.touched.location && formik.errors.location)}
+              helperText={formik.touched.location && formik.errors.location}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              value={formik.values.location}
+              disabled={formik.isSubmitting}
+              name="location"
+              sx={{ mb: 1 }}
+              label="Location"
+              type="text"
+              fullWidth
+              variant="outlined"
+              required
+            />
+            <FormControlLabel
+              control={<Switch disabled={formik.isSubmitting} defaultChecked />}
+              label="Open"
+              required
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              disabled={formik.isSubmitting}
+              onClick={() => {
+                handleClose();
+                formik.resetForm();
+              }}
+            >
+              Cancel
+            </Button>
+            <Button disabled={formik.isSubmitting} type="submit">
+              Add
+            </Button>
+          </DialogActions>
+        </form>
       </Dialog>
+
+      <SnackbarMessage
+        message="Updated successfully"
+        snackbarProps={{ open: showSuccessAdd }}
+        alertProps={{ onClose: () => setShowSuccessAdd(false) }}
+      />
+      <SnackbarMessage
+        message={error.message}
+        snackbarProps={{ open: showErrorAdd }}
+        alertProps={{ severity: "error", onClose: () => setShowErrorAdd(false) }}
+      />
     </div>
   );
 }
