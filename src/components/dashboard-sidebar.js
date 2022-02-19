@@ -15,6 +15,7 @@ import { Users as UsersIcon } from "../icons/users";
 import { XCircle as XCircleIcon } from "../icons/x-circle";
 import { Logo } from "./logo";
 import { NavItem } from "./nav-item";
+import { TaskAlt } from "@mui/icons-material";
 
 const items = [
   {
@@ -31,6 +32,11 @@ const items = [
     href: "/products",
     icon: <ShoppingBagIcon fontSize="small" />,
     title: "Products",
+  },
+  {
+    href: "/tasks",
+    icon: <TaskAlt fontSize="small" />,
+    title: "Tasks",
   },
   {
     href: "/account",
