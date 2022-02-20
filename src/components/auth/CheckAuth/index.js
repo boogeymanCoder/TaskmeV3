@@ -1,3 +1,4 @@
+import { CircularProgress, LinearProgress } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -29,7 +30,7 @@ export default function CheckAuth({ children }) {
     if ((!user && !userLoading) || userError) router.push("/login");
   }, [user, userLoading, userError]);
 
-  if (userLoading || !user || !shouldRender) return null;
+  if (userLoading || !user || !shouldRender) return <LinearProgress />;
 
   console.log({ user, userLoading, userError });
 

@@ -16,8 +16,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { getFirestore, doc } from "firebase/firestore";
-import { useDocumentData } from "react-firebase-hooks/firestore";
 import { useAuthState, useUpdateProfile } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import { useEffect } from "react";
@@ -27,18 +25,17 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";
 import SnackbarMessage from "../SnackbarMessage";
+import { getDatabase, ref } from "firebase/database";
+import { useObjectVal } from "react-firebase-hooks/database";
 
 export const AccountProfileDetails = (props) => {
-  const firestore = getFirestore();
+  const database = getDatabase();
 
   const auth = getAuth();
   const [user, userLoading, userError] = useAuthState(auth);
 
-  const [account, accountLoading, accountError] = useDocumentData(
-    doc(firestore, "accounts", user ? user.uid : "dummy"),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    }
+  const [account, accountLoading, accountError] = useObjectVal(
+    ref(database, `accounts/${user ? user.uid : "dummy"}`)
   );
   const [updateProfile, updateProfileLoading, updateProfileError] = useUpdateProfile(auth);
   const [showSuccessUpdate, setShowSuccessUpdate] = useState(false);
@@ -50,6 +47,7 @@ export const AccountProfileDetails = (props) => {
       email: "",
       contact: "",
       gender: "Male",
+      image: "",
     },
     validationSchema: Yup.object({
       fullname: Yup.string().max(255).required("Name is required"),
@@ -57,10 +55,12 @@ export const AccountProfileDetails = (props) => {
       email: Yup.string().email("Must be a valid email").max(255).required("Email is required"),
       contact: Yup.string().max(255).required("Contact is required"),
       gender: Yup.string().oneOf(["Male", "Female"]).required("Gender is required"),
+      image: Yup.string().required("Image is required"),
     }),
     onSubmit: async (values) => {
       return setAccount(user.uid, values)
-        .then(async () => {
+        .then(async (res) => {
+          console.log({ res });
           await updateProfile({ displayName: values.fullname }).then(() =>
             setShowSuccessUpdate(true)
           );

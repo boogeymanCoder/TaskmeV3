@@ -1,17 +1,24 @@
 import Head from "next/head";
-import { Box, Container, Grid, Pagination } from "@mui/material";
+import { Box, Container, Grid, LinearProgress, Pagination } from "@mui/material";
 import { products } from "../__mocks__/products";
-import { ProductListToolbar } from "../components/product/product-list-toolbar";
-import { ProductCard } from "../components/product/product-card";
 import { DashboardLayout } from "../components/dashboard-layout";
 import CheckAuth from "src/components/auth/CheckAuth";
 import { TaskListToolbar } from "src/components/task/task-list-toolbar";
 import { TaskCard } from "src/components/task/task-card";
 import NewTask from "src/components/task/NewTask";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getDatabase, ref } from "firebase/database";
+import { useListVals } from "react-firebase-hooks/database";
 
 const Tasks = () => {
+  const database = getDatabase();
   const [openNewTask, setOpenNewTask] = useState(false);
+  const [values, loading, error] = useListVals(ref(database, "tasks"));
+
+  useEffect(() => {
+    console.log({ values, loading, error });
+  }, [values, loading, error]);
+
   return (
     <CheckAuth>
       <Head>
