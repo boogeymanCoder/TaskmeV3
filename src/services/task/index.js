@@ -1,9 +1,9 @@
-import { addDoc, collection, getFirestore } from "firebase/firestore";
+import { getDatabase, push, ref } from "firebase/database";
 
 export function setTask(task) {
   console.log({ task });
-  const firestore = getFirestore();
-  const tasksRef = collection(firestore, `tasks`);
+  const database = getDatabase();
+  const tasksRef = ref(database, `tasks`);
 
-  return addDoc(tasksRef, task);
+  return push(tasksRef, task);
 }

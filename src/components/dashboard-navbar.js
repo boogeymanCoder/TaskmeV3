@@ -24,8 +24,8 @@ import { set } from "nprogress";
 import { useRef, useState } from "react";
 import { logOutAccount } from "src/services/user";
 import { useRouter } from "next/router";
-import { useDocumentData } from "react-firebase-hooks/firestore";
-import { doc, getFirestore } from "firebase/firestore";
+import { getDatabase, ref } from "firebase/database";
+import { useObjectVal } from "react-firebase-hooks/database";
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -39,12 +39,9 @@ export const DashboardNavbar = (props) => {
   const [user, userLoading, userError] = useAuthState(auth);
   const [profileMenuAnchor, setProfileMenuAnchor] = useState();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const firestore = getFirestore();
-  const [account, accountLoading, accountError] = useDocumentData(
-    doc(firestore, "accounts", user ? user.uid : "dummy"),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    }
+  const database = getDatabase();
+  const [account, accountLoading, accountError] = useObjectVal(
+    ref(database, `accounts/${user ? user.uid : "dummy"}`)
   );
 
   function handleShowProfileMenu(e) {

@@ -1,3 +1,4 @@
+import { LinearProgress } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -12,7 +13,7 @@ export default function CheckNonAuth({ children }) {
     if (user && !userLoading) router.push("/");
   }, [user, userLoading]);
 
-  if (userLoading) return null;
+  if (userLoading) return <LinearProgress />;
 
   console.log({ user, userLoading, userError });
 

@@ -17,21 +17,19 @@ import { useUploadFile, useDownloadURL } from "react-firebase-hooks/storage";
 
 import { useAuthState, useUpdateProfile } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
-import { doc, getFirestore, updateDoc } from "firebase/firestore";
-import { useDocumentDataOnce } from "react-firebase-hooks/firestore";
 import { useEffect, useState } from "react";
+import { getDatabase, ref as dbRef, update } from "firebase/database";
+import { useObjectVal } from "react-firebase-hooks/database";
 
 export function AccountProfile(props) {
   const auth = getAuth();
   const [user, loading, error] = useAuthState(auth);
   const storage = getStorage();
   const [uploadFile, uploading, snapshot, uploadError] = useUploadFile();
-  const firestore = getFirestore();
 
-  const accountRef = doc(firestore, "accounts", user ? user.uid : "dummy");
-  const [account, accountLoading, accountError] = useDocumentDataOnce(accountRef, {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
+  const database = getDatabase();
+  const accountRef = dbRef(database, `accounts/${user ? user.uid : "dummy"}`);
+  const [account, accountLoading, accountError] = useObjectVal(accountRef);
   const [updateProfile, updateProfileLoading, updateProfileError] = useUpdateProfile(auth);
 
   const [values, setValues] = useState({
@@ -68,21 +66,21 @@ export function AccountProfile(props) {
 
   useEffect(() => {
     return setValues({
+      ...values,
       image: user && user.photoURL ? user.photoURL : "",
     });
   }, [updateProfileLoading, user]);
 
   async function handleUpload(e) {
     // setAvatar(e.target.files ? e.target.files[0] : values.image);
-    const result = await uploadFile(
-      ref(storage, `/avatar/${user.uid}.jpg`),
-      e.target.files ? e.target.files[0] : undefined,
-      {
-        contentType: "image/jpeg",
-      }
-    );
+    console.log({ files: e.target.files });
+    if (e.target.files.length == 0) return;
+    console.log("updating profile");
+    const result = await uploadFile(ref(storage, `/avatar/${user.uid}.jpg`), e.target.files[0], {
+      contentType: "image/jpeg",
+    });
     getDownloadURL(result.ref).then(async (res) => {
-      if (account) updateDoc(accountRef, { image: res });
+      if (account) update(accountRef, { image: res });
       await updateProfile({ photoURL: res });
     });
     console.log({ result });

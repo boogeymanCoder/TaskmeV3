@@ -23,16 +23,16 @@ import * as Yup from "yup";
 import { setTask } from "src/services/task";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { doc, getFirestore } from "firebase/firestore";
 import SnackbarMessage from "../SnackbarMessage";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";
+import { get, getDatabase, ref } from "firebase/database";
 
 export default function NewTask({ open, handleClose }) {
   const [showSuccessAdd, setShowSuccessAdd] = useState(false);
   const [showErrorAdd, setShowErrorAdd] = useState(false);
   const [error, setError] = useState({ message: null });
   const auth = getAuth();
-  const firestore = getFirestore();
+  const database = getDatabase();
   const [user, userLoading, userError] = useAuthState(auth);
 
   const formik = useFormik({
@@ -46,6 +46,7 @@ export default function NewTask({ open, handleClose }) {
       date: new Date(),
       location: "",
       open: true,
+      ups: [],
     },
     validationSchema: Yup.object({
       title: Yup.string().max(255).required("Title is required"),
@@ -56,8 +57,15 @@ export default function NewTask({ open, handleClose }) {
       location: Yup.string().max(255).required("Location is required"),
     }),
     onSubmit: async (values) => {
-      const employer = doc(firestore, `accounts/${user.uid}`);
-      const promise = setTask({ ...values, employer: employer, ups: [] })
+      const employer = ref(database, `accounts/${user.uid}`);
+      const promise = setTask({
+        ...values,
+        date: JSON.stringify(values.date),
+        employer: JSON.stringify(employer),
+        ups: JSON.stringify(values.ups),
+        skills: JSON.stringify(values.skills),
+        tags: JSON.stringify(values.tags),
+      })
         .then((res) => {
           handleClose();
           formik.resetForm();
@@ -209,7 +217,7 @@ export default function NewTask({ open, handleClose }) {
             >
               Cancel
             </Button>
-            <Button disabled={formik.isSubmitting} type="submit">
+            <Button disabled={formik.isSubmitting || userLoading} type="submit">
               Add
             </Button>
           </DialogActions>
@@ -226,6 +234,7 @@ export default function NewTask({ open, handleClose }) {
         snackbarProps={{ open: showErrorAdd }}
         alertProps={{ severity: "error", onClose: () => setShowErrorAdd(false) }}
       />
+      <SnackbarErrorMessage error={userError} />
     </div>
   );
 }
