@@ -13,6 +13,7 @@ import {
   FormControl,
   InputLabel,
   Fab,
+  Tooltip,
 } from "@mui/material";
 import { Search as SearchIcon } from "../../icons/search";
 
@@ -36,26 +37,31 @@ export const TaskListToolbar = ({ handleAddTask, ...props }) => (
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SvgIcon fontSize="small" color="action">
-                        <SearchIcon />
-                      </SvgIcon>
-                    </InputAdornment>
-                  ),
-                }}
-                placeholder="Search product"
-                variant="outlined"
-              />
+              <Tooltip title="Unavailable">
+                <TextField
+                  disabled
+                  fullWidth
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SvgIcon fontSize="small" color="action">
+                          <SearchIcon />
+                        </SvgIcon>
+                      </InputAdornment>
+                    ),
+                  }}
+                  placeholder="Search product"
+                  variant="outlined"
+                />
+              </Tooltip>
             </Grid>
             <Grid item md={6} xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id="sortby-select-label">Sort by</InputLabel>
-                <Select labelId="sortby-select-label" label="Sort by" fullWidth />
-              </FormControl>
+              <Tooltip title="Unavailable">
+                <FormControl fullWidth disabled>
+                  <InputLabel id="sortby-select-label">Sort by</InputLabel>
+                  <Select labelId="sortby-select-label" label="Sort by" fullWidth />
+                </FormControl>
+              </Tooltip>
             </Grid>
           </Grid>
         </CardContent>

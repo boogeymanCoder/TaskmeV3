@@ -57,11 +57,11 @@ export default function NewTask({ open, handleClose }) {
       location: Yup.string().max(255).required("Location is required"),
     }),
     onSubmit: async (values) => {
-      const employer = ref(database, `accounts/${user.uid}`);
+      const employer = user.uid;
       const promise = setTask({
         ...values,
+        employer,
         date: JSON.stringify(values.date),
-        employer: JSON.stringify(employer),
         ups: JSON.stringify(values.ups),
         skills: JSON.stringify(values.skills),
         tags: JSON.stringify(values.tags),
