@@ -13,11 +13,11 @@ import { useListVals } from "react-firebase-hooks/database";
 const Tasks = () => {
   const database = getDatabase();
   const [openNewTask, setOpenNewTask] = useState(false);
-  const [values, loading, error] = useListVals(ref(database, "tasks"));
+  const [tasks, tasksLoading, tasksError] = useListVals(ref(database, "tasks"));
 
   useEffect(() => {
-    console.log({ values, loading, error });
-  }, [values, loading, error]);
+    console.log({ tasks, tasksLoading, tasksError });
+  }, [tasks, tasksLoading, tasksError]);
 
   return (
     <CheckAuth>
@@ -35,9 +35,9 @@ const Tasks = () => {
           <TaskListToolbar handleAddTask={() => setOpenNewTask(true)} />
           <Box sx={{ pt: 3 }}>
             <Grid container spacing={3}>
-              {products.map((task) => (
+              {tasks.map((task) => (
                 <Grid item key={task.id} xs={12}>
-                  <TaskCard task={task} />
+                  <TaskCard taskData={task} />
                 </Grid>
               ))}
             </Grid>
