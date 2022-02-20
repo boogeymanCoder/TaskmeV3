@@ -1,9 +1,8 @@
 import { Chip, Box, Grid, TextField, Container } from "@mui/material";
 import React, { useState } from "react";
 
-export default function TagInput({ label, ...props }) {
-  const [tags, setTags] = useState([]);
-
+export default function TagInput({ tags, setTags, label, ...props }) {
+  console.log({ tags });
   function addTag(tag) {
     const newTags = tags.filter((value) => value !== tag);
     setTags([...newTags, tag]);

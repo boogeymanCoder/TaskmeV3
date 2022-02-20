@@ -21,20 +21,6 @@ import { getDatabase, ref } from "firebase/database";
 import { useObjectVal } from "react-firebase-hooks/database";
 import { useEffect } from "react";
 
-// const taskRawData = {
-//   currency: "P",
-//   date: '"2022-02-20T09:50:17.089Z"',
-//   details: "For graduation tarpaulin",
-//   employer: "q80WSLRkkBNbJNu4bvyaNtHSzAK2",
-//   location: "Perino St., Sumpong, Malaybalay City, Bukidnon",
-//   open: true,
-//   price: 250,
-//   skills: "[]",
-//   tags: "[]",
-//   title: "Edit my photo",
-//   ups: "[]",
-// };
-
 export const TaskCard = ({ taskData, ...rest }) => {
   const [tab, setTab] = useState("comment");
 
@@ -77,7 +63,7 @@ export const TaskCard = ({ taskData, ...rest }) => {
         </Typography>
         <Grid container sx={{ mt: 3 }} spacing={2}>
           <Grid item sm={6} xs={12}>
-            <Skeleton sx={{ mx: "auto" }} variant="rectangular" fullWidth height="100%" />
+            <Skeleton sx={{ mx: "auto" }} variant="rectangular" fullWidth height="40vh" />
           </Grid>
           <Grid item sm={6} xs={12}>
             <Grid container>
