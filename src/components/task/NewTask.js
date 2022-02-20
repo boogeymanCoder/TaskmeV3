@@ -122,6 +122,8 @@ export default function NewTask({ open, handleClose }) {
               required
             />
             <TagInput
+              tags={formik.values.tags}
+              setTags={(tags) => formik.setFieldValue("tags", tags)}
               disabled={formik.isSubmitting}
               label="Tags (press space to add tag)"
               sx={{ mb: 1 }}
@@ -161,7 +163,9 @@ export default function NewTask({ open, handleClose }) {
               </Grid>
             </Grid>
             <TagInput
+              tags={formik.values.skills}
               disabled={formik.isSubmitting}
+              setTags={(skills) => formik.setFieldValue("skills", skills)}
               sx={{ mb: 1 }}
               label="Skills (press space to add skill)"
             />
