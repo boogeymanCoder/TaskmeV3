@@ -2,11 +2,13 @@ import PropTypes from "prop-types";
 import {
   Avatar,
   Box,
+  Button,
   Card,
   CardContent,
   Chip,
   Divider,
   Grid,
+  LinearProgress,
   Link,
   Skeleton,
   Tab,
@@ -15,25 +17,32 @@ import {
 import { Clock as ClockIcon } from "../../icons/clock";
 import { Download as DownloadIcon } from "../../icons/download";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import { getDatabase, ref } from "firebase/database";
 import { useObjectVal } from "react-firebase-hooks/database";
 import { useEffect } from "react";
+import UpdateTask from "./UpdateTask";
+import { getAuth } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export const TaskCard = ({ taskData, ...rest }) => {
+  const [updateOpen, setUpdateOpen] = useState(false);
   const [tab, setTab] = useState("comment");
+  const database = getDatabase();
+  const auth = getAuth();
+  const [user, userLoading, userError] = useAuthState(auth);
 
-  const task = {
+  let task = {
     ...taskData,
     date: JSON.parse(taskData.date),
     skills: JSON.parse(taskData.skills),
     tags: JSON.parse(taskData.tags),
     ups: JSON.parse(taskData.ups),
   };
+
   console.log({ task });
 
-  const database = getDatabase();
   const [employer, employerLoading, employerError] = useObjectVal(
     ref(database, `accounts/${task.employer}`)
   );
@@ -45,6 +54,7 @@ export const TaskCard = ({ taskData, ...rest }) => {
   const handleTabChange = (event, newValue) => {
     setTab(newValue);
   };
+
   return (
     <Card
       sx={{
@@ -55,12 +65,34 @@ export const TaskCard = ({ taskData, ...rest }) => {
       {...rest}
     >
       <CardContent>
-        <Typography align="center" color="textPrimary" gutterBottom variant="h4">
-          {task.title}
-        </Typography>
-        <Typography align="center" color="textPrimary" variant="subtitle1">
-          {task.details}
-        </Typography>
+        <Grid container>
+          <Grid
+            item
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              display: user.uid !== task.employer ? "none" : "initial",
+            }}
+            sm="auto"
+            xs={12}
+          >
+            <Button
+              onClick={() => setUpdateOpen(true)}
+              variant="text"
+              disabled={userLoading || employerLoading}
+            >
+              Edit
+            </Button>
+          </Grid>
+          <Grid item xs>
+            <Typography align="center" color="textPrimary" gutterBottom variant="h4">
+              {task.title}
+            </Typography>
+            <Typography align="center" color="textPrimary" variant="subtitle1">
+              {task.details}
+            </Typography>
+          </Grid>
+        </Grid>
         <Grid container sx={{ mt: 3 }} spacing={2}>
           <Grid item sm={6} xs={12}>
             <Skeleton sx={{ mx: "auto" }} variant="rectangular" fullWidth height="40vh" />
@@ -194,6 +226,7 @@ export const TaskCard = ({ taskData, ...rest }) => {
           <TabPanel value="apply">Apply</TabPanel>
         </Box>
       </TabContext>
+      <UpdateTask task={task} open={updateOpen} handleClose={() => setUpdateOpen(false)} />
     </Card>
   );
 };

@@ -20,33 +20,21 @@ import { DateTimePicker } from "@mui/lab";
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { setTask } from "src/services/task";
+import { setTask, updateTask } from "src/services/task";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import SnackbarMessage from "../SnackbarMessage";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";
-import { get, getDatabase, ref } from "firebase/database";
 
-export default function NewTask({ open, handleClose }) {
-  const [showSuccessAdd, setShowSuccessAdd] = useState(false);
-  const [showErrorAdd, setShowErrorAdd] = useState(false);
+export default function UpdateTask({ task, open, handleClose }) {
+  const [showSuccessUpdate, setShowSuccessUpdate] = useState(false);
+  const [showErrorUpdate, setShowErrorUpdate] = useState(false);
   const [error, setError] = useState({ message: null });
   const auth = getAuth();
   const [user, userLoading, userError] = useAuthState(auth);
 
   const formik = useFormik({
-    initialValues: {
-      title: "",
-      details: "",
-      tags: [],
-      currency: "",
-      price: 0,
-      skills: [],
-      date: new Date(),
-      location: "",
-      open: true,
-      ups: [],
-    },
+    initialValues: { ...task },
     validationSchema: Yup.object({
       title: Yup.string().max(255).required("Title is required"),
       details: Yup.string().max(255).required("Details is required"),
@@ -57,7 +45,7 @@ export default function NewTask({ open, handleClose }) {
     }),
     onSubmit: async (values) => {
       const employer = user.uid;
-      const promise = setTask({
+      const promise = updateTask(task.uid, {
         ...values,
         employer,
         date: JSON.stringify(values.date),
@@ -67,7 +55,6 @@ export default function NewTask({ open, handleClose }) {
       })
         .then((res) => {
           handleClose();
-          formik.resetForm();
           setShowSuccessAdd(true);
           console.log({ res });
         })
@@ -221,21 +208,21 @@ export default function NewTask({ open, handleClose }) {
               Cancel
             </Button>
             <Button disabled={formik.isSubmitting || userLoading} type="submit">
-              Add
+              Update
             </Button>
           </DialogActions>
         </form>
       </Dialog>
 
       <SnackbarMessage
-        message="Added successfully"
-        snackbarProps={{ open: showSuccessAdd }}
-        alertProps={{ onClose: () => setShowSuccessAdd(false) }}
+        message="Updated successfully"
+        snackbarProps={{ open: showSuccessUpdate }}
+        alertProps={{ onClose: () => setShowSuccessUpdate(false) }}
       />
       <SnackbarMessage
         message={error.message}
-        snackbarProps={{ open: showErrorAdd }}
-        alertProps={{ severity: "error", onClose: () => setShowErrorAdd(false) }}
+        snackbarProps={{ open: showErrorUpdate }}
+        alertProps={{ severity: "error", onClose: () => setShowErrorUpdate(false) }}
       />
       <SnackbarErrorMessage error={userError} />
     </div>

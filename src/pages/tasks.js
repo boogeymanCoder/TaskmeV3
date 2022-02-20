@@ -13,7 +13,9 @@ import { useListVals } from "react-firebase-hooks/database";
 const Tasks = () => {
   const database = getDatabase();
   const [openNewTask, setOpenNewTask] = useState(false);
-  const [tasks, tasksLoading, tasksError] = useListVals(ref(database, "tasks"));
+  const [tasks, tasksLoading, tasksError] = useListVals(ref(database, "tasks"), {
+    keyField: "uid",
+  });
 
   useEffect(() => {
     console.log({ tasks, tasksLoading, tasksError });
