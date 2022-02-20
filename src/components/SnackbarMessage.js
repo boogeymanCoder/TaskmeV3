@@ -6,7 +6,9 @@ function SnackbarMessage({ message, alertProps, snackbarProps }) {
   return (
     <Snackbar
       open={open}
+      autoHideDuration={6000}
       anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      onClose={alertProps.onClose ? alertProps.onClose : (e) => setOpen(false)}
       {...snackbarProps}
     >
       <Alert

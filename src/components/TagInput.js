@@ -1,7 +1,7 @@
 import { Chip, Box, Grid, TextField, Container } from "@mui/material";
 import React, { useState } from "react";
 
-export default function TagInput({ label }) {
+export default function TagInput({ label, ...props }) {
   const [tags, setTags] = useState([]);
 
   function addTag(tag) {
@@ -23,21 +23,21 @@ export default function TagInput({ label }) {
   }
 
   return (
-    <Box container sx={{ my: 2 }}>
-      <Grid container spacing={1}>
+    <Box container sx={props.sx}>
+      <Grid container>
         {tags.map((tag) => (
-          <Grid item key={tag}>
-            <Chip label={tag} color="primary" onDelete={() => removeTag(tag)} />
+          <Grid item key={tag} sx={{ mb: 1 }}>
+            <Chip label={tag} sx={{ mr: 1 }} color="primary" onDelete={() => removeTag(tag)} />
           </Grid>
         ))}
       </Grid>
       <TextField
-        sx={{ mt: 2 }}
         label={label}
         type="text"
         fullWidth
         variant="outlined"
         onInput={handleClick}
+        {...props}
       />
     </Box>
   );

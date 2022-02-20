@@ -1,7 +1,7 @@
 import React from "react";
 import SnackbarMessage from "./SnackbarMessage";
 
-export default function SnackbarErrorMessage({ error, alertProps, snackbarProps }) {
+export default function SnackbarErrorMessage({ error, alertProps, snackbarProps, ...props }) {
   if (!error) return null;
 
   return (
@@ -9,6 +9,7 @@ export default function SnackbarErrorMessage({ error, alertProps, snackbarProps 
       message={error.message}
       alertProps={{ severity: "error", ...alertProps }}
       snackbarProps={{ ...snackbarProps }}
+      {...props}
     />
   );
 }
