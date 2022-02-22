@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import {
   Avatar,
+  Badge,
   Box,
   Button,
   Card,
@@ -27,6 +28,7 @@ import UpdateTask from "./UpdateTask";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import NewApplication from "../application/NewApplication";
+import ApplicationList from "../application/ApplicationList";
 
 export const TaskCard = ({ taskData, ...rest }) => {
   const [updateOpen, setUpdateOpen] = useState(false);
@@ -236,8 +238,22 @@ export const TaskCard = ({ taskData, ...rest }) => {
                   onChange={handleTabChange}
                   aria-label="lab API tabs example"
                 >
-                  <Tab label="Comment" value="comment" />
-                  <Tab label="Apply" value="apply" />
+                  <Tab
+                    label={
+                      <Badge badgeContent={100} color="secondary">
+                        <Typography padding={1}>Comment</Typography>
+                      </Badge>
+                    }
+                    value="comment"
+                  />
+                  <Tab
+                    label={
+                      <Badge badgeContent={27} color="secondary">
+                        <Typography padding={1}>Apply</Typography>
+                      </Badge>
+                    }
+                    value="apply"
+                  />
                 </TabList>
               </Grid>
             </Grid>
@@ -250,6 +266,9 @@ export const TaskCard = ({ taskData, ...rest }) => {
           </TabPanel>
         </Box>
       </TabContext>
+      <Box>
+        <ApplicationList taskId={task.uid} />
+      </Box>
       <UpdateTask task={task} open={updateOpen} handleClose={() => setUpdateOpen(false)} />
     </Card>
   );
