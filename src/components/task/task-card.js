@@ -8,6 +8,7 @@ import {
   Chip,
   Divider,
   Grid,
+  IconButton,
   LinearProgress,
   Link,
   Skeleton,
@@ -25,6 +26,7 @@ import { useEffect } from "react";
 import UpdateTask from "./UpdateTask";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
+import NewApplication from "../application/NewApplication";
 
 export const TaskCard = ({ taskData, ...rest }) => {
   const [updateOpen, setUpdateOpen] = useState(false);
@@ -197,33 +199,55 @@ export const TaskCard = ({ taskData, ...rest }) => {
       <Divider />
       <TabContext value={tab}>
         <Box sx={{ p: 2 }}>
-          <Grid container spacing={2} sx={{ justifyContent: "space-between" }}>
+          <Grid container fullWidth spacing={2} sx={{ justifyContent: "space-between" }}>
+            <Grid item xs>
+              <Grid container direction="row" justifyContent="center" alignItems="center">
+                <Grid item xs>
+                  <Grid container direction="row" justifyContent="center" alignItems="center">
+                    <Grid item xs={12}>
+                      <Grid container direction="row" justifyContent="center" alignItems="center">
+                        <IconButton>
+                          <ThumbUpOutlinedIcon fontSize="small" color="action" />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Grid container direction="row" justifyContent="center" alignItems="center">
+                        <Link color="textSecondary" display="inline" variant="caption">
+                          {task.ups.length}
+                        </Link>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+
             <Grid
               item
               sx={{
                 alignItems: "center",
-                display: "flex",
               }}
+              xs
             >
-              <ThumbUpOutlinedIcon sx={{ mx: 1 }} fontSize="large" color="action" />
-              <Link
-                color="textSecondary"
-                display="inline"
-                sx={{ cursor: "pointer" }}
-                variant="body1"
-              >
-                {task.ups.length}
-              </Link>
-              <TabList sx={{ mx: 3 }} onChange={handleTabChange} aria-label="lab API tabs example">
-                <Tab label="Comment" value="comment" />
-                <Tab label="Apply" value="apply" />
-              </TabList>
+              <Grid fullWidth container direction="row" justifyContent="center" alignItems="center">
+                <TabList
+                  sx={{ mx: 3 }}
+                  onChange={handleTabChange}
+                  aria-label="lab API tabs example"
+                >
+                  <Tab label="Comment" value="comment" />
+                  <Tab label="Apply" value="apply" />
+                </TabList>
+              </Grid>
             </Grid>
           </Grid>
         </Box>
-        <Box sx={{ p: 2 }}>
+        <Box>
           <TabPanel value="comment">Comment</TabPanel>
-          <TabPanel value="apply">Apply</TabPanel>
+          <TabPanel value="apply">
+            <NewApplication />
+          </TabPanel>
         </Box>
       </TabContext>
       <UpdateTask task={task} open={updateOpen} handleClose={() => setUpdateOpen(false)} />
