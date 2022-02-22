@@ -246,7 +246,7 @@ export const TaskCard = ({ taskData, ...rest }) => {
         <Box>
           <TabPanel value="comment">Comment</TabPanel>
           <TabPanel value="apply">
-            <NewApplication />
+            <NewApplication taskId={task.uid} />
           </TabPanel>
         </Box>
       </TabContext>

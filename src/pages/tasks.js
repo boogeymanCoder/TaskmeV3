@@ -37,8 +37,9 @@ const Tasks = () => {
           <TaskListToolbar handleAddTask={() => setOpenNewTask(true)} />
           <Box sx={{ pt: 3 }}>
             <Grid container spacing={3}>
+              {console.log({ tasks })}
               {tasks.map((task) => (
-                <Grid item key={task.id} xs={12}>
+                <Grid item key={task.uid} xs={12}>
                   <TaskCard taskData={task} />
                 </Grid>
               ))}

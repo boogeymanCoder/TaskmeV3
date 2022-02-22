@@ -64,18 +64,12 @@ export default function NewTask({ open, handleClose }) {
         ups: JSON.stringify(values.ups),
         skills: JSON.stringify(values.skills),
         tags: JSON.stringify(values.tags),
-      })
-        .then((res) => {
-          handleClose();
-          formik.resetForm();
-          setShowSuccessAdd(true);
-          console.log({ res });
-        })
-        .catch((err) => {
-          console.log({ err });
-          setError(err);
-          setShowErrorAdd(true);
-        });
+      }).then((res) => {
+        handleClose();
+        formik.resetForm();
+        setShowSuccessAdd(true);
+        console.log({ res });
+      });
 
       return promise;
     },

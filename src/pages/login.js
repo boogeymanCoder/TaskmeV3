@@ -173,16 +173,16 @@ const Login = () => {
               </Typography>
             </Box>
             <TextField
-              error={Boolean(formik.touched.email && formik.errors.email)}
               fullWidth
+              error={Boolean(formik.touched.email && formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              value={formik.values.email}
               label="Email Address"
               margin="normal"
               name="email"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
               type="email"
-              value={formik.values.email}
               variant="outlined"
             />
             <TextField
