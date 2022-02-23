@@ -21,6 +21,7 @@ export default function Application({ application, isEmployer }) {
   const database = getDatabase();
   const employeeRef = ref(database, `accounts/${application.employee}`);
   const [employee, employeeLoading, employeeError] = useObjectVal(employeeRef);
+  console.log({ application, employee, employeeLoading, employeeError });
 
   function handleAccept() {
     console.log("Accepted!");
@@ -36,7 +37,8 @@ export default function Application({ application, isEmployer }) {
       .catch((err) => console.log({ err }));
   }
 
-  if (employeeLoading || !employee) return <LinearProgress />;
+  if (employeeLoading) return <LinearProgress />;
+  if (!employeeLoading && !employee) return null;
 
   return (
     <>
