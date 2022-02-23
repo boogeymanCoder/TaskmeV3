@@ -8,7 +8,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";
 
-export default function NewApplication({ taskId }) {
+export default function NewApplication({ taskId, employer }) {
   const auth = getAuth();
   const [user, userLoading, userError] = useAuthState(auth);
 
@@ -27,6 +27,7 @@ export default function NewApplication({ taskId }) {
         message: values.message,
         date: JSON.stringify(new Date()),
         accepted: false,
+        employer,
       })
         .then((res) => console.log({ res }))
         .catch((err) => console.log({ err }));
