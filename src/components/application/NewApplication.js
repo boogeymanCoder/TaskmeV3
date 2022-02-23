@@ -38,29 +38,34 @@ export default function NewApplication({ taskId, employer }) {
 
   return (
     <>
-      <TextField
-        error={Boolean(formik.touched.message && formik.errors.message)}
-        helperText={formik.touched.message && formik.errors.message}
-        onBlur={formik.handleBlur}
-        onChange={formik.handleChange}
-        value={formik.values.message}
-        name="message"
-        autoFocus
-        multiline
-        fullWidth
-        variant="standard"
-        label="Application message"
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton onClick={formik.submitForm} disabled={formik.isSubmitting}>
-                <Send fontSize="large" color="primary" />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
-      <SnackbarErrorMessage error={userError} />
+      {employer !== user.uid && (
+        <>
+          <TextField
+            error={Boolean(formik.touched.message && formik.errors.message)}
+            helperText={formik.touched.message && formik.errors.message}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            value={formik.values.message}
+            disabled={formik.isSubmitting}
+            name="message"
+            autoFocus
+            multiline
+            fullWidth
+            variant="standard"
+            label="Application message"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={formik.submitForm} disabled={formik.isSubmitting}>
+                    <Send fontSize="large" color="primary" />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          <SnackbarErrorMessage error={userError} />
+        </>
+      )}
     </>
   );
 }
