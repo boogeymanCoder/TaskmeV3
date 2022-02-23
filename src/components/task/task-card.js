@@ -262,12 +262,12 @@ export const TaskCard = ({ taskData, ...rest }) => {
         <Box>
           <TabPanel value="comment">Comment</TabPanel>
           <TabPanel value="apply">
-            <NewApplication taskId={task.uid} />
+            <NewApplication taskId={task.uid} employer={task.employer} />
           </TabPanel>
         </Box>
       </TabContext>
       <Box>
-        <ApplicationList taskId={task.uid} />
+        <ApplicationList taskId={task.uid} isEmployer={user.uid === task.employer} />
       </Box>
       <UpdateTask task={task} open={updateOpen} handleClose={() => setUpdateOpen(false)} />
     </Card>

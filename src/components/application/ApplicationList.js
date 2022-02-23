@@ -29,8 +29,7 @@ import { useListVals } from "react-firebase-hooks/database";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";
 import Application from "./Application";
 
-export default function ApplicationList({ taskId }) {
-  console.log({ taskId });
+export default function ApplicationList({ taskId, isEmployer }) {
   const database = getDatabase();
   const [applications, applicationsLoading, applicationsError] = useListVals(
     query(ref(database, "applications"), orderByChild("task"), equalTo(taskId)),
@@ -46,7 +45,7 @@ export default function ApplicationList({ taskId }) {
       <Typography>Applications</Typography>
       <List>
         {applications.map((application) => (
-          <Application key={application.uid} application={application} />
+          <Application key={application.uid} application={application} isEmployer={isEmployer} />
         ))}
       </List>
       <SnackbarErrorMessage error={applicationsError} />
