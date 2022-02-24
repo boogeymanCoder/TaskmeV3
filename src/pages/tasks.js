@@ -9,6 +9,7 @@ import NewTask from "src/components/task/NewTask";
 import { useEffect, useState } from "react";
 import { getDatabase, ref } from "firebase/database";
 import { useListVals } from "react-firebase-hooks/database";
+import AccountCheck from "src/components/account/AccountCheck";
 
 const Tasks = () => {
   const database = getDatabase();
@@ -23,40 +24,42 @@ const Tasks = () => {
 
   return (
     <CheckAuth>
-      <Head>
-        <title>Tasks | TaskME</title>
-      </Head>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          py: 8,
-        }}
-      >
-        <Container maxWidth={false}>
-          <TaskListToolbar handleAddTask={() => setOpenNewTask(true)} />
-          <Box sx={{ pt: 3 }}>
-            <Grid container spacing={3}>
-              {console.log({ tasks })}
-              {tasks.map((task) => (
-                <Grid item key={task.uid} xs={12}>
-                  <TaskCard taskData={task} />
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              pt: 3,
-            }}
-          >
-            <Pagination color="primary" count={3} size="small" />
-          </Box>
-        </Container>
-      </Box>
-      <NewTask open={openNewTask} handleClose={() => setOpenNewTask(false)} />
+      <AccountCheck>
+        <Head>
+          <title>Tasks | TaskME</title>
+        </Head>
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            py: 8,
+          }}
+        >
+          <Container maxWidth={false}>
+            <TaskListToolbar handleAddTask={() => setOpenNewTask(true)} />
+            <Box sx={{ pt: 3 }}>
+              <Grid container spacing={3}>
+                {console.log({ tasks })}
+                {tasks.map((task) => (
+                  <Grid item key={task.uid} xs={12}>
+                    <TaskCard taskData={task} />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                pt: 3,
+              }}
+            >
+              <Pagination color="primary" count={3} size="small" />
+            </Box>
+          </Container>
+        </Box>
+        <NewTask open={openNewTask} handleClose={() => setOpenNewTask(false)} />
+      </AccountCheck>
     </CheckAuth>
   );
 };
