@@ -60,7 +60,7 @@ export default function Application({ application, isEmployer }) {
         <ListItemText primary={application.message} secondary={employee.fullname} />
         <ListItemSecondaryAction>
           {application.accepted && <Chip label="Accepted" sx={{ mr: 1 }} color="success" />}
-          {isEmployer && (
+          {isEmployer && !application.accepted && (
             <Grid container spacing={1}>
               <Grid item xs={6}>
                 <IconButton onClick={handleAccept}>
