@@ -12,6 +12,9 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import {
@@ -29,6 +32,7 @@ import React, { useEffect } from "react";
 import { useListVals } from "react-firebase-hooks/database";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";
 import Application from "./Application";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 
 export default function ApplicationList({ taskId, isEmployer, ...props }) {
   const database = getDatabase();
@@ -47,9 +51,34 @@ export default function ApplicationList({ taskId, isEmployer, ...props }) {
       {applications.length === 0 && <Alert severity="info">No Application Yet</Alert>}
       {applications.length > 0 && (
         <List>
-          {applications.map((application) => (
-            <Application key={application.uid} application={application} isEmployer={isEmployer} />
-          ))}
+          {applications.map((application, index) => {
+            if (index >= 6) return null;
+
+            if (index >= 5) {
+              return (
+                <Accordion>
+                  <AccordionSummary expandIcon={<ExpandMore />}>See more</AccordionSummary>
+                  <AccordionDetails>
+                    {applications.map((application) => (
+                      <Application
+                        key={application.uid}
+                        application={application}
+                        isEmployer={isEmployer}
+                      />
+                    ))}
+                  </AccordionDetails>
+                </Accordion>
+              );
+            }
+
+            return (
+              <Application
+                key={application.uid}
+                application={application}
+                isEmployer={isEmployer}
+              />
+            );
+          })}
         </List>
       )}
       <SnackbarErrorMessage error={applicationsError} />
