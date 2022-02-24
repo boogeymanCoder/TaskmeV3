@@ -38,7 +38,11 @@ export default function Application({ application, isEmployer }) {
   }
 
   if (employeeLoading) return <LinearProgress />;
-  if (!employeeLoading && !employee) return null;
+  if (!employeeLoading && !employee) {
+    console.log({ application });
+    // removeApplication(application.uid);
+    return null;
+  }
 
   return (
     <>
@@ -55,6 +59,7 @@ export default function Application({ application, isEmployer }) {
         </ListItemAvatar>
         <ListItemText primary={application.message} secondary={employee.fullname} />
         <ListItemSecondaryAction>
+          {application.accepted && <Chip label="Accepted" sx={{ mr: 1 }} color="success" />}
           {isEmployer && (
             <Grid container spacing={1}>
               <Grid item xs={6}>
@@ -68,9 +73,6 @@ export default function Application({ application, isEmployer }) {
                 </IconButton>
               </Grid>
             </Grid>
-          )}
-          {!isEmployer && application.accepted && (
-            <Chip label="Accepted" sx={{ mr: 1 }} color="success" />
           )}
           {!isEmployer && !application.accepted && (
             <Chip

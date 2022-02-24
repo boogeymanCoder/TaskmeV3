@@ -1,5 +1,5 @@
 import { Send } from "@mui/icons-material";
-import { IconButton, InputAdornment, LinearProgress, TextField } from "@mui/material";
+import { Container, IconButton, InputAdornment, LinearProgress, TextField } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -39,7 +39,7 @@ export default function NewApplication({ taskId, employer }) {
   return (
     <>
       {employer !== user.uid && (
-        <>
+        <Container>
           <TextField
             error={Boolean(formik.touched.message && formik.errors.message)}
             helperText={formik.touched.message && formik.errors.message}
@@ -48,7 +48,6 @@ export default function NewApplication({ taskId, employer }) {
             value={formik.values.message}
             disabled={formik.isSubmitting}
             name="message"
-            autoFocus
             multiline
             fullWidth
             variant="standard"
@@ -64,7 +63,7 @@ export default function NewApplication({ taskId, employer }) {
             }}
           />
           <SnackbarErrorMessage error={userError} />
-        </>
+        </Container>
       )}
     </>
   );
