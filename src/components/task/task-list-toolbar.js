@@ -75,6 +75,7 @@ export const TaskListToolbar = ({ handleAddTask, ...props }) => (
         bottom: "5%",
         right: "5%",
         boxShadow: 3,
+        zIndex: "modal",
       }}
       color="primary"
       aria-label="add"
