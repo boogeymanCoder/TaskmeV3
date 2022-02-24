@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import {
+  Alert,
   Avatar,
   Badge,
   Box,
@@ -241,7 +242,7 @@ export const TaskCard = ({ taskData, ...rest }) => {
                   <Tab
                     label={
                       <Badge badgeContent={100} color="secondary">
-                        <Typography padding={1}>Comment</Typography>
+                        <Typography padding={1}>Comments</Typography>
                       </Badge>
                     }
                     value="comment"
@@ -249,7 +250,7 @@ export const TaskCard = ({ taskData, ...rest }) => {
                   <Tab
                     label={
                       <Badge badgeContent={27} color="secondary">
-                        <Typography padding={1}>Apply</Typography>
+                        <Typography padding={1}>Applications</Typography>
                       </Badge>
                     }
                     value="apply"
@@ -260,15 +261,15 @@ export const TaskCard = ({ taskData, ...rest }) => {
           </Grid>
         </Box>
         <Box>
-          <TabPanel value="comment">Comment</TabPanel>
+          <TabPanel value="comment">
+            <Alert severity="warning">Comments are not yet available</Alert>
+          </TabPanel>
           <TabPanel value="apply">
             <NewApplication taskId={task.uid} employer={task.employer} />
+            <ApplicationList taskId={task.uid} isEmployer={user.uid === task.employer} />
           </TabPanel>
         </Box>
       </TabContext>
-      <Box>
-        <ApplicationList taskId={task.uid} isEmployer={user.uid === task.employer} />
-      </Box>
       <UpdateTask task={task} open={updateOpen} handleClose={() => setUpdateOpen(false)} />
     </Card>
   );
