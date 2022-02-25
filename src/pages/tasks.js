@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { getDatabase, ref } from "firebase/database";
 import { useListVals } from "react-firebase-hooks/database";
 import AccountCheck from "src/components/account/AccountCheck";
+import SnackbarErrorMessage from "src/components/SnackbarErrorMessage";
 
 const Tasks = () => {
   const database = getDatabase();
@@ -21,6 +22,8 @@ const Tasks = () => {
   useEffect(() => {
     console.log({ tasks, tasksLoading, tasksError });
   }, [tasks, tasksLoading, tasksError]);
+
+  if (tasksLoading || !tasks) return <LinearProgress />;
 
   return (
     <CheckAuth>
@@ -59,6 +62,7 @@ const Tasks = () => {
           </Container>
         </Box>
         <NewTask open={openNewTask} handleClose={() => setOpenNewTask(false)} />
+        <SnackbarErrorMessage error={tasksError} />
       </AccountCheck>
     </CheckAuth>
   );
