@@ -16,6 +16,8 @@ export default function PromptMessage({
   handleClose,
   setValue,
   handleSubmit,
+  label,
+  type,
   value,
 }) {
   return (
@@ -26,11 +28,12 @@ export default function PromptMessage({
         <TextField
           autoFocus
           margin="dense"
-          label="Email Address"
-          type="email"
+          label={label ? label : "Email Address"}
+          type={type ? type : "email"}
           fullWidth
           variant="standard"
           onChange={setValue}
+          defaultValue={value ? value : ""}
         />
       </DialogContent>
       <DialogActions>
