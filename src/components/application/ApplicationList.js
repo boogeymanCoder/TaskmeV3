@@ -50,22 +50,24 @@ export default function ApplicationList({ taskId, isEmployer, ...props }) {
       {console.log("No. of Applications:", applications.length)}
       {applications.length === 0 && <Alert severity="info">No Application Yet</Alert>}
       {applications.length > 0 && (
-        <List>
+        <Grid container>
           {applications.map((application, index) => {
             if (index >= 6) return null;
 
             if (index >= 5) {
               return (
-                <Accordion>
+                <Accordion sx={{ width: "100%" }}>
                   <AccordionSummary expandIcon={<ExpandMore />}>See more</AccordionSummary>
                   <AccordionDetails>
-                    {applications.map((application) => (
-                      <Application
-                        key={application.uid}
-                        application={application}
-                        isEmployer={isEmployer}
-                      />
-                    ))}
+                    {applications.map((application, index) =>
+                      index >= 5 ? (
+                        <Application
+                          key={application.uid}
+                          application={application}
+                          isEmployer={isEmployer}
+                        />
+                      ) : null
+                    )}
                   </AccordionDetails>
                 </Accordion>
               );
@@ -79,7 +81,7 @@ export default function ApplicationList({ taskId, isEmployer, ...props }) {
               />
             );
           })}
-        </List>
+        </Grid>
       )}
       <SnackbarErrorMessage error={applicationsError} />
     </Container>
