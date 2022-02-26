@@ -32,8 +32,9 @@ import NewApplication from "../application/NewApplication";
 import ApplicationList from "../application/ApplicationList";
 
 export const TaskCard = ({ taskData, ...rest }) => {
+  const [applicationCount, setApplicationCount] = useState(0);
   const [updateOpen, setUpdateOpen] = useState(false);
-  const [tab, setTab] = useState("comment");
+  const [tab, setTab] = useState("applications");
   const database = getDatabase();
   const auth = getAuth();
   const [user, userLoading, userError] = useAuthState(auth);
@@ -44,6 +45,7 @@ export const TaskCard = ({ taskData, ...rest }) => {
     skills: JSON.parse(taskData.skills),
     tags: JSON.parse(taskData.tags),
     ups: JSON.parse(taskData.ups),
+    comments: JSON.parse(taskData.comments),
   };
 
   console.log({ task });
@@ -205,23 +207,12 @@ export const TaskCard = ({ taskData, ...rest }) => {
           <Grid container fullWidth spacing={2} sx={{ justifyContent: "space-between" }}>
             <Grid item xs>
               <Grid container direction="row" justifyContent="center" alignItems="center">
-                <Grid item xs>
-                  <Grid container direction="row" justifyContent="center" alignItems="center">
-                    <Grid item xs={12}>
-                      <Grid container direction="row" justifyContent="center" alignItems="center">
-                        <IconButton>
-                          <ThumbUpOutlinedIcon fontSize="small" color="action" />
-                        </IconButton>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Grid container direction="row" justifyContent="center" alignItems="center">
-                        <Link color="textSecondary" display="inline" variant="caption">
-                          {task.ups.length}
-                        </Link>
-                      </Grid>
-                    </Grid>
-                  </Grid>
+                <Grid item>
+                  <Badge showZero={true} badgeContent={task.ups.length} color="secondary">
+                    <IconButton>
+                      <ThumbUpOutlinedIcon fontSize="small" color="action" />
+                    </IconButton>
+                  </Badge>
                 </Grid>
               </Grid>
             </Grid>
@@ -241,19 +232,19 @@ export const TaskCard = ({ taskData, ...rest }) => {
                 >
                   <Tab
                     label={
-                      <Badge badgeContent={100} color="secondary">
-                        <Typography padding={1}>Comments</Typography>
-                      </Badge>
-                    }
-                    value="comment"
-                  />
-                  <Tab
-                    label={
-                      <Badge badgeContent={27} color="secondary">
+                      <Badge showZero={true} badgeContent={applicationCount} color="secondary">
                         <Typography padding={1}>Applications</Typography>
                       </Badge>
                     }
-                    value="apply"
+                    value="applications"
+                  />
+                  <Tab
+                    label={
+                      <Badge showZero={true} badgeContent={task.comments.length} color="secondary">
+                        <Typography padding={1}>Comments</Typography>
+                      </Badge>
+                    }
+                    value="comments"
                   />
                 </TabList>
               </Grid>
@@ -261,12 +252,16 @@ export const TaskCard = ({ taskData, ...rest }) => {
           </Grid>
         </Box>
         <Box>
-          <TabPanel value="comment">
-            <Alert severity="warning">Comments are not yet available</Alert>
-          </TabPanel>
-          <TabPanel value="apply">
+          <TabPanel value="applications">
             <NewApplication taskId={task.uid} employer={task.employer} />
-            <ApplicationList taskId={task.uid} isEmployer={user.uid === task.employer} />
+            <ApplicationList
+              taskId={task.uid}
+              isEmployer={user.uid === task.employer}
+              setApplicationCount={setApplicationCount}
+            />
+          </TabPanel>
+          <TabPanel value="comments">
+            <Alert severity="warning">Comments are not yet available</Alert>
           </TabPanel>
         </Box>
       </TabContext>
