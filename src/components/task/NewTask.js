@@ -16,6 +16,7 @@ import {
   Select,
   Switch,
 } from "@mui/material";
+import { DropzoneArea } from "material-ui-dropzone";
 import { DateTimePicker } from "@mui/lab";
 import { useState } from "react";
 import { useFormik } from "formik";
@@ -26,13 +27,22 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import SnackbarMessage from "../SnackbarMessage";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";
 import { get, getDatabase, ref } from "firebase/database";
+import { Image } from "@mui/icons-material";
+import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
+import { useUploadFile } from "react-firebase-hooks/storage";
+import UIDGenerator from "uid-generator";
 
 export default function NewTask({ open, handleClose }) {
+  const uidGen = new UIDGenerator();
+  const [images, setImages] = useState([]);
   const [showSuccessAdd, setShowSuccessAdd] = useState(false);
   const [showErrorAdd, setShowErrorAdd] = useState(false);
   const [error, setError] = useState({ message: null });
   const auth = getAuth();
   const [user, userLoading, userError] = useAuthState(auth);
+
+  const storage = getStorage();
+  const [uploadFile, uploading, snapshot, uploadError] = useUploadFile();
 
   const formik = useFormik({
     initialValues: {
@@ -67,17 +77,65 @@ export default function NewTask({ open, handleClose }) {
         skills: JSON.stringify(values.skills),
         tags: JSON.stringify(values.tags),
       })
-        .then((res) => {
-          handleClose();
-          formik.resetForm();
-          setShowSuccessAdd(true);
-          console.log({ res });
+        .then(async (res) => {
+          const taskUid = (await get(res)).key;
+
+          await uploadImages(taskUid)
+            .then(async (res) => {
+              console.log({ res });
+              handleClose();
+              formik.resetForm();
+              setShowSuccessAdd(true);
+            })
+            .catch((err) => console.log({ err }));
+          console.log({ images });
         })
         .catch((err) => console.log({ err }));
-
       return promise;
     },
   });
+
+  async function uploadImages(taskUid) {
+    if (images.length === 0) return;
+    console.log({ images });
+
+    const uploadPromise = new Promise((resolve, reject) => {
+      const urls = [];
+      images.forEach(async (image, index) => {
+        let uid = await uidGen.generate();
+        let ext = image.name.split(".").pop();
+
+        const result = await uploadFile(
+          storageRef(storage, `/task/${taskUid}/${uid}.${ext}`),
+          image,
+          {
+            contentType: `image/${ext}`,
+          }
+        ).catch((err) => console.log("uploadError:", { err }));
+
+        await getDownloadURL(result.ref)
+          .then(async (res) => {
+            console.log({ url: res });
+            urls.push(res);
+            if (index === images.length - 1) {
+              console.log("resolved!");
+              resolve(urls);
+            }
+          })
+          .catch((err) => {
+            console.log({ err });
+            reject(err);
+          });
+      });
+    });
+
+    return uploadPromise;
+  }
+
+  React.useEffect(() => {
+    if (uploading) console.log("uploading!");
+    if (!uploading) console.log("not uploading!");
+  }, [uploading]);
 
   return (
     <div>
@@ -86,6 +144,25 @@ export default function NewTask({ open, handleClose }) {
           <DialogTitle>Add task</DialogTitle>
           <DialogContent>
             <DialogContentText>Fields marked with (*) are required.</DialogContentText>
+
+            <DropzoneArea
+              sx={{ mb: 1 }}
+              dropzoneText={"Upload images"}
+              filesLimit={9999}
+              showPreviewsInDropzone={false}
+              showPreviews={true}
+              showAlerts={false}
+              previewChipProps={{ color: "primary", variant: "default" }}
+              previewText={false}
+              useChipsForPreview={true}
+              acceptedFiles={["image/*"]}
+              Icon={Image}
+              dropzoneProps={{ disabled: formik.isSubmitting }}
+              onChange={(values) => {
+                console.log({ values });
+                setImages(values);
+              }}
+            />
             <TextField
               error={Boolean(formik.touched.title && formik.errors.title)}
               helperText={formik.touched.title && formik.errors.title}

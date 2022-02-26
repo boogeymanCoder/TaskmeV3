@@ -11,10 +11,13 @@ import {
   Divider,
   Grid,
   IconButton,
+  ImageList,
+  ImageListItem,
   LinearProgress,
   Link,
   Skeleton,
   Tab,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import moment from "moment";
@@ -33,6 +36,7 @@ import NewApplication from "../application/NewApplication";
 import ApplicationList from "../application/ApplicationList";
 import Ups from "../Ups";
 import { updateTask, updateTaskUps } from "src/services/task";
+import { getDownloadURL, getStorage, list, ref as storageRef } from "firebase/storage";
 
 export const TaskCard = ({ taskData, ...rest }) => {
   const [applicationCount, setApplicationCount] = useState(0);
@@ -41,6 +45,10 @@ export const TaskCard = ({ taskData, ...rest }) => {
   const database = getDatabase();
   const auth = getAuth();
   const [user, userLoading, userError] = useAuthState(auth);
+  const [images, setImages] = useState([]);
+  const storage = getStorage();
+  const [fetchingImage, setFetchingImage] = useState(true);
+  const [filenames, setFilenames] = useState(new Map());
 
   let task = {
     ...taskData,
@@ -58,12 +66,32 @@ export const TaskCard = ({ taskData, ...rest }) => {
     setUpdatedAt(moment(task.updatedAt).fromNow());
   }, 60000);
 
-  console.log({ task });
-
   const [employer, employerLoading, employerError] = useObjectVal(
     ref(database, `accounts/${task.employer}`)
   );
-  console.log(`tasks/${task.employer}`);
+
+  useEffect(() => {
+    if (fetchingImage) {
+      setImages([]);
+      list(storageRef(storage, `/task/${task.uid}`))
+        .then(async (res) => {
+          console.log({ uid: task.uid });
+          const updatedFilenames = new Map();
+          res.items.forEach((item) => {
+            getDownloadURL(item)
+              .then((url) => {
+                setImages((prev) => [...prev, url]);
+                updatedFilenames.set(item.name, url);
+              })
+              .catch((err) => console.error({ err }));
+          });
+          setFilenames(updatedFilenames);
+          setFetchingImage(false);
+        })
+        .catch((err) => console.log({ err }));
+    }
+  }, [fetchingImage]);
+
   useEffect(() => {
     console.log({ employer, employerLoading, employerError });
   }, [employer, employerLoading, employerError]);
@@ -84,6 +112,8 @@ export const TaskCard = ({ taskData, ...rest }) => {
       .then((res) => console.log({ res }))
       .catch((err) => console.log({ err }));
   }
+
+  if (fetchingImage) return <LinearProgress />;
 
   return (
     <Card
@@ -125,7 +155,21 @@ export const TaskCard = ({ taskData, ...rest }) => {
         </Grid>
         <Grid container sx={{ mt: 3 }} spacing={2}>
           <Grid item sm={6} xs={12}>
-            <Skeleton sx={{ mx: "auto" }} variant="rectangular" fullWidth height="40vh" />
+            {/* <Skeleton sx={{ mx: "auto" }} variant="rectangular" fullWidth height="40vh" /> */}
+            {console.log({ images })}
+            {images && (
+              <Box sx={{ width: "100%", maxHeight: "50vw", overflowY: "scroll" }}>
+                <ImageList variant="masonry" cols={2} gap={5}>
+                  {images.map((image) => (
+                    <Link key={image} href={image}>
+                      <ImageListItem>
+                        <img src={image} loading="lazy" alt={image} />
+                      </ImageListItem>
+                    </Link>
+                  ))}
+                </ImageList>
+              </Box>
+            )}
           </Grid>
           <Grid item sm={6} xs={12}>
             <Grid container>
@@ -290,7 +334,16 @@ export const TaskCard = ({ taskData, ...rest }) => {
           </TabPanel>
         </Box>
       </TabContext>
-      <UpdateTask task={task} open={updateOpen} handleClose={() => setUpdateOpen(false)} />
+      <UpdateTask
+        oldImageLinks={images}
+        task={task}
+        open={updateOpen}
+        handleClose={() => {
+          setUpdateOpen(false);
+          setFetchingImage(true);
+        }}
+        filenames={filenames}
+      />
     </Card>
   );
 };
