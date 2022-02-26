@@ -4,16 +4,28 @@ export function setApplication(application) {
   console.log({ application });
   const database = getDatabase();
   const applicationsRef = ref(database, "applications");
+  const now = new Date();
+  const applicationWithTimestamp = {
+    ...application,
+    createdAt: JSON.stringify(now),
+    updatedAt: JSON.stringify(now),
+  };
 
-  return push(applicationsRef, application);
+  return push(applicationsRef, applicationWithTimestamp);
 }
 
 export function updateApplication(uid, application) {
   console.log({ uid, application });
   const database = getDatabase();
   const applicationsRef = ref(database, `applications/${application.uid}`);
+  const now = new Date();
+  const applicationWithTimestamp = {
+    ...application,
+    createdAt: JSON.stringify(application.createdAt),
+    updatedAt: JSON.stringify(now),
+  };
 
-  return update(applicationsRef, application);
+  return update(applicationsRef, applicationWithTimestamp);
 }
 
 export function removeApplication(uid) {

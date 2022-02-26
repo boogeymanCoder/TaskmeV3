@@ -69,7 +69,7 @@ export default function ApplicationList({ taskId, isEmployer, setApplicationCoun
                       index >= 5 ? (
                         <Application
                           key={application.uid}
-                          application={application}
+                          applicationData={application}
                           isEmployer={isEmployer}
                         />
                       ) : null
@@ -82,7 +82,7 @@ export default function ApplicationList({ taskId, isEmployer, setApplicationCoun
             return (
               <Application
                 key={application.uid}
-                application={application}
+                applicationData={application}
                 isEmployer={isEmployer}
               />
             );

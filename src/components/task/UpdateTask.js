@@ -48,6 +48,7 @@ export default function UpdateTask({ task, open, handleClose }) {
       const promise = updateTask(task.uid, {
         ...values,
         employer,
+        comments: JSON.stringify(values.comments),
         date: JSON.stringify(values.date),
         ups: JSON.stringify(values.ups),
         skills: JSON.stringify(values.skills),
@@ -55,7 +56,7 @@ export default function UpdateTask({ task, open, handleClose }) {
       })
         .then((res) => {
           handleClose();
-          setShowSuccessAdd(true);
+          setShowSuccessUpdate(true);
           console.log({ res });
         })
         .catch((err) => {

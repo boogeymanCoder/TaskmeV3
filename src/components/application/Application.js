@@ -11,18 +11,29 @@ import {
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
+  Skeleton,
   Typography,
 } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref } from "firebase/database";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useObjectVal } from "react-firebase-hooks/database";
+import { Clock } from "src/icons/clock";
 import { removeApplication, updateApplication } from "src/services/application";
 import PromptMessage from "../PromptMessage";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";
+import moment from "moment";
 
-export default function Application({ application, isEmployer }) {
+export default function Application({ applicationData, isEmployer }) {
+  console.log({ applicationData });
+  const application = useMemo(() => {
+    return {
+      ...applicationData,
+      createdAt: JSON.parse(applicationData.createdAt),
+      updatedAt: JSON.parse(applicationData.updatedAt),
+    };
+  }, [applicationData]);
   const [editOpen, setEditOpen] = useState(false);
   const [message, setMessage] = useState(application.message);
 
@@ -32,6 +43,16 @@ export default function Application({ application, isEmployer }) {
   const employeeRef = ref(database, `accounts/${application.employee}`);
   const [employee, employeeLoading, employeeError] = useObjectVal(employeeRef, { keyField: "uid" });
   console.log({ application, user, employee, employeeLoading, employeeError });
+
+  const [updatedAt, setUpdatedAt] = useState(moment(application.updatedAt).fromNow());
+  setInterval(() => {
+    setUpdatedAt(moment(application.updatedAt).fromNow());
+  }, 60000);
+
+  useEffect(() => {
+    console.log("updated with useEffect!");
+    setUpdatedAt(moment(application.updatedAt).fromNow());
+  }, [application]);
 
   function handleAccept() {
     console.log("Accepted!");
@@ -64,28 +85,57 @@ export default function Application({ application, isEmployer }) {
   return (
     <>
       <Grid container direction="row" justifyContent="center" alignItems="center">
+        <Grid item xs={12} sx={{ ml: 3, mt: 2, mb: 0 }}>
+          <Typography variant="h5">{application.message}</Typography>
+        </Grid>
         <Grid item xs>
-          <Grid container direction="row" justifyContent="center" alignItems="center">
-            <Grid item xs="auto" justifyContent="center" alignItems="center">
-              <Grid container direction="row" justifyContent="center" alignItems="center">
-                <Grid item>
-                  <Avatar
-                    src={employee.image}
-                    sx={{
-                      height: 40,
-                      width: 40,
-                    }}
-                  />
-                </Grid>
-              </Grid>
+          <Grid container xs sx={{ mt: 3 }}>
+            <Grid item>
+              {employeeLoading ? (
+                <Skeleton variant="circular" width={40} height={40} sx={{ mr: 2 }} />
+              ) : (
+                <Avatar
+                  src={employee ? employee.image : ""}
+                  width={40}
+                  height={40}
+                  sx={{ mr: 2 }}
+                />
+              )}
             </Grid>
             <Grid item xs>
-              <Grid container sx={{ margin: 1 }}>
-                <Grid item xs={12}>
-                  <Typography>{application.message}</Typography>
+              <Grid container>
+                <Grid
+                  item
+                  sx={{
+                    alignItems: "center",
+                  }}
+                  xs={12}
+                >
+                  {employeeLoading ? (
+                    <Skeleton width="100%" variant="text" />
+                  ) : (
+                    <Typography color="textPrimary" variant="body1">
+                      {employee ? employee.fullname : ""}
+                    </Typography>
+                  )}
                 </Grid>
-                <Grid item xs={12}>
-                  <Typography>{employee.fullname}</Typography>
+                <Grid
+                  item
+                  sx={{
+                    alignItems: "center",
+                    display: "flex",
+                  }}
+                  xs={12}
+                >
+                  <Clock fontSize="small" color="action" />
+                  <Typography
+                    color="textSecondary"
+                    display="inline"
+                    sx={{ pl: 1 }}
+                    variant="caption"
+                  >
+                    {updatedAt}
+                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
