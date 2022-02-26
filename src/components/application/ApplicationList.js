@@ -34,7 +34,7 @@ import SnackbarErrorMessage from "../SnackbarErrorMessage";
 import Application from "./Application";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 
-export default function ApplicationList({ taskId, isEmployer, ...props }) {
+export default function ApplicationList({ taskId, isEmployer, setApplicationCount, ...props }) {
   const database = getDatabase();
   const [applications, applicationsLoading, applicationsError] = useListVals(
     query(ref(database, "applications"), orderByChild("task"), equalTo(taskId)),
@@ -42,6 +42,12 @@ export default function ApplicationList({ taskId, isEmployer, ...props }) {
       keyField: "uid",
     }
   );
+
+  useEffect(() => {
+    if (!applicationsLoading && applications) {
+      setApplicationCount(applications.length);
+    }
+  }, [applicationsLoading, applications, setApplicationCount]);
 
   if (applicationsLoading) return <LinearProgress />;
 

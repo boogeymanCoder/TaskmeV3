@@ -46,6 +46,7 @@ export default function NewTask({ open, handleClose }) {
       location: "",
       open: true,
       ups: [],
+      comments: [],
     },
     validationSchema: Yup.object({
       title: Yup.string().max(255).required("Title is required"),
@@ -62,6 +63,7 @@ export default function NewTask({ open, handleClose }) {
         employer,
         date: JSON.stringify(values.date),
         ups: JSON.stringify(values.ups),
+        comments: JSON.stringify(values.comments),
         skills: JSON.stringify(values.skills),
         tags: JSON.stringify(values.tags),
       }).then((res) => {

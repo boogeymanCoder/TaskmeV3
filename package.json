@@ -5,9 +5,9 @@
   "version": "2.0.0",
   "private": false,
   "scripts": {
-    "dev": "next",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start && next build",
+    "start": "next build && next start",
     "export": "next build &&  next export",
     "lint": "next lint",
     "lint-fix": "next lint --fix",
