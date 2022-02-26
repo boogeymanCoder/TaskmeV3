@@ -66,12 +66,14 @@ export default function NewTask({ open, handleClose }) {
         comments: JSON.stringify(values.comments),
         skills: JSON.stringify(values.skills),
         tags: JSON.stringify(values.tags),
-      }).then((res) => {
-        handleClose();
-        formik.resetForm();
-        setShowSuccessAdd(true);
-        console.log({ res });
-      });
+      })
+        .then((res) => {
+          handleClose();
+          formik.resetForm();
+          setShowSuccessAdd(true);
+          console.log({ res });
+        })
+        .catch((err) => console.log({ err }));
 
       return promise;
     },

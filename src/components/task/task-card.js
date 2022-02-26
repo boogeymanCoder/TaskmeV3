@@ -17,6 +17,7 @@ import {
   Tab,
   Typography,
 } from "@mui/material";
+import moment from "moment";
 import { Clock as ClockIcon } from "../../icons/clock";
 import { Download as DownloadIcon } from "../../icons/download";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
@@ -46,7 +47,14 @@ export const TaskCard = ({ taskData, ...rest }) => {
     tags: JSON.parse(taskData.tags),
     ups: JSON.parse(taskData.ups),
     comments: JSON.parse(taskData.comments),
+    createdAt: JSON.parse(taskData.createdAt),
+    updatedAt: JSON.parse(taskData.updatedAt),
   };
+
+  const [updatedAt, setUpdatedAt] = useState(moment(task.updatedAt).fromNow());
+  setInterval(() => {
+    setUpdatedAt(moment(task.updatedAt).fromNow());
+  }, 60000);
 
   console.log({ task });
 
@@ -120,7 +128,9 @@ export const TaskCard = ({ taskData, ...rest }) => {
                 />
               </Grid>
             </Grid>
-            <Typography variant="body2">Date: {task.date}</Typography>
+            <Typography variant="body2">
+              Date: {moment(task.date).format("MMMM Do YYYY, h:mm:ss a")}
+            </Typography>
             <Typography variant="body2">Location: {task.location}</Typography>
             <Typography variant="body2">Tags:</Typography>
             <Grid container>
@@ -189,7 +199,7 @@ export const TaskCard = ({ taskData, ...rest }) => {
                           sx={{ pl: 1 }}
                           variant="caption"
                         >
-                          Updated 2hr ago
+                          {updatedAt}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -271,5 +281,5 @@ export const TaskCard = ({ taskData, ...rest }) => {
 };
 
 TaskCard.propTypes = {
-  task: PropTypes.object.isRequired,
+  taskData: PropTypes.object.isRequired,
 };

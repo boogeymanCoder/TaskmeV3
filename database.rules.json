@@ -12,7 +12,7 @@
       "$uid": {
         ".write": "data.child('employer').val() === auth.uid || newData.child('employer').val() === auth.uid",
         ".read": "auth !== null",
-        ".validate": "newData.hasChildren(['currency', 'date', 'details', 'employer', 'location', 'open', 'price', 'skills', 'tags', 'title', 'ups'])"
+        ".validate": "newData.hasChildren(['currency', 'date', 'details', 'employer', 'location', 'open', 'price', 'skills', 'tags', 'title', 'ups', 'createdAt', 'updatedAt'])"
       }
     },
     "applications": {
