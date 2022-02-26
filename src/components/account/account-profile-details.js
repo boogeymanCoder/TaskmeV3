@@ -55,7 +55,6 @@ export const AccountProfileDetails = (props) => {
       email: Yup.string().email("Must be a valid email").max(255).required("Email is required"),
       contact: Yup.string().max(255).required("Contact is required"),
       gender: Yup.string().oneOf(["Male", "Female"]).required("Gender is required"),
-      image: Yup.string().required("Image is required"),
     }),
     onSubmit: async (values) => {
       return setAccount(user.uid, values)
@@ -98,7 +97,7 @@ export const AccountProfileDetails = (props) => {
         email: user && user.email ? user.email : "",
         contact: "",
         gender: "Male",
-        image: user.photoURL,
+        image: user.photoURL ? user.photoURL : "",
       });
     }
   }, [accountLoading]);
