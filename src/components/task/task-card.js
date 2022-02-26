@@ -31,6 +31,8 @@ import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import NewApplication from "../application/NewApplication";
 import ApplicationList from "../application/ApplicationList";
+import Ups from "../Ups";
+import { updateTask, updateTaskUps } from "src/services/task";
 
 export const TaskCard = ({ taskData, ...rest }) => {
   const [applicationCount, setApplicationCount] = useState(0);
@@ -69,6 +71,19 @@ export const TaskCard = ({ taskData, ...rest }) => {
   const handleTabChange = (event, newValue) => {
     setTab(newValue);
   };
+
+  function unUpHandler(uid) {
+    const newUps = task.ups.filter((user) => user !== uid);
+    updateTaskUps(task.uid, JSON.stringify(newUps))
+      .then((res) => console.log({ res }))
+      .catch((err) => console.log({ err }));
+  }
+
+  function addUpHandler(uid) {
+    updateTaskUps(task.uid, JSON.stringify([...task.ups, uid]))
+      .then((res) => console.log({ res }))
+      .catch((err) => console.log({ err }));
+  }
 
   return (
     <Card
@@ -192,7 +207,6 @@ export const TaskCard = ({ taskData, ...rest }) => {
                         xs={12}
                       >
                         <ClockIcon fontSize="small" color="action" />
-                        {/* TODO implement updated when */}
                         <Typography
                           color="textSecondary"
                           display="inline"
@@ -218,11 +232,12 @@ export const TaskCard = ({ taskData, ...rest }) => {
             <Grid item xs>
               <Grid container direction="row" justifyContent="center" alignItems="center">
                 <Grid item>
-                  <Badge showZero={true} badgeContent={task.ups.length} color="secondary">
+                  {/* <Badge showZero={true} badgeContent={task.ups.length} color="secondary">
                     <IconButton>
                       <ThumbUpOutlinedIcon fontSize="small" color="action" />
                     </IconButton>
-                  </Badge>
+                  </Badge> */}
+                  <Ups ups={task.ups} addUp={addUpHandler} unUp={unUpHandler} />
                 </Grid>
               </Grid>
             </Grid>

@@ -14,7 +14,7 @@ export function setApplication(application) {
   return push(applicationsRef, applicationWithTimestamp);
 }
 
-export function updateApplication(uid, application) {
+export function updateApplication(uid, application, timestamp = true) {
   console.log({ uid, application });
   const database = getDatabase();
   const applicationsRef = ref(database, `applications/${application.uid}`);
@@ -22,7 +22,7 @@ export function updateApplication(uid, application) {
   const applicationWithTimestamp = {
     ...application,
     createdAt: JSON.stringify(application.createdAt),
-    updatedAt: JSON.stringify(now),
+    updatedAt: timestamp ? JSON.stringify(now) : JSON.stringify(application.updatedAt),
   };
 
   return update(applicationsRef, applicationWithTimestamp);
