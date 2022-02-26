@@ -1,7 +1,6 @@
 import { getDatabase, push, ref, update } from "firebase/database";
 
 export function setTask(task) {
-  console.log({ task });
   const database = getDatabase();
   const tasksRef = ref(database, `tasks`);
   const now = new Date();
@@ -9,6 +8,7 @@ export function setTask(task) {
   const updatedAt = JSON.stringify(now);
 
   const taskWithTimestamp = { ...task, createdAt: createdAt, updatedAt: updatedAt };
+  console.log({ taskWithTimestamp });
 
   return push(tasksRef, taskWithTimestamp);
 }
@@ -27,4 +27,13 @@ export function updateTask(uid, task) {
   console.log({ taskWithTimestamp });
 
   return update(taskRef, taskWithTimestamp);
+}
+
+export function updateTaskUps(uid, ups) {
+  console.log("update");
+  const database = getDatabase();
+  const taskRef = ref(database, `tasks/${uid}`);
+  console.log("update ups:", ups);
+
+  return update(taskRef, { ups: ups });
 }

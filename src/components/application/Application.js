@@ -56,7 +56,7 @@ export default function Application({ applicationData, isEmployer }) {
 
   function handleAccept() {
     console.log("Accepted!");
-    updateApplication(application.uid, { ...application, accepted: true })
+    updateApplication(application.uid, { ...application, accepted: true }, false)
       .then((res) => console.log({ res }))
       .catch((err) => console.log({ err }));
   }

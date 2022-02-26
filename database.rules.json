@@ -10,7 +10,7 @@
     "tasks": {
       ".read": "auth !== null",
       "$uid": {
-        ".write": "data.child('employer').val() === auth.uid || newData.child('employer').val() === auth.uid",
+        ".write": "auth !== null",
         ".read": "auth !== null",
         ".validate": "newData.hasChildren(['currency', 'date', 'details', 'employer', 'location', 'open', 'price', 'skills', 'tags', 'title', 'ups', 'createdAt', 'updatedAt'])"
       }
