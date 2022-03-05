@@ -31,8 +31,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-console.log({ app });
-
 const clientSideEmotionCache = createEmotionCache();
 
 const App = (props) => {

@@ -13,15 +13,21 @@ import { User as UserIcon } from "../icons/user";
 import { UserAdd as UserAddIcon } from "../icons/user-add";
 import { Users as UsersIcon } from "../icons/users";
 import { XCircle as XCircleIcon } from "../icons/x-circle";
+import { Inbox } from "../icons/x-circle";
 import { Logo } from "./logo";
 import { NavItem } from "./nav-item";
-import { TaskAlt } from "@mui/icons-material";
+import { TaskAlt, Message } from "@mui/icons-material";
 
 const items = [
   {
     href: "/",
     icon: <ChartBarIcon fontSize="small" />,
     title: "Dashboard",
+  },
+  {
+    href: "/messages",
+    icon: <Message fontSize="small" />,
+    title: "Messages",
   },
   {
     href: "/customers",
