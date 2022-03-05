@@ -1,0 +1,26 @@
+{
+  "rules": {
+    "accounts": {
+      "$uid": {
+        ".write": "$uid === auth.uid",
+        ".read": "auth !== null",
+        ".validate": "newData.hasChildren(['address', 'contact', 'email', 'gender', 'image'])"
+      }
+    },
+    "tasks": {
+      ".read": "auth !== null",
+      "$uid": {
+        ".write": "newData.child('employer').val() === auth.uid || data.child('employer').val() === auth.uid || newData.child('ups').exists()",
+        ".read": "auth !== null",
+        ".validate": "newData.hasChildren(['currency', 'date', 'details', 'employer', 'location', 'open', 'price', 'skills', 'tags', 'title', 'ups', 'createdAt', 'updatedAt'])"
+      }
+    },
+    "applications": {
+      ".read": "auth !== null",
+      "$uid": {
+        ".write": "newData.child('employee').val() === auth.uid || newData.child('employer').val() === auth.uid || data.child('employee').val() === auth.uid || data.child('employer').val() === auth.uid",
+        ".validate": "newData.hasChildren(['task', 'employee', 'message', 'date', 'accepted', 'employer'])"
+      }
+    }
+  }
+}
