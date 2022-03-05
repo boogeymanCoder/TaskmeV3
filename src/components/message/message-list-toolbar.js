@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { Search as SearchIcon } from "../../icons/search";
 
-export const TaskListToolbar = ({ handleAddTask, ...props }) => (
+export const MessageListToolbar = ({ handleAddMessage, ...props }) => (
   <Box {...props}>
     <Box
       sx={{
@@ -25,11 +25,10 @@ export const TaskListToolbar = ({ handleAddTask, ...props }) => (
         display: "flex",
         justifyContent: "space-between",
         flexWrap: "wrap",
-        m: -1,
       }}
     >
       <Typography sx={{ m: 1 }} variant="h4">
-        Tasks
+        Messages
       </Typography>
     </Box>
     <Box sx={{ mt: 3 }}>
@@ -50,7 +49,7 @@ export const TaskListToolbar = ({ handleAddTask, ...props }) => (
                       </InputAdornment>
                     ),
                   }}
-                  placeholder="Search task"
+                  placeholder="Search messages"
                   variant="outlined"
                 />
               </Tooltip>
@@ -68,7 +67,7 @@ export const TaskListToolbar = ({ handleAddTask, ...props }) => (
       </Card>
     </Box>
     <Fab
-      onClick={handleAddTask}
+      onClick={handleAddMessage}
       size="large"
       sx={{
         position: "fixed",

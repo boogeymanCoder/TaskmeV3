@@ -3,13 +3,13 @@ import { Box, Container, Grid, LinearProgress, Pagination } from "@mui/material"
 import { products } from "../__mocks__/products";
 import { DashboardLayout } from "../components/dashboard-layout";
 import CheckAuth from "src/components/auth/CheckAuth";
+import AccountCheck from "src/components/account/AccountCheck";
 import { TaskListToolbar } from "src/components/task/task-list-toolbar";
 import { TaskCard } from "src/components/task/task-card";
 import NewTask from "src/components/task/NewTask";
 import { useEffect, useState } from "react";
 import { getDatabase, ref } from "firebase/database";
 import { useListVals } from "react-firebase-hooks/database";
-import AccountCheck from "src/components/account/AccountCheck";
 import SnackbarErrorMessage from "src/components/SnackbarErrorMessage";
 
 const Tasks = () => {
