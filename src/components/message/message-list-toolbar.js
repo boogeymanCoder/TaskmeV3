@@ -16,8 +16,17 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Search as SearchIcon } from "../../icons/search";
+import PropTypes from "prop-types";
 
-export const MessageListToolbar = ({ handleAddMessage, ...props }) => (
+/**
+ * Messages toolbar allowing users to add, search or sort messages
+ */
+export const MessageListToolbar = ({
+  handleAddMessage,
+  searchEnabled = false,
+  sortEnabled = false,
+  ...props
+}) => (
   <Box {...props}>
     <Box
       sx={{
@@ -36,9 +45,9 @@ export const MessageListToolbar = ({ handleAddMessage, ...props }) => (
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={6} xs={12}>
-              <Tooltip title="Unavailable">
+              <Tooltip title={searchEnabled ? "" : "Unavailable"}>
                 <TextField
-                  disabled
+                  disabled={!searchEnabled}
                   fullWidth
                   InputProps={{
                     startAdornment: (
@@ -55,8 +64,8 @@ export const MessageListToolbar = ({ handleAddMessage, ...props }) => (
               </Tooltip>
             </Grid>
             <Grid item md={6} xs={12}>
-              <Tooltip title="Unavailable">
-                <FormControl fullWidth disabled>
+              <Tooltip title={sortEnabled ? "" : "Unavailable"}>
+                <FormControl fullWidth disabled={!sortEnabled}>
                   <InputLabel id="sortby-select-label">Sort by</InputLabel>
                   <Select labelId="sortby-select-label" label="Sort by" fullWidth />
                 </FormControl>
@@ -83,3 +92,18 @@ export const MessageListToolbar = ({ handleAddMessage, ...props }) => (
     </Fab>
   </Box>
 );
+
+MessageListToolbar.prototype = {
+  /**
+   * Function to be called when the floating action button has been clicked.
+   */
+  handleAddMessage: PropTypes.func.isRequired,
+  /**
+   * Wether the search field was enabled or not, defaults to false.
+   */
+  searchEnabled: PropTypes.bool,
+  /**
+   * Wether the sort field was enabled or not, defaults to false.
+   */
+  sortEnabled: PropTypes.bool,
+};

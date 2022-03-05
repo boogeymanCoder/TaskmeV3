@@ -1,7 +1,12 @@
 import { Chip, Box, Grid, TextField, Container } from "@mui/material";
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 
-export default function TagInput({ tags, setTags, label, ...props }) {
+/**
+ * Allows the user to input multiple values, best usable on tag input or any similar features.
+ * Press space to enter a new tag.
+ */
+export default function TagInput({ tags, setTags, label, chipProps, textFieldProps, ...props }) {
   console.log({ tags });
   function addTag(tag) {
     const newTags = tags.filter((value) => value !== tag);
@@ -26,7 +31,13 @@ export default function TagInput({ tags, setTags, label, ...props }) {
       <Grid container>
         {tags.map((tag) => (
           <Grid item key={tag} sx={{ mb: 1 }}>
-            <Chip label={tag} sx={{ mr: 1 }} color="primary" onDelete={() => removeTag(tag)} />
+            <Chip
+              label={tag}
+              sx={{ mr: 1 }}
+              color="primary"
+              onDelete={() => removeTag(tag)}
+              {...chipProps}
+            />
           </Grid>
         ))}
       </Grid>
@@ -36,8 +47,31 @@ export default function TagInput({ tags, setTags, label, ...props }) {
         fullWidth
         variant="outlined"
         onInput={handleClick}
-        {...props}
+        {...textFieldProps}
       />
     </Box>
   );
 }
+
+TagInput.propTypes = {
+  /**
+   * The array of selected values.
+   */
+  tags: PropTypes.arrayOf(PropTypes.string).isRequired,
+  /**
+   * The setter for the tags.
+   */
+  setTags: PropTypes.func.isRequired,
+  /**
+   * Label for the underlying MUI TextField component.
+   */
+  label: PropTypes.string.isRequired,
+  /**
+   * Props for the underlying MUI Chip component.
+   */
+  chipProps: PropTypes.object,
+  /**
+   * Props for the underlying MUI TextField component.
+   */
+  textFieldProps: PropTypes.object,
+};

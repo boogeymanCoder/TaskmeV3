@@ -2,7 +2,10 @@ import Head from "next/head";
 import NextLink from "next/link";
 import { Box, Button, Container, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
+import PropTypes from "prop-types";
+/**
+ * Template for redirection pages.
+ */
 export default function RedirectPage({
   title,
   mainText,
@@ -73,3 +76,39 @@ export default function RedirectPage({
     </>
   );
 }
+
+RedirectPage.propTypes = {
+  /**
+   * Tab title for the redirect page.
+   */
+  title: PropTypes.string.isRequired,
+  /**
+   * The title of the redirect page.
+   */
+  mainText: PropTypes.string.isRequired,
+  /**
+   * Additional message  for the redirect page.
+   */
+  secondaryText: PropTypes.string.isRequired,
+  /**
+   * If an element was given, it will be displayed rather than the secondaryText.
+   * The element is preferable as an MUI Typography although any other element is allowed.
+   */
+  secondaryTypography: PropTypes.element,
+  /**
+   * link to the image to be displayed at the middle of the redirect page.
+   */
+  image: PropTypes.string.isRequired,
+  /**
+   * Where to redirect the user after clicking the redirect page's button.
+   */
+  continueUrl: PropTypes.string.isRequired,
+  /**
+   * The text to display on the redirect page button.
+   */
+  buttonText: PropTypes.string.isRequired,
+  /**
+   * Function to call after the upon redirecting the user.
+   */
+  onContinue: PropTypes.func,
+};
