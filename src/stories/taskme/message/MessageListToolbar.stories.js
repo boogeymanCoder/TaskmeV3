@@ -3,7 +3,7 @@ import { MessageListToolbar } from "/src/components/message/message-list-toolbar
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const sb = {
-  title: "TaskME/message/MessageListToolbar",
+  title: "message/MessageListToolbar",
   component: MessageListToolbar,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {

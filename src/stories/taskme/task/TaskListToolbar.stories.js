@@ -3,7 +3,7 @@ import { TaskListToolbar } from "/src/components/task/task-list-toolbar";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const sb = {
-  title: "TaskME/task/TaskListToolbar",
+  title: "task/TaskListToolbar",
   component: TaskListToolbar,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {

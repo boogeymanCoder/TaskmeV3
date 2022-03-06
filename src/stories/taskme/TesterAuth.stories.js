@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import StorybookCheckAuth from "/src/components/sb/StorybookCheckAuth";
-import { Button } from "@mui/material";
 import { logOutAccount } from "/src/services/user";
 import RedirectPage from "/src/components/redirect-page";
 import SnackbarMessage from "/src/components/SnackbarMessage";

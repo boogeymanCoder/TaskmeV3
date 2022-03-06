@@ -9,7 +9,7 @@ import { Loop } from "@mui/icons-material";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const sb = {
-  title: "TaskME/application/Application",
+  title: "application/Application",
   component: Application,
   argTypes: {
     handleAccept: { action: "handleAccept" },
