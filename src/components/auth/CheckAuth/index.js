@@ -3,7 +3,7 @@ import { getAuth } from "firebase/auth";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { logOutAccount } from "src/services/user";
+import { logOutAccount } from "/src/services/user";
 
 export default function CheckAuth({ children }) {
   const router = useRouter();

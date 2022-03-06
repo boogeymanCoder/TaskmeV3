@@ -2,17 +2,28 @@ import Head from "next/head";
 import { Box, Container, Grid, LinearProgress, Pagination } from "@mui/material";
 import { products } from "../__mocks__/products";
 import { DashboardLayout } from "../components/dashboard-layout";
-import CheckAuth from "src/components/auth/CheckAuth";
-import AccountCheck from "src/components/account/AccountCheck";
-import { TaskListToolbar } from "src/components/task/task-list-toolbar";
-import { TaskCard } from "src/components/task/task-card";
-import NewTask from "src/components/task/NewTask";
+import CheckAuth from "/src/components/auth/CheckAuth";
+import AccountCheck from "/src/components/account/AccountCheck";
+import { TaskListToolbar } from "/src/components/task/task-list-toolbar";
+import { TaskCard } from "/src/components/task/task-card";
+import NewTask from "/src/components/task/NewTask";
 import { useEffect, useState } from "react";
 import { getDatabase, ref } from "firebase/database";
 import { useListVals } from "react-firebase-hooks/database";
-import SnackbarErrorMessage from "src/components/SnackbarErrorMessage";
+import SnackbarErrorMessage from "/src/components/SnackbarErrorMessage";
 
 const Tasks = () => {
+  return (
+    <CheckAuth>
+      <TasksPage />
+    </CheckAuth>
+  );
+};
+
+/**
+ * This page shows the user the latest tasks that best fits them based on their preference.
+ */
+export const TasksPage = () => {
   const database = getDatabase();
   const [openNewTask, setOpenNewTask] = useState(false);
   const [tasks, tasksLoading, tasksError] = useListVals(ref(database, "tasks"), {
@@ -26,7 +37,7 @@ const Tasks = () => {
   if (tasksLoading || !tasks) return <LinearProgress />;
 
   return (
-    <CheckAuth>
+    <>
       <AccountCheck>
         <Head>
           <title>Tasks | TaskME</title>
@@ -64,10 +75,10 @@ const Tasks = () => {
         <NewTask open={openNewTask} handleClose={() => setOpenNewTask(false)} />
         <SnackbarErrorMessage error={tasksError} />
       </AccountCheck>
-    </CheckAuth>
+    </>
   );
 };
 
-Tasks.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+TasksPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Tasks;

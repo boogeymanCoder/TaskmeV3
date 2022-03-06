@@ -3,7 +3,7 @@ import SnackbarErrorMessage from "/src/components/SnackbarErrorMessage";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const sb = {
-  title: "TaskME/SnackbarErrorMessage",
+  title: "SnackbarErrorMessage",
   component: SnackbarErrorMessage,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
 };

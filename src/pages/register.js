@@ -21,11 +21,23 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import CheckNonAuth from "src/components/auth/CheckNonAuth";
-import SnackbarMessage from "src/components/SnackbarMessage";
-import SnackbarErrorMessage from "src/components/SnackbarErrorMessage";
+import CheckNonAuth from "/src/components/auth/CheckNonAuth";
+import SnackbarMessage from "/src/components/SnackbarMessage";
+import SnackbarErrorMessage from "/src/components/SnackbarErrorMessage";
 
 const Register = () => {
+  return (
+    <CheckNonAuth>
+      <RegisterPage />
+    </CheckNonAuth>
+  );
+};
+
+/**
+ * In this page the user can create a new account whenever they choose to use
+ * email and password to authenticate.
+ */
+export const RegisterPage = () => {
   const [showError, setShowError] = useState(false);
 
   const auth = getAuth();
@@ -64,7 +76,7 @@ const Register = () => {
   });
 
   return (
-    <CheckNonAuth>
+    <>
       <Head>
         <title>Register | TaskME</title>
       </Head>
@@ -213,7 +225,7 @@ const Register = () => {
         />
       )}
       <SnackbarErrorMessage error={emailError} />
-    </CheckNonAuth>
+    </>
   );
 };
 

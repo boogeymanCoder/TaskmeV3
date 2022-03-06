@@ -1,4 +1,4 @@
-import { logOutAccount } from "src/services/user";
+import { logOutAccount } from "/src/services/user";
 import RedirectPage from "../redirect-page";
 
 const EmailVerifiedMessage = () => (

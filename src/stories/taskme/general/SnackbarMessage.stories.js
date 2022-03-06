@@ -4,7 +4,7 @@ import SnackbarMessage from "/src/components/SnackbarMessage";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const sb = {
-  title: "TaskME/SnackbarMessage",
+  title: "SnackbarMessage",
   component: SnackbarMessage,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
 };

@@ -15,10 +15,13 @@ import { getAuth } from "firebase/auth";
 import { useUpdateEmail, useSendEmailVerification, useAuthState } from "react-firebase-hooks/auth";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { logOutAccount } from "src/services/user";
+import { logOutAccount } from "/src/services/user";
 import SnackbarMessage from "../SnackbarMessage";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";
 
+/**
+ * Allows the use to edit their email address if they authenticated using email and password.
+ */
 export function SettingsEmail(props) {
   const [errorMessage, setErrorMessage] = useState(null);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
@@ -28,10 +31,17 @@ export function SettingsEmail(props) {
   const [updateEmail, updating, error] = useUpdateEmail(auth);
   const [sendEmailVerification, sendingEmailVerification, sendEmailVerificationError] =
     useSendEmailVerification(auth);
+  const [showUpdate, setShowUpdate] = useState(false);
 
   useEffect(() => {
     console.log({ error });
   }, [error]);
+
+  useEffect(() => {
+    if (user && user.providerData[0].providerId == "password") {
+      setShowUpdate(true);
+    }
+  }, [user]);
 
   const formik = useFormik({
     initialValues: {
@@ -54,6 +64,8 @@ export function SettingsEmail(props) {
       });
     },
   });
+
+  if (!showUpdate) return null;
 
   return (
     <form onSubmit={formik.handleSubmit} noValidate>

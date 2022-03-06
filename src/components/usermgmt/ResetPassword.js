@@ -2,7 +2,7 @@ import { Container, Grid } from "@mui/material";
 import { verifyPasswordResetCode, confirmPasswordReset } from "firebase/auth";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
-import Error from "src/pages/error";
+import Error from "/src/pages/error";
 import { NewPassword } from "./NewPassword";
 import * as Yup from "yup";
 import router from "next/router";

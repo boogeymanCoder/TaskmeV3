@@ -22,7 +22,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import { set } from "nprogress";
 import { useRef, useState } from "react";
-import { logOutAccount } from "src/services/user";
+import { logOutAccount } from "/src/services/user";
 import { useRouter } from "next/router";
 import { getDatabase, ref } from "firebase/database";
 import { useObjectVal } from "react-firebase-hooks/database";
@@ -32,6 +32,9 @@ const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   boxShadow: theme.shadows[3],
 }));
 
+/**
+ * The  navbar of most of the website's pages.
+ */
 export const DashboardNavbar = (props) => {
   const router = useRouter();
   const { onSidebarOpen, ...other } = props;

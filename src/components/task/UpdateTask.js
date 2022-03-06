@@ -24,7 +24,7 @@ import { DateTimePicker } from "@mui/lab";
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { setTask, updateTask } from "src/services/task";
+import { setTask, updateTask } from "/src/services/task";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import SnackbarMessage from "../SnackbarMessage";
@@ -33,7 +33,11 @@ import { Image } from "@mui/icons-material";
 import { deleteObject, getDownloadURL, getStorage, list, ref } from "firebase/storage";
 import UIDGenerator from "uid-generator";
 import { useUploadFile } from "react-firebase-hooks/storage";
+import PropTypes from "prop-types";
 
+/**
+ * Allows the employer to update a task.
+ */
 export default function UpdateTask({ oldImageLinks, task, open, handleClose, filenames }) {
   const updatedOldImageLinks = oldImageLinks ? oldImageLinks : [];
   const [showSuccessUpdate, setShowSuccessUpdate] = useState(false);
@@ -348,3 +352,26 @@ export default function UpdateTask({ oldImageLinks, task, open, handleClose, fil
     </div>
   );
 }
+
+UpdateTask.propTypes = {
+  /**
+   * Array of links to the old images of the task.
+   */
+  oldImageLinks: PropTypes.array.isRequired,
+  /**
+   * Task data from the database.
+   */
+  task: PropTypes.object.isRequired,
+  /**
+   * Wether this UpdateTask modal was open or not.
+   */
+  open: PropTypes.bool.isRequired,
+  /**
+   * Function to call when user clicks the backdrop or the cancel button.
+   */
+  handleClose: PropTypes.func.isRequired,
+  /**
+   * Map for the uploaded new images.
+   */
+  filenames: PropTypes.object.isRequired,
+};

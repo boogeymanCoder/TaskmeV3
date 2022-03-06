@@ -29,11 +29,23 @@ import {
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import CheckNonAuth from "src/components/auth/CheckNonAuth";
-import PromptMessage from "src/components/PromptMessage";
-import SnackbarMessage from "src/components/SnackbarMessage";
+import CheckNonAuth from "/src/components/auth/CheckNonAuth";
+import PromptMessage from "/src/components/PromptMessage";
+import SnackbarMessage from "/src/components/SnackbarMessage";
 
 const Login = () => {
+  return (
+    <CheckNonAuth>
+      <LoginPage />
+    </CheckNonAuth>
+  );
+};
+
+/**
+ * The websites login page where the users can login through email and password or by an external
+ * provider such as facebook, google, or github.
+ */
+export const LoginPage = () => {
   const [sendingEmail, setSendingEmail] = useState(false);
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState(null);
@@ -96,7 +108,7 @@ const Login = () => {
   }
 
   return (
-    <CheckNonAuth>
+    <>
       <Head>
         <title>Login | TaskME</title>
       </Head>
@@ -293,7 +305,7 @@ const Login = () => {
           setOpen(false);
         }}
       />
-    </CheckNonAuth>
+    </>
   );
 };
 

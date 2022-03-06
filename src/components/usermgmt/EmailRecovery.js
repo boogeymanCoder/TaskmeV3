@@ -5,6 +5,9 @@ import EmailRecoveredMessage from "./EmailRecoveredMessage";
 import ConfirmMessage from "../ConfirmMessage";
 import SnackbarMessage from "../SnackbarMessage";
 
+/**
+ * Users email recovery page.
+ */
 export default function EmailRecovery({ auth, actionCode, lang }) {
   const [restoredEmail, setRestoredEmail] = useState(null);
   const [openConfirmation, setOpenConfirmation] = useState(false);

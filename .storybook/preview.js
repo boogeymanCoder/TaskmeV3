@@ -1,6 +1,7 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { ThemeProvider as Emotion10ThemeProvider } from "emotion-theming";
 import { theme } from "/src/theme";
+import StorybookFirebase from "/src/components/sb/StorybookFirebase";
 
 const defaultTheme = theme; // or your custom theme
 
@@ -14,7 +15,15 @@ const withThemeProvider = (Story, context) => {
   );
 };
 
-export const decorators = [withThemeProvider];
+const withFirebase = (Story, context) => {
+  return (
+    <StorybookFirebase>
+      <Story {...context} />
+    </StorybookFirebase>
+  );
+};
+
+export const decorators = [withFirebase, withThemeProvider];
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },

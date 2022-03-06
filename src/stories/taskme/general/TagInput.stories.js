@@ -4,7 +4,7 @@ import TagInput from "/src/components/TagInput";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const sb = {
-  title: "TaskME/TagInput",
+  title: "TagInput",
   component: TagInput,
   argTypes: {
     setTags: { action: "setTags" },

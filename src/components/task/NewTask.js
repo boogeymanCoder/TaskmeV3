@@ -21,7 +21,7 @@ import { DateTimePicker } from "@mui/lab";
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { setTask } from "src/services/task";
+import { setTask } from "/src/services/task";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import SnackbarMessage from "../SnackbarMessage";
@@ -31,7 +31,11 @@ import { Image } from "@mui/icons-material";
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 import { useUploadFile } from "react-firebase-hooks/storage";
 import UIDGenerator from "uid-generator";
+import PropTypes from "prop-types";
 
+/**
+ * Allows the user to create a task.
+ */
 export default function NewTask({ open, handleClose }) {
   const uidGen = new UIDGenerator();
   const [images, setImages] = useState([]);
@@ -316,3 +320,14 @@ export default function NewTask({ open, handleClose }) {
     </div>
   );
 }
+
+NewTask.propTypes = {
+  /**
+   * Wether the update modal was open or not.
+   */
+  open: PropTypes.bool.isRequired,
+  /**
+   * Function to call when the user clicks on the backdrop or cancel button.
+   */
+  handleClose: PropTypes.func.isRequired,
+};

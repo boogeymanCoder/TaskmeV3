@@ -9,8 +9,8 @@ import { TotalCustomers } from "../components/dashboard/total-customers";
 import { TotalProfit } from "../components/dashboard/total-profit";
 import { TrafficByDevice } from "../components/dashboard/traffic-by-device";
 import { DashboardLayout } from "../components/dashboard-layout";
-import CheckAuth from "src/components/auth/CheckAuth";
-import AccountCheck from "src/components/account/AccountCheck";
+import CheckAuth from "/src/components/auth/CheckAuth";
+import AccountCheck from "/src/components/account/AccountCheck";
 
 const Dashboard = () => {
   return (

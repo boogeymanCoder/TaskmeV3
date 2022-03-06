@@ -4,7 +4,7 @@ import RedirectPage from "/src/components/redirect-page";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const sb = {
-  title: "TaskME/RedirectPage",
+  title: "RedirectPage",
   component: RedirectPage,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {

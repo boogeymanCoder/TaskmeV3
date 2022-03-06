@@ -21,6 +21,9 @@ import { useEffect, useState } from "react";
 import { getDatabase, ref as dbRef, update } from "firebase/database";
 import { useObjectVal } from "react-firebase-hooks/database";
 
+/**
+ * Displays account profile picture and summary of information.
+ */
 export function AccountProfile(props) {
   const auth = getAuth();
   const [user, loading, error] = useAuthState(auth);

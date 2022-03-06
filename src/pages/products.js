@@ -4,8 +4,8 @@ import { products } from "../__mocks__/products";
 import { ProductListToolbar } from "../components/product/product-list-toolbar";
 import { ProductCard } from "../components/product/product-card";
 import { DashboardLayout } from "../components/dashboard-layout";
-import CheckAuth from "src/components/auth/CheckAuth";
-import AccountCheck from "src/components/account/AccountCheck";
+import CheckAuth from "/src/components/auth/CheckAuth";
+import AccountCheck from "/src/components/account/AccountCheck";
 
 const Products = () => {
   return (

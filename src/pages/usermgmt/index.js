@@ -3,8 +3,8 @@ import React from "react";
 import Error from "../error";
 import ResetPassword from "../../components/usermgmt/ResetPassword";
 import { getAuth } from "firebase/auth";
-import EmailVerification from "src/components/usermgmt/EmailVerification";
-import EmailRecovery from "src/components/usermgmt/EmailRecovery";
+import EmailVerification from "/src/components/usermgmt/EmailVerification";
+import EmailRecovery from "/src/components/usermgmt/EmailRecovery";
 
 export default function UserMgmt() {
   const auth = getAuth();

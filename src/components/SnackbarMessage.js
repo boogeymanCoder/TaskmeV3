@@ -33,7 +33,7 @@ SnackbarMessage.propTypes = {
   /**
    * The message to show the user.
    */
-  message: PropTypes.string.isRequired,
+  message: PropTypes.string,
   /**
    * Props for the MUI Alert component.
    */
