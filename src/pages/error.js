@@ -1,4 +1,4 @@
-import RedirectPage from "src/components/redirect-page";
+import RedirectPage from "/src/components/redirect-page";
 
 export default function Error({ title, mainText, secondaryText }) {
   return (

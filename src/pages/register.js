@@ -21,9 +21,9 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import CheckNonAuth from "src/components/auth/CheckNonAuth";
-import SnackbarMessage from "src/components/SnackbarMessage";
-import SnackbarErrorMessage from "src/components/SnackbarErrorMessage";
+import CheckNonAuth from "/src/components/auth/CheckNonAuth";
+import SnackbarMessage from "/src/components/SnackbarMessage";
+import SnackbarErrorMessage from "/src/components/SnackbarErrorMessage";
 
 const Register = () => {
   const [showError, setShowError] = useState(false);

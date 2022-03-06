@@ -1,16 +1,14 @@
 import { CircularProgress, LinearProgress } from "@mui/material";
 import { getAuth } from "firebase/auth";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { logOutAccount } from "/src/services/user";
+import StorybookVerify from "./StorybookVerify";
+import StorybookLogin from "./StorybookLogin";
 
-export default function CheckAuth({ children }) {
-  const router = useRouter();
+export default function StorybookCheckAuth({ children }) {
+  const [component, setComponent] = useState(children);
   const auth = getAuth();
   const [user, userLoading, userError] = useAuthState(auth);
-  const [shouldRender, setShouldRender] = useState(true);
-
   useEffect(() => {
     if (
       user &&
@@ -18,21 +16,25 @@ export default function CheckAuth({ children }) {
       user.providerData[0].providerId === "password" &&
       !user.emailVerified
     ) {
-      setShouldRender(false);
       // logOutAccount().then((res) => {
-      router.push("/verify");
+      setComponent(<StorybookVerify />);
       // });
     }
   }, [user, userLoading]);
 
   useEffect(() => {
-    if (!shouldRender) return;
-    if ((!user && !userLoading) || userError) router.push("/login");
+    if ((!user && !userLoading) || userError) {
+      console.log("login");
+      setComponent(<StorybookLogin />);
+    }
   }, [user, userLoading, userError]);
 
-  if (userLoading || !user || !shouldRender) return <LinearProgress />;
+  console.log({ user, userLoading, userError });
+  console.log({ component });
+
+  if (userLoading) return <LinearProgress />;
 
   console.log({ user, userLoading, userError });
 
-  return <>{children}</>;
+  return <>{component}</>;
 }

@@ -3,13 +3,13 @@ import { Alert, Box, Container, Snackbar, Typography } from "@mui/material";
 import { DashboardLayout } from "../components/dashboard-layout";
 import { SettingsNotifications } from "../components/settings/settings-notifications";
 import { SettingsPassword } from "../components/settings/settings-password";
-import CheckAuth from "src/components/auth/CheckAuth";
+import CheckAuth from "/src/components/auth/CheckAuth";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useEffect, useState } from "react";
-import { SettingsEmail } from "src/components/settings/settings-email";
-import { logOutAccount } from "src/services/user";
-import SnackbarErrorMessage from "src/components/SnackbarErrorMessage";
+import { SettingsEmail } from "/src/components/settings/settings-email";
+import { logOutAccount } from "/src/services/user";
+import SnackbarErrorMessage from "/src/components/SnackbarErrorMessage";
 
 const Settings = () => {
   const auth = getAuth();

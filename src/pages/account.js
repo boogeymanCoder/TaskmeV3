@@ -3,7 +3,7 @@ import { Box, Container, Grid, Typography } from "@mui/material";
 import { AccountProfile } from "../components/account/account-profile";
 import { AccountProfileDetails } from "../components/account/account-profile-details";
 import { DashboardLayout } from "../components/dashboard-layout";
-import CheckAuth from "src/components/auth/CheckAuth";
+import CheckAuth from "/src/components/auth/CheckAuth";
 
 const Account = () => {
   return (

@@ -1,3 +1,13 @@
 {
-  "cSpell.words": ["Firestore", "formik", "fullname", "labelledby", "Mgmt", "taskme", "usermgmt"]
+  "cSpell.words": [
+    "apos",
+    "Firestore",
+    "formik",
+    "fullname",
+    "labelledby",
+    "Mgmt",
+    "taskme",
+    "usermgmt",
+    "vercel"
+  ]
 }

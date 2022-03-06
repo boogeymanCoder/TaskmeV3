@@ -89,7 +89,7 @@ RedirectPage.propTypes = {
   /**
    * Additional message  for the redirect page.
    */
-  secondaryText: PropTypes.string.isRequired,
+  secondaryText: PropTypes.string,
   /**
    * If an element was given, it will be displayed rather than the secondaryText.
    * The element is preferable as an MUI Typography although any other element is allowed.

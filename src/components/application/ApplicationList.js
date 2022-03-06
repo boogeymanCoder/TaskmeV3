@@ -33,6 +33,7 @@ import { useListVals } from "react-firebase-hooks/database";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";
 import Application from "./Application";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import { removeApplication, updateApplication } from "src/services/application";
 
 export default function ApplicationList({ taskId, isEmployer, setApplicationCount, ...props }) {
   const database = getDatabase();
@@ -50,6 +51,27 @@ export default function ApplicationList({ taskId, isEmployer, setApplicationCoun
   }, [applicationsLoading, applications, setApplicationCount]);
 
   if (applicationsLoading) return <LinearProgress />;
+
+  function handleAccept(application) {
+    console.log("Accepted!");
+    updateApplication(application.uid, { ...application, accepted: true }, false)
+      .then((res) => console.log({ res }))
+      .catch((err) => console.log({ err }));
+  }
+
+  function handleReject(application) {
+    console.log("Rejected!");
+    removeApplication(application.uid)
+      .then((res) => console.log({ res }))
+      .catch((err) => console.log({ err }));
+  }
+
+  function handleEdit(application, message) {
+    console.log("Edited!");
+    updateApplication(application.uid, { ...application, message })
+      .then((res) => console.log({ res }))
+      .catch((err) => console.log({ err }));
+  }
 
   return (
     <Container fluid {...props}>
@@ -71,6 +93,9 @@ export default function ApplicationList({ taskId, isEmployer, setApplicationCoun
                           key={application.uid}
                           applicationData={application}
                           isEmployer={isEmployer}
+                          handleAccept={handleAccept}
+                          handleEdit={handleEdit}
+                          handleReject={handleReject}
                         />
                       ) : null
                     )}
@@ -84,6 +109,9 @@ export default function ApplicationList({ taskId, isEmployer, setApplicationCoun
                 key={application.uid}
                 applicationData={application}
                 isEmployer={isEmployer}
+                handleAccept={handleAccept}
+                handleEdit={handleEdit}
+                handleReject={handleReject}
               />
             );
           })}

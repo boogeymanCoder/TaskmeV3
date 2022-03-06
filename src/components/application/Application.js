@@ -19,13 +19,23 @@ import { getDatabase, ref } from "firebase/database";
 import React, { useEffect, useMemo, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useObjectVal } from "react-firebase-hooks/database";
-import { Clock } from "src/icons/clock";
-import { removeApplication, updateApplication } from "src/services/application";
+import { Clock } from "/src/icons/clock";
+import { removeApplication, updateApplication } from "/src/services/application";
 import PromptMessage from "../PromptMessage";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";
 import moment from "moment";
+import PropTypes from "prop-types";
 
-export default function Application({ applicationData, isEmployer }) {
+/**
+ * Displays application data to the user.
+ */
+export default function Application({
+  applicationData,
+  isEmployer,
+  handleAccept,
+  handleReject,
+  handleEdit,
+}) {
   console.log({ applicationData });
   const application = useMemo(() => {
     return {
@@ -53,27 +63,6 @@ export default function Application({ applicationData, isEmployer }) {
     console.log("updated with useEffect!");
     setUpdatedAt(moment(application.updatedAt).fromNow());
   }, [application]);
-
-  function handleAccept() {
-    console.log("Accepted!");
-    updateApplication(application.uid, { ...application, accepted: true }, false)
-      .then((res) => console.log({ res }))
-      .catch((err) => console.log({ err }));
-  }
-
-  function handleReject() {
-    console.log("Rejected!");
-    removeApplication(application.uid)
-      .then((res) => console.log({ res }))
-      .catch((err) => console.log({ err }));
-  }
-
-  function handleEdit() {
-    console.log("Edited!");
-    updateApplication(application.uid, { ...application, message })
-      .then((res) => console.log({ res }))
-      .catch((err) => console.log({ err }));
-  }
 
   if (employeeLoading || userLoading) return <LinearProgress />;
   if (!employeeLoading && !employee) {
@@ -147,18 +136,20 @@ export default function Application({ applicationData, isEmployer }) {
               label="Accepted"
               sx={{ mr: 1 }}
               color="success"
-              onDelete={employee.uid === user.uid || isEmployer ? handleReject : false}
+              onDelete={
+                employee.uid === user.uid || isEmployer ? () => handleReject(application) : false
+              }
             />
           )}
           {isEmployer && !application.accepted && (
             <Grid container spacing={1}>
               <Grid item xs={6}>
-                <IconButton onClick={handleAccept}>
+                <IconButton onClick={() => handleAccept(application)}>
                   <CheckCircle color="success" />
                 </IconButton>
               </Grid>
               <Grid item xs={6}>
-                <IconButton onClick={handleReject}>
+                <IconButton onClick={() => handleReject(application)}>
                   <Clear color="error" />
                 </IconButton>
               </Grid>
@@ -172,7 +163,7 @@ export default function Application({ applicationData, isEmployer }) {
               justifyContent="flex-start"
               alignItems="center"
             >
-              <Grid item xs="auto" direction="row" justifyContent="center" alignItems="center">
+              <Grid item xs="auto" justifyContent="center" alignItems="center">
                 <Chip
                   icon={<CircularProgress size="1rem" />}
                   label="Pending"
@@ -185,13 +176,13 @@ export default function Application({ applicationData, isEmployer }) {
               {employee.uid === user.uid && (
                 <Grid item xs="auto">
                   <Grid container direction="row" justifyContent="center" alignItems="center">
-                    <Grid item xs={6} direction="row" justifyContent="center" alignItems="center">
+                    <Grid item xs={6} justifyContent="center" alignItems="center">
                       <IconButton onClick={(e) => setEditOpen(true)}>
                         <Edit color="warning" />
                       </IconButton>
                     </Grid>
-                    <Grid item xs={6} direction="row" justifyContent="center" alignItems="center">
-                      <IconButton onClick={handleReject}>
+                    <Grid item xs={6} justifyContent="center" alignItems="center">
+                      <IconButton onClick={() => handleReject(application)}>
                         <Delete color="error" />
                       </IconButton>
                     </Grid>
@@ -211,7 +202,7 @@ export default function Application({ applicationData, isEmployer }) {
         handleClose={() => setEditOpen(false)}
         setValue={(e) => setMessage(e.target.value)}
         handleSubmit={(e) => {
-          handleEdit(e);
+          handleEdit(application, message);
           setEditOpen(false);
         }}
         label="Application message"
@@ -221,3 +212,17 @@ export default function Application({ applicationData, isEmployer }) {
     </>
   );
 }
+
+Application.propTypes = {
+  /**
+   * Application data from database.
+   */
+  applicationData: PropTypes.object.isRequired,
+  /**
+   * Whether the user is an employer or not.
+   */
+  isEmployer: PropTypes.bool.isRequired,
+  handleAccept: PropTypes.func.isRequired,
+  handleReject: PropTypes.func.isRequired,
+  handleEdit: PropTypes.func.isRequired,
+};

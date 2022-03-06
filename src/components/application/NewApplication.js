@@ -3,7 +3,7 @@ import { Container, IconButton, InputAdornment, LinearProgress, TextField } from
 import { getAuth } from "firebase/auth";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { setApplication } from "src/services/application";
+import { setApplication } from "/src/services/application";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";

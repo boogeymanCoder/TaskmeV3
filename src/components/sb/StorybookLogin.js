@@ -1,6 +1,5 @@
 import Head from "next/head";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -33,7 +32,7 @@ import CheckNonAuth from "/src/components/auth/CheckNonAuth";
 import PromptMessage from "/src/components/PromptMessage";
 import SnackbarMessage from "/src/components/SnackbarMessage";
 
-const Login = () => {
+export default function StorybookLogin({ children }) {
   const [sendingEmail, setSendingEmail] = useState(false);
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState(null);
@@ -50,7 +49,6 @@ const Login = () => {
     useSignInWithFacebook(auth);
   const [signInWithGithub, githubUser, githubLoading, githubError] = useSignInWithGithub(auth);
 
-  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -71,8 +69,7 @@ const Login = () => {
 
   if (emailUser || googleUser || facebookUser || githubUser) {
     console.log({ emailUser, googleUser, facebookUser, githubUser });
-    router.push("/");
-    return null;
+    return <>{children}</>;
   }
 
   function forgotPassword() {
@@ -96,7 +93,7 @@ const Login = () => {
   }
 
   return (
-    <CheckNonAuth>
+    <>
       <Head>
         <title>Login | TaskME</title>
       </Head>
@@ -110,11 +107,6 @@ const Login = () => {
         }}
       >
         <Container maxWidth="sm">
-          <NextLink href="/" passHref>
-            <Button component="a" startIcon={<ArrowBackIcon fontSize="small" />}>
-              Dashboard
-            </Button>
-          </NextLink>
           <form onSubmit={formik.handleSubmit}>
             <Box sx={{ my: 3 }}>
               <Typography color="textPrimary" variant="h4">
@@ -293,8 +285,6 @@ const Login = () => {
           setOpen(false);
         }}
       />
-    </CheckNonAuth>
+    </>
   );
-};
-
-export default Login;
+}

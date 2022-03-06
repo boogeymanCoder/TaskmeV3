@@ -35,7 +35,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import NewApplication from "../application/NewApplication";
 import ApplicationList from "../application/ApplicationList";
 import Ups from "../Ups";
-import { updateTask, updateTaskUps } from "src/services/task";
+import { updateTask, updateTaskUps } from "/src/services/task";
 import { getDownloadURL, getStorage, list, ref as storageRef } from "firebase/storage";
 
 export const TaskCard = ({ taskData, ...rest }) => {

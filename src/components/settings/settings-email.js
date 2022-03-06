@@ -15,7 +15,7 @@ import { getAuth } from "firebase/auth";
 import { useUpdateEmail, useSendEmailVerification, useAuthState } from "react-firebase-hooks/auth";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { logOutAccount } from "src/services/user";
+import { logOutAccount } from "/src/services/user";
 import SnackbarMessage from "../SnackbarMessage";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";
 
