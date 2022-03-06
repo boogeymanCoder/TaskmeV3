@@ -25,7 +25,7 @@ export default function StorybookCheckAuth({ children }) {
   useEffect(() => {
     if ((!user && !userLoading) || userError) {
       console.log("login");
-      setComponent(<StorybookLogin />);
+      setComponent(<StorybookLogin>{children}</StorybookLogin>);
     }
   }, [user, userLoading, userError]);
 

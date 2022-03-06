@@ -33,6 +33,7 @@ import PromptMessage from "/src/components/PromptMessage";
 import SnackbarMessage from "/src/components/SnackbarMessage";
 
 export default function StorybookLogin({ children }) {
+  const [signup, setSignup] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState(null);
@@ -225,18 +226,16 @@ export default function StorybookLogin({ children }) {
             </Box>
             <Typography color="textSecondary" variant="body2">
               Don&apos;t have an account?{" "}
-              <NextLink href="/register">
-                <Link
-                  to="/register"
-                  variant="subtitle2"
-                  underline="hover"
-                  sx={{
-                    cursor: "pointer",
-                  }}
-                >
-                  Sign Up
-                </Link>
-              </NextLink>
+              <Link
+                variant="subtitle2"
+                underline="hover"
+                onClick={() => setSignup(true)}
+                sx={{
+                  cursor: "pointer",
+                }}
+              >
+                Sign Up
+              </Link>
             </Typography>
           </form>
         </Container>
@@ -284,6 +283,12 @@ export default function StorybookLogin({ children }) {
           forgotPassword();
           setOpen(false);
         }}
+      />
+
+      <SnackbarMessage
+        message="Sign Up at https://taskme.vercel.app/register"
+        snackbarProps={{ open: signup }}
+        alertProps={{ severity: "info", onClose: () => setSignup(false) }}
       />
     </>
   );

@@ -59,7 +59,20 @@ export default function RedirectPage({
                 }}
               />
             </Box>
-            <NextLink href={continueUrl} passHref>
+            {continueUrl && (
+              <NextLink href={continueUrl} passHref>
+                <Button
+                  component="a"
+                  startIcon={<ArrowBackIcon fontSize="small" />}
+                  sx={{ mt: 3 }}
+                  variant="contained"
+                  onClick={onContinue}
+                >
+                  {buttonText}
+                </Button>
+              </NextLink>
+            )}
+            {!continueUrl && (
               <Button
                 component="a"
                 startIcon={<ArrowBackIcon fontSize="small" />}
@@ -69,7 +82,7 @@ export default function RedirectPage({
               >
                 {buttonText}
               </Button>
-            </NextLink>
+            )}
           </Box>
         </Container>
       </Box>
@@ -102,7 +115,7 @@ RedirectPage.propTypes = {
   /**
    * Where to redirect the user after clicking the redirect page's button.
    */
-  continueUrl: PropTypes.string.isRequired,
+  continueUrl: PropTypes.string,
   /**
    * The text to display on the redirect page button.
    */
