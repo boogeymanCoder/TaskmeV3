@@ -28,7 +28,10 @@ import SnackbarMessage from "../SnackbarMessage";
 import { getDatabase, ref } from "firebase/database";
 import { useObjectVal } from "react-firebase-hooks/database";
 
-export const AccountProfileDetails = (props) => {
+/**
+ * Allows users to view and update their profile information.
+ */
+export function AccountProfileDetails(props) {
   const database = getDatabase();
 
   const auth = getAuth();
@@ -226,4 +229,4 @@ export const AccountProfileDetails = (props) => {
       </Card>
     </form>
   );
-};
+}

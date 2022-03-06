@@ -8,6 +8,17 @@ import CheckAuth from "/src/components/auth/CheckAuth";
 const Account = () => {
   return (
     <CheckAuth>
+      <AccountPage />
+    </CheckAuth>
+  );
+};
+
+/**
+ * Allows the user to view and update account information
+ */
+export const AccountPage = () => {
+  return (
+    <CheckAuth>
       <Head>
         <title>Account | TaskME</title>
       </Head>
@@ -36,6 +47,6 @@ const Account = () => {
   );
 };
 
-Account.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+AccountPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Account;

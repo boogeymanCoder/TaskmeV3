@@ -33,8 +33,12 @@ import { useListVals } from "react-firebase-hooks/database";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";
 import Application from "./Application";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import { removeApplication, updateApplication } from "src/services/application";
+import { removeApplication, updateApplication } from "/src/services/application";
+import PropTypes from "prop-types";
 
+/**
+ * Displays the list of applications.
+ */
 export default function ApplicationList({ taskId, isEmployer, setApplicationCount, ...props }) {
   const database = getDatabase();
   const [applications, applicationsLoading, applicationsError] = useListVals(
@@ -74,7 +78,7 @@ export default function ApplicationList({ taskId, isEmployer, setApplicationCoun
   }
 
   return (
-    <Container fluid {...props}>
+    <Container {...props}>
       {console.log("No. of Applications:", applications.length)}
       {applications.length === 0 && <Alert severity="info">No Application Yet</Alert>}
       {applications.length > 0 && (
@@ -84,7 +88,7 @@ export default function ApplicationList({ taskId, isEmployer, setApplicationCoun
 
             if (index >= 5) {
               return (
-                <Accordion sx={{ width: "100%" }}>
+                <Accordion key="accordion" sx={{ width: "100%" }}>
                   <AccordionSummary expandIcon={<ExpandMore />}>See more</AccordionSummary>
                   <AccordionDetails>
                     {applications.map((application, index) =>
@@ -121,3 +125,18 @@ export default function ApplicationList({ taskId, isEmployer, setApplicationCoun
     </Container>
   );
 }
+
+ApplicationList.propTypes = {
+  /**
+   * The id of task received from firebase.
+   */
+  taskId: PropTypes.string.isRequired,
+  /**
+   * Whether the user is the employer or not.
+   */
+  isEmployer: PropTypes.bool.isRequired,
+  /**
+   * Application to call to set the number of application.
+   */
+  setApplicationCount: PropTypes.func.isRequired,
+};

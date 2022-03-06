@@ -13,6 +13,17 @@ import { useListVals } from "react-firebase-hooks/database";
 import SnackbarErrorMessage from "/src/components/SnackbarErrorMessage";
 
 const Tasks = () => {
+  return (
+    <CheckAuth>
+      <TasksPage />
+    </CheckAuth>
+  );
+};
+
+/**
+ * This page shows the user the latest tasks that best fits them based on their preference.
+ */
+export const TasksPage = () => {
   const database = getDatabase();
   const [openNewTask, setOpenNewTask] = useState(false);
   const [tasks, tasksLoading, tasksError] = useListVals(ref(database, "tasks"), {
@@ -26,7 +37,7 @@ const Tasks = () => {
   if (tasksLoading || !tasks) return <LinearProgress />;
 
   return (
-    <CheckAuth>
+    <>
       <AccountCheck>
         <Head>
           <title>Tasks | TaskME</title>
@@ -64,10 +75,10 @@ const Tasks = () => {
         <NewTask open={openNewTask} handleClose={() => setOpenNewTask(false)} />
         <SnackbarErrorMessage error={tasksError} />
       </AccountCheck>
-    </CheckAuth>
+    </>
   );
 };
 
-Tasks.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+TasksPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Tasks;

@@ -12,6 +12,18 @@ import { logOutAccount } from "/src/services/user";
 import SnackbarErrorMessage from "/src/components/SnackbarErrorMessage";
 
 const Settings = () => {
+  return (
+    <CheckAuth>
+      <SettingsPage />
+    </CheckAuth>
+  );
+};
+
+/**
+ * The users can change their setting here as well as change their email or password
+ * if they logged in with their email and password.
+ */
+export const SettingsPage = () => {
   const auth = getAuth();
   const [user, loading, error] = useAuthState(auth);
 
@@ -24,7 +36,7 @@ const Settings = () => {
   }, [user]);
 
   return (
-    <CheckAuth>
+    <>
       <Head>
         <title>Settings | TaskME</title>
       </Head>
@@ -55,7 +67,7 @@ const Settings = () => {
       </Box>
 
       <SnackbarErrorMessage error={error} />
-    </CheckAuth>
+    </>
   );
 };
 

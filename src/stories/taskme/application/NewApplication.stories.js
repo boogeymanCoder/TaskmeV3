@@ -1,21 +1,15 @@
 import React from "react";
 import StorybookCheckAuth from "/src/components/sb/StorybookCheckAuth";
-import { default as ApplicationComponent } from "/src/components/application/Application";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Alert, LinearProgress, Typography } from "@mui/material";
 import SnackbarErrorMessage from "/src/components/SnackbarErrorMessage";
-import { Loop } from "@mui/icons-material";
+import { default as NewApplicationComponent } from "/src/components/application/NewApplication";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const sb = {
-  title: "application/Application",
-  component: ApplicationComponent,
-  argTypes: {
-    handleAccept: { action: "handleAccept" },
-    handleReject: { action: "handleReject" },
-    handleEdit: { action: "handleEdit" },
-  },
+  title: "application/New Application",
+  component: NewApplicationComponent,
 };
 export default sb;
 
@@ -27,7 +21,7 @@ const Template = (args) => {
   if (userLoading) return <LinearProgress />;
   return (
     <StorybookCheckAuth>
-      <ApplicationComponent {...args} />
+      <NewApplicationComponent {...args} />
       {user && (
         <Alert severity="info" sx={{ margin: 1 }}>
           Your uid: {user.uid}
@@ -38,19 +32,9 @@ const Template = (args) => {
   );
 };
 
-export const Application = Template.bind({});
+export const NewApplication = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-Application.args = {
-  applicationData: {
-    accepted: false,
-    createdAt: '"2022-02-27T12:14:00.177Z"',
-    date: '"2022-02-27T12:14:00.177Z"',
-    employee: "2z6DaFNT77hA1oMtqwBK5T4H3bI3",
-    employer: "HEgcbARb8AUqSj5L8idA3vlIbxD2",
-    message: "asd",
-    task: "-Mwsczxug3YSN2fBlMA6",
-    updatedAt: '"2022-02-27T12:14:00.177Z"',
-    uid: "-Mwv5WOsfpEmbEJ3nByP",
-  },
-  isEmployer: true,
+NewApplication.args = {
+  taskId: "-Mwsczxug3YSN2fBlMA6",
+  employer: "HEgcbARb8AUqSj5L8idA3vlIbxD2",
 };

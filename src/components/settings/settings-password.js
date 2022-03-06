@@ -18,6 +18,9 @@ import * as Yup from "yup";
 import { logOutAccount } from "/src/services/user";
 import SnackbarMessage from "../SnackbarMessage";
 
+/**
+ * Allows the user to change their password if they authenticated using their email and password.
+ */
 export function SettingsPassword(props) {
   const [alertPasswordUpdated, setAlertPasswordUpdated] = useState(false);
   const auth = getAuth();

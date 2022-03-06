@@ -1,6 +1,9 @@
 import RedirectPage from "/src/components/redirect-page";
 
-const NotFound = () => (
+/**
+ * Shown whenever the user accesses a prohibited or unavailable url.
+ */
+const NotFoundPage = () => (
   <RedirectPage
     title="404"
     mainText="404: The page you are looking for isn’t here"
@@ -12,4 +15,4 @@ const NotFound = () => (
   />
 );
 
-export default NotFound;
+export default NotFoundPage;

@@ -32,6 +32,9 @@ const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   boxShadow: theme.shadows[3],
 }));
 
+/**
+ * The  navbar of most of the website's pages.
+ */
 export const DashboardNavbar = (props) => {
   const router = useRouter();
   const { onSidebarOpen, ...other } = props;

@@ -78,7 +78,7 @@ export default function Application({
           <Typography variant="h5">{application.message}</Typography>
         </Grid>
         <Grid item xs>
-          <Grid container xs sx={{ mt: 3 }}>
+          <Grid container sx={{ mt: 3 }}>
             <Grid item>
               {employeeLoading ? (
                 <Skeleton variant="circular" width={40} height={40} sx={{ mr: 2 }} />

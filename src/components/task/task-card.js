@@ -38,6 +38,9 @@ import Ups from "../Ups";
 import { updateTask, updateTaskUps } from "/src/services/task";
 import { getDownloadURL, getStorage, list, ref as storageRef } from "firebase/storage";
 
+/**
+ * Displays task information to the users.
+ */
 export const TaskCard = ({ taskData, ...rest }) => {
   const [applicationCount, setApplicationCount] = useState(0);
   const [updateOpen, setUpdateOpen] = useState(false);
@@ -92,9 +95,9 @@ export const TaskCard = ({ taskData, ...rest }) => {
     }
   }, [fetchingImage]);
 
-  useEffect(() => {
-    console.log({ employer, employerLoading, employerError });
-  }, [employer, employerLoading, employerError]);
+  // useEffect(() => {
+  //   console.log({ employer, employerLoading, employerError });
+  // }, [employer, employerLoading, employerError]);
 
   const handleTabChange = (event, newValue) => {
     setTab(newValue);
@@ -272,7 +275,7 @@ export const TaskCard = ({ taskData, ...rest }) => {
       <Divider />
       <TabContext value={tab}>
         <Box sx={{ p: 2 }}>
-          <Grid container fullWidth spacing={2} sx={{ justifyContent: "space-between" }}>
+          <Grid container spacing={2} sx={{ justifyContent: "space-between" }}>
             <Grid item xs>
               <Grid container direction="row" justifyContent="center" alignItems="center">
                 <Grid item>
@@ -293,7 +296,7 @@ export const TaskCard = ({ taskData, ...rest }) => {
               }}
               xs
             >
-              <Grid fullWidth container direction="row" justifyContent="center" alignItems="center">
+              <Grid container direction="row" justifyContent="center" alignItems="center">
                 <TabList
                   sx={{ mx: 3 }}
                   onChange={handleTabChange}
@@ -349,5 +352,8 @@ export const TaskCard = ({ taskData, ...rest }) => {
 };
 
 TaskCard.propTypes = {
+  /**
+   * The task information received from firebase.
+   */
   taskData: PropTypes.object.isRequired,
 };

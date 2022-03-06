@@ -60,7 +60,9 @@ const items = [
     title: "Error",
   },
 ];
-
+/**
+ * Side bar of the page's layout.
+ */
 export const DashboardSidebar = (props) => {
   const { open, onClose } = props;
   const router = useRouter();
@@ -71,6 +73,8 @@ export const DashboardSidebar = (props) => {
 
   useEffect(
     () => {
+      // storybook does not support next route
+      if (!router) return;
       if (!router.isReady) {
         return;
       }
@@ -80,7 +84,7 @@ export const DashboardSidebar = (props) => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [router.asPath]
+    [router]
   );
 
   const content = (
@@ -230,6 +234,12 @@ export const DashboardSidebar = (props) => {
 };
 
 DashboardSidebar.propTypes = {
+  /**
+   * Function to be called on closing.
+   */
   onClose: PropTypes.func,
+  /**
+   * Whether the sidebar was open or not.
+   */
   open: PropTypes.bool,
 };

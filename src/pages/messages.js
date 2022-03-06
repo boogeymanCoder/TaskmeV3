@@ -9,6 +9,17 @@ import { MessageListToolbar } from "../components/message/message-list-toolbar";
 function Messages() {
   return (
     <CheckAuth>
+      <MessagesPage />
+    </CheckAuth>
+  );
+}
+
+/**
+ * Here the user can view their messages.
+ */
+export function MessagesPage() {
+  return (
+    <CheckAuth>
       <AccountCheck>
         <Head>
           <title>Messages | TaskME</title>
@@ -27,6 +38,6 @@ function Messages() {
   );
 }
 
-Messages.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+MessagesPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Messages;
