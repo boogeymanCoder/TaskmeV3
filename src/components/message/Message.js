@@ -6,6 +6,9 @@ import PropTypes from "prop-types";
  * Displays user messages.
  */
 export default function Message({ image, message, isOwned }) {
+  const border = isOwned
+    ? { borderRadius: 1, borderTopRightRadius: 0 }
+    : { borderRadius: 1, borderTopLeftRadius: 0 };
   return (
     <Grid
       container
@@ -17,7 +20,6 @@ export default function Message({ image, message, isOwned }) {
         <Avatar src={image} />
       </Grid>
       <Grid item maxWidth="80%">
-        {/* <Grid item md={"auto"} sm={11}> */}
         <Grid
           container
           sx={{ height: "100%" }}
@@ -33,9 +35,9 @@ export default function Message({ image, message, isOwned }) {
               sx={{
                 m: 1,
                 padding: 1,
-                borderRadius: 1,
-                borderTopLeftRadius: 0,
                 wordWrap: "break-word",
+                whiteSpace: "pre-wrap",
+                ...border,
               }}
             >
               {message}
