@@ -1,6 +1,9 @@
 import { logOutAccount } from "/src/services/user";
 import RedirectPage from "../redirect-page";
 
+/**
+ * Displayed after a user verifies email.
+ */
 const EmailVerifiedMessage = () => (
   <RedirectPage
     title="Email Verified"

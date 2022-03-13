@@ -1,7 +1,11 @@
 import { Link, Typography } from "@mui/material";
 import React from "react";
 import RedirectPage from "../redirect-page";
+import PropTypes from "prop-types";
 
+/**
+ * Displayed after a user recovers email.
+ */
 export default function EmailRecoveredMessage({ showResetPassword }) {
   return (
     <RedirectPage
@@ -30,3 +34,10 @@ export default function EmailRecoveredMessage({ showResetPassword }) {
     />
   );
 }
+
+EmailRecoveredMessage.PropTypes = {
+  /**
+   * Function to call to allow user to reset password.
+   */
+  showResetPassword: PropTypes.func.isRequired,
+};

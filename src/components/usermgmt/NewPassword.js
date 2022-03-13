@@ -15,7 +15,11 @@ import { useUpdatePassword } from "react-firebase-hooks/auth";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import PropTypes from "prop-types";
 
+/**
+ * Displayed when user chooses to set a new password.
+ */
 export function NewPassword({ setPassword, email }) {
   const auth = getAuth();
 
@@ -116,3 +120,14 @@ export function NewPassword({ setPassword, email }) {
     </form>
   );
 }
+
+NewPassword.propTypes = {
+  /**
+   * Function to call when submitting a valid new password.
+   */
+  setPassword: PropTypes.func.isRequired,
+  /**
+   * User's email address.
+   */
+  email: PropTypes.string.isRequired,
+};
