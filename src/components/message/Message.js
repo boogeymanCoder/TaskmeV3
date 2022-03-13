@@ -31,7 +31,7 @@ export default function Message({ image, message, isOwned }) {
             <Typography
               paragraph
               color="primary.contrastText"
-              bgcolor="primary.main"
+              bgcolor={isOwned ? "primary.main" : "secondary.main"}
               sx={{
                 m: 1,
                 padding: 1,
