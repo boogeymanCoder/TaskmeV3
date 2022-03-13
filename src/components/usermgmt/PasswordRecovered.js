@@ -1,6 +1,9 @@
 import React from "react";
 import RedirectPage from "../redirect-page";
 
+/**
+ * Displayed after a user recovered password.
+ */
 export default function PasswordRecovered() {
   return (
     <RedirectPage
