@@ -3,7 +3,7 @@ import { default as MessageComponent } from "/src/components/message/Message";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const sb = {
-  title: "message/Message",
+  title: "Message/Message",
   component: MessageComponent,
 };
 export default sb;
