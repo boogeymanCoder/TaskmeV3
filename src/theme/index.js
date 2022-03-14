@@ -209,6 +209,12 @@ export const theme = createTheme({
       dark: "#000000",
       contrastText: "#ffffff",
     },
+    white: {
+      main: "#CCCCCC",
+      light: "#FFFFFF",
+      dark: "#AAAAAA",
+      contrastText: "#000000",
+    },
   },
   shape: {
     borderRadius: 8,
