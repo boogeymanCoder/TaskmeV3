@@ -116,14 +116,14 @@ export function AccountProfileDetails(props) {
               <TextField
                 disabled={userLoading || accountLoading || formik.isSubmitting}
                 error={Boolean(formik.touched.fullname && formik.errors.fullname)}
-                fullWidth
                 helperText={formik.touched.fullname && formik.errors.fullname}
-                label="Full Name"
-                name="fullname"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                type="text"
                 value={formik.values.fullname}
+                name="fullname"
+                fullWidth
+                label="Full Name"
+                type="text"
                 variant="outlined"
                 required
               />
