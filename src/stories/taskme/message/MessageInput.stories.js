@@ -8,7 +8,6 @@ const sb = {
   argTypes: {
     onSend: { action: "onSend" },
     onUploadFile: { action: "onUploadFile" },
-    onUploadImage: { action: "onUploadImage" },
   },
 };
 export default sb;

@@ -19,7 +19,7 @@ import { useFormik } from "formik";
 /**
  * Allow user to create messages, add emojis, and upload files to the conversation.
  */
-export default function MessageInput({ onSend, onUploadFile, onUploadImage }) {
+export default function MessageInput({ onSend, onUploadFile }) {
   // popup
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -45,7 +45,7 @@ export default function MessageInput({ onSend, onUploadFile, onUploadImage }) {
       message: "",
     },
     validationSchema: Yup.object({
-      message: Yup.string().required("Name is required"),
+      message: Yup.string().required("Message is required"),
     }),
     onSubmit: async (values) => {
       const messageText = values.message;
@@ -101,12 +101,10 @@ export default function MessageInput({ onSend, onUploadFile, onUploadImage }) {
               ),
             }}
             disabled={formik.isSubmitting}
-            error={Boolean(formik.touched.message && formik.errors.message)}
-            onBlur={formik.handleBlur}
+            error={Boolean(formik.errors.message)}
             onChange={formik.handleChange}
             value={formik.values.message}
             name="message"
-            required
             multiline
             maxRows={6}
             fullWidth
@@ -150,8 +148,4 @@ MessageInput.propTypes = {
    * Function to call when user uploads a file, func(file: object).
    */
   onUploadFile: PropTypes.func.isRequired,
-  /**
-   * Function to call when user uploads an image, func(image: object).
-   */
-  onUploadImage: PropTypes.func.isRequired,
 };
