@@ -19,7 +19,7 @@ import { useFormik } from "formik";
 /**
  * Allow user to create messages, add emojis, and upload files to the conversation.
  */
-export default function MessageInput({ onSend, onUploadFile, onUploadImage }) {
+export default function MessageInput({ onSend, onUploadFile }) {
   // popup
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -45,7 +45,7 @@ export default function MessageInput({ onSend, onUploadFile, onUploadImage }) {
       message: "",
     },
     validationSchema: Yup.object({
-      message: Yup.string().required("Name is required"),
+      message: Yup.string().required("Message is required"),
     }),
     onSubmit: async (values) => {
       const messageText = values.message;
@@ -93,7 +93,6 @@ export default function MessageInput({ onSend, onUploadFile, onUploadImage }) {
                     <Picker
                       onEmojiClick={onEmojiClick}
                       disableAutoFocus={true}
-                      skinTone={SKIN_TONE_MEDIUM_DARK}
                       groupNames={{ smileys_people: "PEOPLE" }}
                     />
                   </Menu>
@@ -101,11 +100,10 @@ export default function MessageInput({ onSend, onUploadFile, onUploadImage }) {
               ),
             }}
             disabled={formik.isSubmitting}
-            error={Boolean(formik.touched.message && formik.errors.message)}
+            error={Boolean(formik.errors.message)}
             onChange={formik.handleChange}
             value={formik.values.message}
             name="message"
-            required
             multiline
             maxRows={6}
             fullWidth
@@ -113,25 +111,9 @@ export default function MessageInput({ onSend, onUploadFile, onUploadImage }) {
             label="Message"
             variant="outlined"
           />
-          <Menu
-            id="emoji-picker"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleEmojiClose}
-            MenuListProps={{
-              "aria-labelledby": "icon-button",
-            }}
-          >
-            <Picker
-              onEmojiClick={onEmojiClick}
-              disableAutoFocus={true}
-              skinTone={SKIN_TONE_MEDIUM_DARK}
-              groupNames={{ smileys_people: "PEOPLE" }}
-            />
-          </Menu>
         </Grid>
         <Grid item>
-          <IconButton type="submit">
+          <IconButton type="submit" id="icon-button">
             <Send color="primary" />
           </IconButton>
         </Grid>
@@ -149,8 +131,4 @@ MessageInput.propTypes = {
    * Function to call when user uploads a file, func(file: object).
    */
   onUploadFile: PropTypes.func.isRequired,
-  /**
-   * Function to call when user uploads an image, func(image: object).
-   */
-  onUploadImage: PropTypes.func.isRequired,
 };
