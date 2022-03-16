@@ -93,7 +93,6 @@ export default function MessageInput({ onSend, onUploadFile }) {
                     <Picker
                       onEmojiClick={onEmojiClick}
                       disableAutoFocus={true}
-                      skinTone={SKIN_TONE_MEDIUM_DARK}
                       groupNames={{ smileys_people: "PEOPLE" }}
                     />
                   </Menu>
@@ -112,25 +111,9 @@ export default function MessageInput({ onSend, onUploadFile }) {
             label="Message"
             variant="outlined"
           />
-          <Menu
-            id="emoji-picker"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleEmojiClose}
-            MenuListProps={{
-              "aria-labelledby": "icon-button",
-            }}
-          >
-            <Picker
-              onEmojiClick={onEmojiClick}
-              disableAutoFocus={true}
-              skinTone={SKIN_TONE_MEDIUM_DARK}
-              groupNames={{ smileys_people: "PEOPLE" }}
-            />
-          </Menu>
         </Grid>
         <Grid item>
-          <IconButton type="submit">
+          <IconButton type="submit" id="icon-button">
             <Send color="primary" />
           </IconButton>
         </Grid>
