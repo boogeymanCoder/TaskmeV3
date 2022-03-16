@@ -29,8 +29,9 @@
     "@mui/styles": "^5.0.2",
     "chart.js": "^3.5.1",
     "date-fns": "^2.25.0",
+    "emoji-picker-react": "^3.5.1",
     "firebase": "^9.6.5",
-    "formik": "^2.1.5",
+    "formik": "^2.2.9",
     "history": "^5.0.0",
     "material-ui-dropzone": "^3.5.0",
     "moment": "^2.29.1",
@@ -44,7 +45,7 @@
     "react-perfect-scrollbar": "^1.5.8",
     "uid-generator": "^2.0.0",
     "uuid": "^8.3.0",
-    "yup": "^0.32.9"
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.17.5",
