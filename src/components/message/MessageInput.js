@@ -102,7 +102,6 @@ export default function MessageInput({ onSend, onUploadFile, onUploadImage }) {
             }}
             disabled={formik.isSubmitting}
             error={Boolean(formik.touched.message && formik.errors.message)}
-            onBlur={formik.handleBlur}
             onChange={formik.handleChange}
             value={formik.values.message}
             name="message"
