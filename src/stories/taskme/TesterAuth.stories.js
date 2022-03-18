@@ -19,7 +19,7 @@ export const TesterAuth = (args) => {
         title="Welcome"
         mainText="Welcome!"
         secondaryText="Welcome to the TaskME component library, you may now start testing."
-        image="https://pbs.twimg.com/media/EXzqzKdWoAADjTL.png"
+        image="/static/images/undraw_hello_re_3evm.svg"
         buttonText="Logout"
         onContinue={() => {
           logOutAccount();

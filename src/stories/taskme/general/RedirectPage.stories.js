@@ -23,7 +23,7 @@ Default.args = {
   mainText: "Sample Redirect Page Title",
   secondaryText:
     "Sample redirect page paragraph with very long sentence and so many words for demonstration",
-  image: "https://pbs.twimg.com/media/EXzqzKdWoAADjTL.png",
+  image: "/static/images/undraw_hello_re_3evm.svg",
   continueUrl: "/",
   buttonText: "Continue",
 };
@@ -38,7 +38,7 @@ CustomSecondary.args = {
       This is a custom secondary text using the Typography component of the MUI library.
     </Alert>
   ),
-  image: "https://pbs.twimg.com/media/EXzqzKdWoAADjTL.png",
+  image: "/static/images/undraw_hello_re_3evm.svg",
   continueUrl: "/",
   buttonText: "Continue",
 };
