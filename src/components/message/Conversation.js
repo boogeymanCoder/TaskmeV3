@@ -11,6 +11,7 @@ export default function Conversation({
   title,
   lastMessage,
   lastMessageSent,
+  lastSender,
   isRead,
   onClick,
 }) {
@@ -18,7 +19,7 @@ export default function Conversation({
     <Grid
       container
       direction="row"
-      justifyContent="center"
+      // justifyContent="center"
       alignItems="center"
       sx={{ cursor: "pointer" }}
       onClick={onClick}
@@ -33,7 +34,7 @@ export default function Conversation({
           }}
         />
       </Grid>
-      <Grid item xs>
+      <Grid item xs={9}>
         <Grid container direction="row" justifyContent="center" alignItems="center">
           <Grid item xs={12}>
             <Badge color="primary" variant="dot" invisible={isRead} overlap="rectangular">
@@ -50,7 +51,7 @@ export default function Conversation({
                   paragraph
                   sx={{ m: 0, p: 0 }}
                 >
-                  {lastMessage}
+                  {lastSender && `${lastSender}:`} {lastMessage}
                 </Typography>
               </Grid>
               <Grid item xs={3}>
@@ -93,7 +94,7 @@ Conversation.propTypes = {
   /**
    * Text to show the last message sender.
    */
-  lastSender: PropTypes.string.isRequired,
+  lastSender: PropTypes.string,
   /**
    * Whether to mark the conversation as read or not.
    */
