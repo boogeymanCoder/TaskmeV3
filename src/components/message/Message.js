@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 /**
  * Displays user messages.
  */
-export default function Message({ image, message, isOwned }) {
+export default function Message({ image, message, isOwned, id }) {
   const border = isOwned
     ? { borderRadius: 1, borderTopRightRadius: 0 }
     : { borderRadius: 1, borderTopLeftRadius: 0 };
@@ -62,4 +62,8 @@ Message.propTypes = {
    * Whether the message is owned by the current user.
    */
   isOwned: PropTypes.bool.isRequired,
+  /**
+   * The id of the message.
+   */
+  id: PropTypes.string.isRequired,
 };
