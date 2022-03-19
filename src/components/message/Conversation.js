@@ -24,7 +24,7 @@ export default function Conversation({
       sx={{ cursor: "pointer" }}
       onClick={onClick}
     >
-      <Grid item sx={{ pr: 1 }}>
+      <Grid item xs={3} sm="auto" sx={{ pr: 1 }}>
         <Avatar
           alt={title}
           src={avatar}
@@ -34,7 +34,7 @@ export default function Conversation({
           }}
         />
       </Grid>
-      <Grid item xs={9}>
+      <Grid item xs={9} sm>
         <Grid container direction="row" justifyContent="center" alignItems="center">
           <Grid item xs={12}>
             <Badge color="primary" variant="dot" invisible={isRead} overlap="rectangular">
