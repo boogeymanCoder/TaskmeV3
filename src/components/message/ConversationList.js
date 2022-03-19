@@ -1,20 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Conversation from "./Conversation";
-import { Grid } from "@mui/material";
+import { Grid, List, ListItem, ListItemButton } from "@mui/material";
 
 /**
  * Displays list of conversations.
  */
 export default function ConversationList({ conversations, onClick }) {
   return (
-    <Grid container>
+    <List sx={{ border: "1px solid black", width: "100%" }}>
       {conversations.map((conversation) => (
-        <Grid item xs={12} sx={{ mb: 1 }}>
+        <ListItemButton sx={{ mb: 1, border: "1px solid red" }}>
           <Conversation {...conversation} onClick={onClick} />
-        </Grid>
+        </ListItemButton>
       ))}
-    </Grid>
+    </List>
   );
 }
 
