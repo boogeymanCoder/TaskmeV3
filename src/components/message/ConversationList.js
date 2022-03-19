@@ -8,9 +8,9 @@ import { Grid, List, ListItem, ListItemButton } from "@mui/material";
  */
 export default function ConversationList({ conversations, onClick }) {
   return (
-    <List sx={{ border: "1px solid black", width: "100%" }}>
+    <List sx={{ width: "100%" }}>
       {conversations.map((conversation) => (
-        <ListItemButton sx={{ mb: 1, border: "1px solid red" }}>
+        <ListItemButton key={conversation.id} sx={{ mb: 1 }}>
           <Conversation {...conversation} onClick={onClick} />
         </ListItemButton>
       ))}

@@ -14,6 +14,7 @@ export default function Conversation({
   lastSender,
   isRead,
   onClick,
+  id,
 }) {
   return (
     <Grid
@@ -22,7 +23,7 @@ export default function Conversation({
       // justifyContent="center"
       alignItems="center"
       sx={{ cursor: "pointer" }}
-      onClick={onClick}
+      onClick={() => onClick(id)}
     >
       <Grid item xs={3} sm="auto" sx={{ pr: 1 }}>
         <Avatar

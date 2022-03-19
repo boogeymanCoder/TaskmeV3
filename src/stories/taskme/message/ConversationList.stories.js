@@ -26,6 +26,7 @@ ConversationList.args = {
       lastMessage: "Hello, I would like to follow up the task.",
       lastMessageSent: "2m ago",
       isRead: false,
+      id: "-MyXNGUXRY54xjjKjOCW",
     },
     {
       avatar:
@@ -35,6 +36,7 @@ ConversationList.args = {
       lastMessage: "Hi we need to test the AI tomorrow.",
       lastMessageSent: "2h ago",
       isRead: true,
+      id: "-MyXNR4P6P3BztGBfhNc",
     },
   ],
 };
