@@ -84,7 +84,7 @@ export const TaskListToolbar = ({
         bottom: "5%",
         right: "5%",
         boxShadow: 3,
-        zIndex: "modal",
+        zIndex: "page_fab",
       }}
       color="primary"
       aria-label="add"
