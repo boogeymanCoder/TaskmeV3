@@ -104,4 +104,8 @@ Conversation.propTypes = {
    * Function to call when clicking the conversation.
    */
   onClick: PropTypes.func.isRequired,
+  /**
+   * The conversations id.
+   */
+  id: PropTypes.string.isRequired,
 };
