@@ -10,7 +10,7 @@ export default function MessageList({ messages }) {
   return (
     <Grid container direction="column">
       {messages.map((message) => (
-        <Grid item xs>
+        <Grid key={message.id} item xs>
           <Message {...message} />
         </Grid>
       ))}
