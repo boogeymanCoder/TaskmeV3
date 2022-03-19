@@ -315,4 +315,8 @@ export const theme = createTheme({
       lineHeight: 1.375,
     },
   },
+  zIndex: {
+    notification_dot: -1,
+    page_fab: 1150,
+  },
 });

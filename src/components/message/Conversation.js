@@ -38,7 +38,15 @@ export default function Conversation({
       <Grid item xs={9} sm>
         <Grid container direction="row" justifyContent="center" alignItems="center">
           <Grid item xs={12}>
-            <Badge color="primary" variant="dot" invisible={isRead} overlap="rectangular">
+            <Badge
+              color="primary"
+              variant="dot"
+              invisible={isRead}
+              overlap="rectangular"
+              sx={{
+                zIndex: "notification_dot",
+              }}
+            >
               <Typography variant="h6">{title}</Typography>
             </Badge>
           </Grid>
