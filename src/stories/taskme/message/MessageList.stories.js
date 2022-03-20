@@ -21,6 +21,7 @@ MessageList.args = {
       message: "Hello, I would like to follow up the task.",
       isOwned: false,
       id: "-MyXQeYqUPJsKpeTlZs0",
+      sentAt: "8:15 AM",
     },
     {
       image:
@@ -28,6 +29,8 @@ MessageList.args = {
       message: "Hi I am nearly done, just some finishing touches are being added.",
       isOwned: true,
       id: "-MyXQnVcgDIkyAAEKh_u",
+      sentAt: "8:16 AM",
+      isDelivered: true,
     },
     {
       image:
@@ -35,6 +38,8 @@ MessageList.args = {
       message: "I'll ping you once it's done, might take an hour or so.",
       isOwned: true,
       id: "-MyXQzZMDrU4ow3_X1_D",
+      sentAt: "8:16 AM",
+      isDelivered: true,
     },
     {
       image:
@@ -42,6 +47,7 @@ MessageList.args = {
       message: "Okay great.",
       isOwned: false,
       id: "-MyXR1N2FBYvQ61OJBsj",
+      sentAt: "8:17 AM",
     },
   ],
 };
