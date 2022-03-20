@@ -20,22 +20,14 @@ export default function Conversation({
     <Grid
       container
       direction="row"
-      // justifyContent="center"
       alignItems="center"
       sx={{ cursor: "pointer" }}
       onClick={() => onClick(id)}
     >
-      <Grid item xs={3} sm="auto" sx={{ pr: 1 }}>
-        <Avatar
-          alt={title}
-          src={avatar}
-          sx={{
-            height: 60,
-            width: 60,
-          }}
-        />
+      <Grid item xs={2} sm="auto" sx={{ pr: 1 }}>
+        <Avatar alt={title} src={avatar} />
       </Grid>
-      <Grid item xs={9} sm>
+      <Grid item xs={10}>
         <Grid container direction="row" justifyContent="center" alignItems="center">
           <Grid item xs={12}>
             <Badge
