@@ -33,7 +33,7 @@ ConversationViewer.args = {
     {
       avatar:
         "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-      title: "Allan Turing",
+      title: "Allan Parker",
       lastSender: "Allan Parker",
       lastMessage: "Hi we need to test the AI tomorrow.",
       lastMessageSent: "2h ago",
