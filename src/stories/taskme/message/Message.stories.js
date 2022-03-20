@@ -19,6 +19,8 @@ Owned.args = {
   message: "Hello, I would like to follow up the task.",
   isOwned: true,
   id: "-MyXQeYqUPJsKpeTlZs0",
+  sentAt: "8:15 AM",
+  isDelivered: true,
 };
 
 export const NotOwned = Template.bind({});
@@ -29,4 +31,6 @@ NotOwned.args = {
   message: "Hello, I would like to follow up the task.",
   isOwned: false,
   id: "-MyXQeYqUPJsKpeTlZs0",
+  sentAt: "8:15 AM",
+  isDelivered: true,
 };
