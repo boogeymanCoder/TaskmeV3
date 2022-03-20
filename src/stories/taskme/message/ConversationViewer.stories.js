@@ -9,6 +9,7 @@ const sb = {
     onClick: { action: "onClick" },
     onSearch: { action: "onSearch" },
     onNewMessage: { action: "onNewMessage" },
+    onClose: { action: "onClose" },
   },
 };
 export default sb;

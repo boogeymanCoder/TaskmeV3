@@ -1,4 +1,5 @@
 import { Avatar, Badge, Grid, IconButton, Menu, MenuItem, Typography } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import React from "react";
 import PropTypes from "prop-types";
 import { Call, VideoCall } from "@mui/icons-material";
@@ -16,6 +17,8 @@ export default function ChatBar({
   onVoiceCall,
   onVideoCall,
   menuActions,
+  drawer = false,
+  onDrawer,
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -27,7 +30,12 @@ export default function ChatBar({
   };
 
   return (
-    <Grid container direction="row" alignItems="center" bgcolor="white.light" sx={{ p: 1 }}>
+    <Grid container direction="row" alignItems="center" bgcolor="white.light">
+      <Grid item xs={1} sm="auto" sx={{ display: drawer ? null : "none" }}>
+        <IconButton color="primary" onClick={onDrawer}>
+          <MenuIcon />
+        </IconButton>
+      </Grid>
       {image && (
         <Grid item xs={2} sm="auto">
           <Badge color="secondary" overlap="circular" badgeContent=" " invisible={!isActive}>
@@ -61,7 +69,7 @@ export default function ChatBar({
           </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={5} sm="auto">
+      <Grid item xs={drawer ? 4 : 5} sm="auto">
         <Grid container align="end" direction="row" alignItems="center" justifyContent="flex-end">
           <Grid item xs={4} sm="auto">
             <IconButton onClick={onVoiceCall}>
@@ -132,4 +140,12 @@ ChatBar.propTypes = {
       method: PropTypes.func.isRequired,
     })
   ),
+  /**
+   * Whether to be in drawer mode or not
+   */
+  drawer: PropTypes.bool,
+  /**
+   * Function to call when opening drawer, requires drawer = true.
+   */
+  onDrawer: PropTypes.func,
 };

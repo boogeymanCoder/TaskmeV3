@@ -9,6 +9,7 @@ const sb = {
   argTypes: {
     onVoiceCall: { action: "onVoiceCall" },
     onVideoCall: { action: "onVideoCall" },
+    onDrawer: { action: "onDrawer" },
   },
 };
 export default sb;
