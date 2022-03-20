@@ -27,7 +27,7 @@ export default function ChatBar({
   };
 
   return (
-    <Grid container direction="row" alignItems="center" sx={{ p: 1 }}>
+    <Grid container direction="row" alignItems="center" bgcolor="white.light" sx={{ p: 1 }}>
       {image && (
         <Grid item xs={2} sm="auto">
           <Badge color="secondary" overlap="circular" badgeContent=" " invisible={!isActive}>

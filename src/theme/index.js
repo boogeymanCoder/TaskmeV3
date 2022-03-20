@@ -210,7 +210,7 @@ export const theme = createTheme({
       contrastText: "#ffffff",
     },
     white: {
-      main: "#CCCCCC",
+      main: "#FDFDFD",
       light: "#FFFFFF",
       dark: "#AAAAAA",
       contrastText: "#000000",
@@ -318,5 +318,6 @@ export const theme = createTheme({
   zIndex: {
     notification_dot: -1,
     page_fab: 1150,
+    message_list: -1,
   },
 });
