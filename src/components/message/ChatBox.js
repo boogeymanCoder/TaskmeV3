@@ -38,7 +38,7 @@ export default function ChatBox({
           <ConversationViewer {...conversationViewerProps} />
         </Grid>
         <Grid item xs={min600 ? 7 : 12} sx={{ maxHeight: "100vh", m: 0, p: 0 }}>
-          <Grid container sx={{ height: "94vh", overflow: "auto" }}>
+          <Grid container sx={{ height: "94vh", overflow: "auto", overflowX: "hidden" }}>
             <Grid item xs={12} sx={{ mb: 1 }} position="sticky" top={0}>
               <ChatBar {...chatBarProps} drawer={!min600} onDrawer={() => setOpenDrawer(true)} />
             </Grid>
