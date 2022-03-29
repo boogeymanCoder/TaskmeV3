@@ -56,7 +56,14 @@ export default function MessageInput({ onSend, onUploadFile }) {
 
   return (
     <form onSubmit={formik.handleSubmit} noValidate>
-      <Grid container direction="row" justifyContent="center" alignItems="flex-end">
+      <Grid
+        container
+        direction="row"
+        bgcolor="white.light"
+        justifyContent="center"
+        alignItems="flex-end"
+        sx={{ p: 1 }}
+      >
         <Grid item xs>
           <TextField
             InputProps={{
@@ -100,14 +107,12 @@ export default function MessageInput({ onSend, onUploadFile }) {
               ),
             }}
             disabled={formik.isSubmitting}
-            error={Boolean(formik.errors.message)}
             onChange={formik.handleChange}
             value={formik.values.message}
             name="message"
             multiline
             maxRows={6}
             fullWidth
-            autoFocus
             label="Message"
             variant="outlined"
           />

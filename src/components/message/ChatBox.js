@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Grid } from "@mui/material";
+import { Card, Drawer, Grid, useMediaQuery } from "@mui/material";
 import ConversationViewer from "./ConversationViewer";
 import ChatBar from "./ChatBar";
 import MessageList from "./MessageList";
@@ -12,25 +12,46 @@ export default function ChatBox({
   messageListProps,
   messageInputProps,
 }) {
+  const min600 = useMediaQuery("(min-width:600px)");
+  const [openDrawer, setOpenDrawer] = useState(false);
   return (
-    <Grid container>
-      <Grid item xs={5} sx={{ maxHeight: "100vh", overflow: "auto" }}>
-        <ConversationViewer {...conversationViewerProps} />
-      </Grid>
-      <Grid item xs={7}>
-        <Grid container sx={{ maxHeight: "100vh", overflow: "auto", m: 1 }}>
-          <Grid item xs={12} sx={{ my: 1 }}>
-            <ChatBar {...chatBarProps} />
-          </Grid>
-          <Grid item xs={12}>
-            <MessageList {...messageListProps} />
-          </Grid>
-          <Grid item xs={12}>
-            <MessageInput {...messageInputProps} />
+    <>
+      <Drawer open={openDrawer} onClose={(e) => setOpenDrawer(false)} anchor="left">
+        <ConversationViewer
+          {...conversationViewerProps}
+          drawer={!min600}
+          onClose={() => setOpenDrawer(false)}
+        />
+      </Drawer>
+      <Grid container sx={{ maxHeight: "100vh", m: 0, p: 0 }}>
+        <Grid
+          item
+          xs={5}
+          sx={{
+            height: "95vh",
+            overflow: "auto",
+            display: min600 ? null : "none",
+            m: 0,
+            p: 0,
+          }}
+        >
+          <ConversationViewer {...conversationViewerProps} />
+        </Grid>
+        <Grid item xs={min600 ? 7 : 12} sx={{ maxHeight: "100vh", m: 0, p: 0 }}>
+          <Grid container sx={{ height: "94vh", overflow: "auto", overflowX: "hidden" }}>
+            <Grid item xs={12} sx={{ mb: 1 }} position="sticky" top={0}>
+              <ChatBar {...chatBarProps} drawer={!min600} onDrawer={() => setOpenDrawer(true)} />
+            </Grid>
+            <Grid item xs={12} zIndex="message_list">
+              <MessageList {...messageListProps} />
+            </Grid>
+            <Grid item xs={12} sx={{ mt: 1 }} position="sticky" bottom={0}>
+              <MessageInput {...messageInputProps} />
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 }
 

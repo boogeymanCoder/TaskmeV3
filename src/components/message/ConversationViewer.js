@@ -12,15 +12,22 @@ import {
   Fab,
   Container,
 } from "@mui/material";
-import { Add, Search } from "@mui/icons-material";
+import { Add, MenuOpen, Search } from "@mui/icons-material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Box } from "@mui/system";
+import { IconButton } from "@material-ui/core";
 
 /**
  * Allow users to search for conversations.
  */
-export default function ConversationViewer({ onSearch, conversations, onClick }) {
+export default function ConversationViewer({
+  onSearch,
+  conversations,
+  onClick,
+  drawer = false,
+  onClose,
+}) {
   const formik = useFormik({
     initialValues: {
       query: "",
@@ -37,21 +44,30 @@ export default function ConversationViewer({ onSearch, conversations, onClick })
       subheader={
         <ListSubheader>
           <form onSubmit={formik.handleSubmit}>
-            <TextField
-              fullWidth
-              onChange={formik.handleChange}
-              name="query"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="start">
-                    <Search fontSize="small" />
-                  </InputAdornment>
-                ),
-              }}
-              placeholder="Search conversation"
-              variant="outlined"
-              sx={{ my: 1, position: "sticky" }}
-            />
+            <Grid container direction="row" justifyContent="center" alignItems="center">
+              <Grid item xs={2} sx={{ display: drawer ? null : "none" }}>
+                <IconButton color="primary" onClick={onClose} sx={{ display: "none" }}>
+                  <MenuOpen />
+                </IconButton>
+              </Grid>
+              <Grid item xs={drawer ? 10 : 12}>
+                <TextField
+                  fullWidth
+                  onChange={formik.handleChange}
+                  name="query"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="start">
+                        <Search fontSize="small" />
+                      </InputAdornment>
+                    ),
+                  }}
+                  placeholder="Search conversation"
+                  variant="outlined"
+                  sx={{ my: 1, position: "sticky" }}
+                />
+              </Grid>
+            </Grid>
           </form>
         </ListSubheader>
       }
@@ -76,4 +92,12 @@ ConversationViewer.propTypes = {
    * Function to call when the user clicks on a conversation.
    */
   onClick: PropTypes.func.isRequired,
+  /**
+   * Whether on drawer mode.
+   */
+  drawer: PropTypes.bool,
+  /**
+   * Function to call on closing drawer, requires drawer = true.
+   */
+  onClose: PropTypes.func.isRequired,
 };

@@ -10,7 +10,7 @@ export default function ConversationList({ conversations, onClick }) {
   return (
     <List sx={{ width: "100%" }}>
       {conversations.map((conversation) => (
-        <ListItemButton key={conversation.id} sx={{ mb: 1 }}>
+        <ListItemButton key={conversation.id} sx={{ mb: 1, width: "100%" }}>
           <Conversation {...conversation} onClick={onClick} />
         </ListItemButton>
       ))}
