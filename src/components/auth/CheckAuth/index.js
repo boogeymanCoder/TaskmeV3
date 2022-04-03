@@ -34,5 +34,6 @@ export default function CheckAuth({ children }) {
 
   console.log({ user, userLoading, userError });
 
-  return <>{children}</>;
+  if (user) return <>{children}</>;
+  else return <LinearProgress />;
 }

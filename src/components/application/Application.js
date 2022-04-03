@@ -7,6 +7,7 @@ import {
   Grid,
   IconButton,
   LinearProgress,
+  Link,
   ListItem,
   ListItemAvatar,
   ListItemSecondaryAction,
@@ -103,9 +104,9 @@ export default function Application({
                   {employeeLoading ? (
                     <Skeleton width="100%" variant="text" />
                   ) : (
-                    <Typography color="textPrimary" variant="body1">
-                      {employee ? employee.fullname : ""}
-                    </Typography>
+                    <Link href={`/account/${application.employee}`}>
+                      <Typography variant="body1">{employee ? employee.fullname : ""}</Typography>
+                    </Link>
                   )}
                 </Grid>
                 <Grid

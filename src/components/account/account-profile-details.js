@@ -33,15 +33,13 @@ import PropTypes from "prop-types";
 /**
  * Allows users to view and update their profile information.
  */
-export function AccountProfileDetails({ publicView = false, ...props }) {
+export function AccountProfileDetails({ publicView = false, id, ...props }) {
   const database = getDatabase();
 
   const auth = getAuth();
   const [user, userLoading, userError] = useAuthState(auth);
 
-  const [account, accountLoading, accountError] = useObjectVal(
-    ref(database, `accounts/${user ? user.uid : "dummy"}`)
-  );
+  const [account, accountLoading, accountError] = useObjectVal(ref(database, `accounts/${id}`));
   const [updateProfile, updateProfileLoading, updateProfileError] = useUpdateProfile(auth);
   const [showSuccessUpdate, setShowSuccessUpdate] = useState(false);
 
@@ -95,7 +93,7 @@ export function AccountProfileDetails({ publicView = false, ...props }) {
         image: account.image,
       });
     }
-    if (!accountLoading && !account) {
+    if (!accountLoading && !account && !publicView) {
       return formik.setValues({
         fullname: user && user.displayName ? user.displayName : "",
         address: "",
@@ -238,7 +236,14 @@ export function AccountProfileDetails({ publicView = false, ...props }) {
 }
 
 AccountProfileDetails.propTypes = {
+  /**
+   * Whether the profile is in public view.
+   */
   publicView: PropTypes.bool,
+  /**
+   * The users id
+   */
+  id: PropTypes.string,
 };
 
 AccountProfileDetails.default = {
