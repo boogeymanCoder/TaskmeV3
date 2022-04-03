@@ -28,10 +28,12 @@ import SnackbarMessage from "../SnackbarMessage";
 import { getDatabase, ref } from "firebase/database";
 import { useObjectVal } from "react-firebase-hooks/database";
 
+import PropTypes from "prop-types";
+
 /**
  * Allows users to view and update their profile information.
  */
-export function AccountProfileDetails(props) {
+export function AccountProfileDetails({ publicView = false, ...props }) {
   const database = getDatabase();
 
   const auth = getAuth();
@@ -114,7 +116,7 @@ export function AccountProfileDetails(props) {
           <Grid container spacing={3}>
             <Grid item md={6} xs={12}>
               <TextField
-                disabled={userLoading || accountLoading || formik.isSubmitting}
+                disabled={userLoading || accountLoading || formik.isSubmitting || publicView}
                 error={Boolean(formik.touched.fullname && formik.errors.fullname)}
                 helperText={formik.touched.fullname && formik.errors.fullname}
                 onBlur={formik.handleBlur}
@@ -132,7 +134,7 @@ export function AccountProfileDetails(props) {
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Gender</InputLabel>
                 <Select
-                  disabled={userLoading || accountLoading || formik.isSubmitting}
+                  disabled={userLoading || accountLoading || formik.isSubmitting || publicView}
                   error={Boolean(formik.touched.gender && formik.errors.gender)}
                   fullWidth
                   helperText={formik.touched.gender && formik.errors.gender}
@@ -152,7 +154,7 @@ export function AccountProfileDetails(props) {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                disabled={userLoading || accountLoading || formik.isSubmitting}
+                disabled={userLoading || accountLoading || formik.isSubmitting || publicView}
                 error={Boolean(formik.touched.address && formik.errors.address)}
                 fullWidth
                 helperText={formik.touched.address && formik.errors.address}
@@ -168,7 +170,7 @@ export function AccountProfileDetails(props) {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
-                disabled={userLoading || accountLoading || formik.isSubmitting}
+                disabled={userLoading || accountLoading || formik.isSubmitting || publicView}
                 error={Boolean(formik.touched.email && formik.errors.email)}
                 fullWidth
                 helperText={formik.touched.email && formik.errors.email}
@@ -184,7 +186,7 @@ export function AccountProfileDetails(props) {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
-                disabled={userLoading || accountLoading || formik.isSubmitting}
+                disabled={userLoading || accountLoading || formik.isSubmitting || publicView}
                 error={Boolean(formik.touched.contact && formik.errors.contact)}
                 fullWidth
                 helperText={formik.touched.contact && formik.errors.contact}
@@ -200,23 +202,27 @@ export function AccountProfileDetails(props) {
             </Grid>
           </Grid>
         </CardContent>
-        <Divider />
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "flex-end",
-            p: 2,
-          }}
-        >
-          <Button
-            color="primary"
-            variant="contained"
-            disabled={userLoading || accountLoading || formik.isSubmitting}
-            type="submit"
-          >
-            Save details
-          </Button>
-        </Box>
+        {!publicView && (
+          <>
+            <Divider />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                p: 2,
+              }}
+            >
+              <Button
+                color="primary"
+                variant="contained"
+                disabled={userLoading || accountLoading || formik.isSubmitting || publicView}
+                type="submit"
+              >
+                Save details
+              </Button>
+            </Box>
+          </>
+        )}
 
         <SnackbarMessage
           message="Updated successfully"
@@ -230,3 +236,11 @@ export function AccountProfileDetails(props) {
     </form>
   );
 }
+
+AccountProfileDetails.propTypes = {
+  publicView: PropTypes.bool,
+};
+
+AccountProfileDetails.default = {
+  publicView: false,
+};
