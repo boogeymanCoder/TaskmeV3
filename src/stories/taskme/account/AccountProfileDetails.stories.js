@@ -12,10 +12,12 @@ export default sb;
 const Template = (args) => {
   return (
     <StorybookCheckAuth>
-      <AccountProfileDetailsComponent />
+      <AccountProfileDetailsComponent {...args} />
     </StorybookCheckAuth>
   );
 };
 
 export const AccountProfileDetails = Template.bind({});
-AccountProfileDetails.args = {};
+AccountProfileDetails.args = {
+  publicView: false,
+};

@@ -5,6 +5,9 @@ import StorybookCheckAuth from "/src/components/sb/StorybookCheckAuth";
 const sb = {
   title: "Account/Account Profile",
   component: AccountProfileComponent,
+  argTypes: {
+    onMessage: { action: "onMessage" },
+  },
 };
 export default sb;
 
@@ -13,10 +16,12 @@ export default sb;
 const Template = (args) => {
   return (
     <StorybookCheckAuth>
-      <AccountProfileComponent />
+      <AccountProfileComponent {...args} />
     </StorybookCheckAuth>
   );
 };
 
 export const AccountProfile = Template.bind({});
-AccountProfile.args = {};
+AccountProfile.args = {
+  publicView: false,
+};

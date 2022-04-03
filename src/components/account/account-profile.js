@@ -21,10 +21,12 @@ import { useEffect, useState } from "react";
 import { getDatabase, ref as dbRef, update } from "firebase/database";
 import { useObjectVal } from "react-firebase-hooks/database";
 
+import PropTypes from "prop-types";
+
 /**
  * Displays account profile picture and summary of information.
  */
-export function AccountProfile(props) {
+export function AccountProfile({ publicView = false, onMessage, ...props }) {
   const auth = getAuth();
   const [user, loading, error] = useAuthState(auth);
   const storage = getStorage();
@@ -132,17 +134,45 @@ export function AccountProfile(props) {
       </CardContent>
       <Divider />
       <CardActions>
-        <Button
-          fullWidth
-          variant="text"
-          color="primary"
-          component="label"
-          disabled={loading || accountLoading || uploading}
-        >
-          Upload picture
-          <input type="file" hidden multiple={false} onChange={handleUpload} />
-        </Button>
+        {publicView && (
+          <Button
+            fullWidth
+            variant="text"
+            color="primary"
+            disabled={loading || accountLoading || uploading}
+            onClick={onMessage}
+          >
+            Message
+          </Button>
+        )}
+        {!publicView && (
+          <Button
+            fullWidth
+            variant="text"
+            color="primary"
+            component="label"
+            disabled={loading || accountLoading || uploading}
+          >
+            Upload picture
+            <input type="file" hidden multiple={false} onChange={handleUpload} />
+          </Button>
+        )}
       </CardActions>
     </Card>
   );
 }
+
+AccountProfile.propTypes = {
+  /**
+   * Whether the profile is in public view (has viewing features), else (has updating features).
+   */
+  publicView: PropTypes.bool,
+  /**
+   * Function called when the user is messaged, requires publicView = true.
+   */
+  onMessage: PropTypes.func,
+};
+
+AccountProfile.default = {
+  publicView: true,
+};
