@@ -19,5 +19,6 @@ const Template = (args) => {
 
 export const AccountProfileDetails = Template.bind({});
 AccountProfileDetails.args = {
+  id: "",
   publicView: false,
 };

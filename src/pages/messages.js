@@ -38,6 +38,6 @@ export function MessagesPage() {
   );
 }
 
-MessagesPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+Messages.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Messages;

@@ -7,6 +7,7 @@ import CheckAuth from "/src/components/auth/CheckAuth";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
+import PropTypes from "prop-types";
 
 const Account = () => {
   const router = useRouter();
@@ -58,6 +59,17 @@ export const AccountPage = ({ id, publicView }) => {
       </Box>
     </CheckAuth>
   );
+};
+
+AccountPage.PropTypes = {
+  /**
+   * The users id.
+   */
+  id: PropTypes.string.isRequired,
+  /**
+   * Whether the account is on public view.
+   */
+  publicView: PropTypes.bool.isRequired,
 };
 
 Account.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
