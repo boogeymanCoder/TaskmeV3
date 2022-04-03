@@ -79,6 +79,6 @@ export const TasksPage = () => {
   );
 };
 
-TasksPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+Tasks.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Tasks;

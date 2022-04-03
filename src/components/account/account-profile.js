@@ -26,14 +26,14 @@ import PropTypes from "prop-types";
 /**
  * Displays account profile picture and summary of information.
  */
-export function AccountProfile({ publicView = false, onMessage, ...props }) {
+export function AccountProfile({ publicView = false, id, onMessage, ...props }) {
   const auth = getAuth();
   const [user, loading, error] = useAuthState(auth);
   const storage = getStorage();
   const [uploadFile, uploading, snapshot, uploadError] = useUploadFile();
 
   const database = getDatabase();
-  const accountRef = dbRef(database, `accounts/${user ? user.uid : "dummy"}`);
+  const accountRef = dbRef(database, `accounts/${id}`);
   const [account, accountLoading, accountError] = useObjectVal(accountRef);
   const [updateProfile, updateProfileLoading, updateProfileError] = useUpdateProfile(auth);
 
@@ -57,7 +57,7 @@ export function AccountProfile({ publicView = false, onMessage, ...props }) {
         image: account.image,
       });
 
-    if (!accountLoading && !account) {
+    if (!accountLoading && !account && !publicView) {
       return setValues({
         fullname: user && user.displayName ? user.displayName : "",
         address: "",
@@ -65,6 +65,17 @@ export function AccountProfile({ publicView = false, onMessage, ...props }) {
         contact: "",
         gender: "Male",
         image: user && user.photoURL ? user.photoURL : "",
+      });
+    }
+
+    if (!accountLoading && !account && publicView) {
+      return setValues({
+        fullname: "Profile Not Found",
+        address: "",
+        email: "",
+        contact: "",
+        gender: "",
+        image: "",
       });
     }
   }, [account, accountLoading]);
@@ -171,6 +182,10 @@ AccountProfile.propTypes = {
    * Function called when the user is messaged, requires publicView = true.
    */
   onMessage: PropTypes.func,
+  /**
+   * The id of the user
+   */
+  id: PropTypes.string,
 };
 
 AccountProfile.default = {

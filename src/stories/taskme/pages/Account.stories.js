@@ -1,4 +1,4 @@
-import { AccountPage } from "/src/pages/account";
+import { AccountPage } from "/src/pages/account/[id]";
 import StorybookCheckAuth from "/src/components/sb/StorybookCheckAuth";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export

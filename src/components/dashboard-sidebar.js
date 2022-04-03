@@ -45,7 +45,7 @@ const items = [
     title: "Tasks",
   },
   {
-    href: "/account",
+    href: "/account/me",
     icon: <UserIcon fontSize="small" />,
     title: "Account",
   },

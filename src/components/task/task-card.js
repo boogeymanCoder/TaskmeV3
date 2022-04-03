@@ -240,9 +240,11 @@ export const TaskCard = ({ taskData, ...rest }) => {
                         {employerLoading ? (
                           <Skeleton width="100%" variant="text" />
                         ) : (
-                          <Typography color="textPrimary" variant="body1">
-                            {employer ? employer.fullname : ""}
-                          </Typography>
+                          <Link href={`/account/${task.employer}`}>
+                            <Typography variant="body1">
+                              {employer ? employer.fullname : ""}
+                            </Typography>
+                          </Link>
                         )}
                       </Grid>
                       <Grid
