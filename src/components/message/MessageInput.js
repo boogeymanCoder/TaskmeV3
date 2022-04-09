@@ -12,7 +12,11 @@ import {
 } from "@mui/material";
 import EmojiSymbols from "@mui/icons-material/EmojiSymbols";
 import { AddBox, AttachFile, InsertEmoticon, PhotoCamera, Send } from "@mui/icons-material";
-import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
+import dynamic from "next/dynamic";
+const Picker = dynamic(() => import("emoji-picker-react"), {
+  ssr: false,
+});
+
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
@@ -87,22 +91,6 @@ export default function MessageInput({ onSend, onUploadFile }) {
                   >
                     <InsertEmoticon color="primary" />
                   </IconButton>
-
-                  <Menu
-                    id="emoji-picker"
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleEmojiClose}
-                    MenuListProps={{
-                      "aria-labelledby": "icon-button",
-                    }}
-                  >
-                    <Picker
-                      onEmojiClick={onEmojiClick}
-                      disableAutoFocus={true}
-                      groupNames={{ smileys_people: "PEOPLE" }}
-                    />
-                  </Menu>
                 </InputAdornment>
               ),
             }}
@@ -123,6 +111,30 @@ export default function MessageInput({ onSend, onUploadFile }) {
           </IconButton>
         </Grid>
       </Grid>
+
+      <Menu
+        id="emoji-picker"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleEmojiClose}
+        MenuListProps={{
+          "aria-labelledby": "icon-button",
+        }}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+      >
+        <Picker
+          onEmojiClick={onEmojiClick}
+          disableAutoFocus={true}
+          groupNames={{ smileys_people: "PEOPLE" }}
+        />
+      </Menu>
     </form>
   );
 }

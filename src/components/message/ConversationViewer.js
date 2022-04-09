@@ -11,6 +11,7 @@ import {
   TextField,
   Fab,
   Container,
+  Button,
 } from "@mui/material";
 import { Add, MenuOpen, Search } from "@mui/icons-material";
 import { useFormik } from "formik";
@@ -46,9 +47,9 @@ export default function ConversationViewer({
           <form onSubmit={formik.handleSubmit}>
             <Grid container direction="row" justifyContent="center" alignItems="center">
               <Grid item xs={2} sx={{ display: drawer ? null : "none" }}>
-                <IconButton color="primary" onClick={onClose} sx={{ display: "none" }}>
+                <Button color="primary" onClick={onClose} sx={{ display: drawer ? null : "none" }}>
                   <MenuOpen />
-                </IconButton>
+                </Button>
               </Grid>
               <Grid item xs={drawer ? 10 : 12}>
                 <TextField

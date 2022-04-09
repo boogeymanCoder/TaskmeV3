@@ -5,6 +5,7 @@ import ConversationViewer from "./ConversationViewer";
 import ChatBar from "./ChatBar";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
+import { Box } from "@material-ui/core";
 
 export default function ChatBox({
   conversationViewerProps,
@@ -15,7 +16,7 @@ export default function ChatBox({
   const min600 = useMediaQuery("(min-width:600px)");
   const [openDrawer, setOpenDrawer] = useState(false);
   return (
-    <>
+    <Box sx={{ height: "90vh", overflow: "hidden" }}>
       <Drawer open={openDrawer} onClose={(e) => setOpenDrawer(false)} anchor="left">
         <ConversationViewer
           {...conversationViewerProps}
@@ -23,12 +24,12 @@ export default function ChatBox({
           onClose={() => setOpenDrawer(false)}
         />
       </Drawer>
-      <Grid container sx={{ maxHeight: "100vh", m: 0, p: 0 }}>
+      <Grid container sx={{ height: "100vh", m: 0, p: 0 }}>
         <Grid
           item
           xs={5}
           sx={{
-            height: "95vh",
+            maxHeight: "95vh",
             overflow: "auto",
             display: min600 ? null : "none",
             m: 0,
@@ -37,8 +38,8 @@ export default function ChatBox({
         >
           <ConversationViewer {...conversationViewerProps} />
         </Grid>
-        <Grid item xs={min600 ? 7 : 12} sx={{ maxHeight: "100vh", m: 0, p: 0 }}>
-          <Grid container sx={{ height: "94vh", overflow: "auto", overflowX: "hidden" }}>
+        <Grid item xs={min600 ? 7 : 12} sx={{ maxHeight: "95vh", m: 0, p: 0 }}>
+          <Grid container sx={{ height: "90vh", overflow: "auto", overflowX: "hidden" }}>
             <Grid item xs={12} sx={{ mb: 1 }} position="sticky" top={0}>
               <ChatBar {...chatBarProps} drawer={!min600} onDrawer={() => setOpenDrawer(true)} />
             </Grid>
@@ -51,7 +52,7 @@ export default function ChatBox({
           </Grid>
         </Grid>
       </Grid>
-    </>
+    </Box>
   );
 }
 
