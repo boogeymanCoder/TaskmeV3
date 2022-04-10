@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Grid } from "@mui/material";
-import Message from "./Message";
+import Message, { FirebaseMessage } from "./Message";
 
 /**
  * Displays messages to the user on a list view.
@@ -10,8 +10,8 @@ export default function MessageList({ messages }) {
   return (
     <Grid container direction="column">
       {messages.map((message) => (
-        <Grid key={message.id} item xs>
-          <Message {...message} />
+        <Grid key={message} item xs>
+          <FirebaseMessage id={message} />
         </Grid>
       ))}
     </Grid>

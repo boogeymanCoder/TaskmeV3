@@ -1,8 +1,35 @@
 import { Avatar, Badge, Grid, Tooltip, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Check } from "@mui/icons-material";
+import { get, getDatabase, ref } from "firebase/database";
 import { CircularProgress } from "@material-ui/core";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { getAuth } from "firebase/auth";
+import { useObjectVal } from "react-firebase-hooks/database";
+
+export function FirebaseMessage({ id }) {
+  const database = getDatabase();
+  const auth = getAuth();
+  const [user, userLoading, userError] = useAuthState(auth);
+  const [message, messageLoading, messageError] = useObjectVal(
+    ref(database, `conversations/dummy`),
+    {
+      keyField: "uid",
+    }
+  );
+
+  if (userLoading || !user || messageLoading) return <CircularProgress />;
+
+  return (
+    <Message
+      image={user.photoURL}
+      message={message}
+      isOwned={user.uid === message.sender}
+      sentAt={message.sentAt}
+    />
+  );
+}
 
 /**
  * Displays user messages.
