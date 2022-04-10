@@ -30,7 +30,7 @@ export default function ChatBar({
   };
 
   return (
-    <Grid container direction="row" alignItems="center" bgcolor="white.light">
+    <Grid container direction="row" alignItems="center" bgcolor="white.light" sx={{ padding: 1 }}>
       <Grid item xs={1} sm="auto" sx={{ display: drawer ? null : "none" }}>
         <IconButton color="primary" onClick={onDrawer}>
           <MenuIcon />

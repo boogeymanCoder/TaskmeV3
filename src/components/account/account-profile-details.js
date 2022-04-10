@@ -43,6 +43,8 @@ export function AccountProfileDetails({ publicView = false, id, ...props }) {
   const [updateProfile, updateProfileLoading, updateProfileError] = useUpdateProfile(auth);
   const [showSuccessUpdate, setShowSuccessUpdate] = useState(false);
 
+  console.log({ account, accountLoading, accountError });
+
   const formik = useFormik({
     initialValues: {
       fullname: "",
