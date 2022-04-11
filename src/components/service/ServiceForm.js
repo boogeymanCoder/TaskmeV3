@@ -44,7 +44,7 @@ export default function ServiceForm({
       price: Yup.number().required("Price is required"),
     }),
     onSubmit: async (values) => {
-      return await onSubmit(values);
+      return onSubmit(values);
     },
   });
   return (
@@ -143,7 +143,7 @@ export default function ServiceForm({
 
         <DialogActions>
           <Button onClick={onCancel}>Cancel</Button>
-          <Button type="submit">Subscribe</Button>
+          <Button type="submit">Submit</Button>
         </DialogActions>
       </form>
     </Dialog>
