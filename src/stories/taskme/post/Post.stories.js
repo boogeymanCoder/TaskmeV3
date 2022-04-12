@@ -3,7 +3,7 @@ import { default as PostComponent } from "/src/components/post/Post";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const sb = {
-  title: "Forum/Post",
+  title: "Post/Post",
   component: PostComponent,
   argTypes: {
     onEdit: { action: "onEdit" },

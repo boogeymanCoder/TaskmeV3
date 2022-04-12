@@ -3,7 +3,7 @@ import { default as PostFormComponent } from "/src/components/post/PostForm";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const sb = {
-  title: "Forum/Post Form",
+  title: "Post/Post Form",
   component: PostFormComponent,
   argTypes: {
     onSubmit: { action: "onSubmit" },
