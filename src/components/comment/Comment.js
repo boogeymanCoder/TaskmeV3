@@ -43,6 +43,10 @@ Comment.propTypes = {
    */
   name: PropTypes.string.isRequired,
   /**
+   * When the comment was last updated.
+   */
+  lastUpdate: PropTypes.string.isRequired,
+  /**
    * The comment body.
    */
   body: PropTypes.string.isRequired,
