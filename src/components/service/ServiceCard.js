@@ -9,6 +9,8 @@ import {
   Divider,
   IconButton,
   LinearProgress,
+  Menu,
+  MenuItem,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
@@ -20,8 +22,9 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useObjectVal } from "react-firebase-hooks/database";
 import { useEffect } from "react";
 import moment from "moment";
-import { Edit } from "@mui/icons-material";
+import { Edit, MoreVert } from "@mui/icons-material";
 import ServiceForm from "./ServiceForm";
+import ConfirmMessage from "../ConfirmMessage";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -34,7 +37,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export function ServiceCard({ serviceData, onEdit }) {
+export function ServiceCard({ serviceData, onEdit, onDelete }) {
   const database = getDatabase();
   const auth = getAuth();
 
@@ -67,8 +70,87 @@ export function ServiceCard({ serviceData, onEdit }) {
       currency={serviceData.currency}
       price={serviceData.price}
       isOwned={user.uid === owner.uid}
-      onEdit={onEdit}
+      onEdit={user.uid === owner.uid ? onEdit : undefined}
+      onDelete={user.uid === owner.uid ? onDelete : undefined}
     />
+  );
+}
+
+export function ServiceMenu({ onEdit, onDelete }) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [openConfirmation, setOpenConfirmation] = useState(false);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <>
+      <IconButton
+        id="basic-button"
+        aria-controls={open ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClick}
+      >
+        <MoreVert />
+      </IconButton>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <MenuItem
+          onClick={() => {
+            onEdit();
+            handleClose();
+          }}
+        >
+          Edit
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            setOpenConfirmation(true);
+          }}
+        >
+          Delete
+        </MenuItem>
+      </Menu>
+
+      <ConfirmMessage
+        title="Delete Service?"
+        message="After deletion, this service can no longer be seen and and sent with offers from others."
+        onAgree={(e) => {
+          onDelete()
+            .then((res) => {
+              setOpenConfirmation(false);
+              handleClose();
+            })
+            .catch((err) => console.log({ err }));
+        }}
+        onDisagree={(e) => {
+          setOpenConfirmation(false);
+          handleClose();
+        }}
+        open={openConfirmation}
+        handleClose={(e) => setOpenConfirmation(false)}
+      />
+    </>
   );
 }
 
@@ -86,6 +168,7 @@ export default function ServiceCardView({
   price,
   isOwned = false,
   onEdit,
+  onDelete,
 }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -99,15 +182,7 @@ export default function ServiceCardView({
         title={owner}
         avatar={<Avatar src={avatar} />}
         subheader={lastUpdated}
-        action={
-          <>
-            {isOwned && (
-              <IconButton onClick={onEdit}>
-                <Edit />
-              </IconButton>
-            )}
-          </>
-        }
+        action={<>{isOwned && <ServiceMenu onEdit={onEdit} onDelete={onDelete} />}</>}
       />
 
       <CardContent>
@@ -181,6 +256,10 @@ ServiceCardView.propTypes = {
    * Function to call on edit, requires isOwned to be true.
    */
   onEdit: PropTypes.func,
+  /**
+   * Function to call on delete, requires isOwned to be true.
+   */
+  onDelete: PropTypes.func,
 };
 
 ServiceCardView.default = { isOwned: false };

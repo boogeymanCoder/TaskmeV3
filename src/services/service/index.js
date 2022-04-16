@@ -1,4 +1,4 @@
-import { getDatabase, push, ref, update } from "firebase/database";
+import { getDatabase, push, ref, remove, update } from "firebase/database";
 
 export function setService(service) {
   const database = getDatabase();
@@ -28,4 +28,12 @@ export function updateService(uid, service) {
   console.log({ serviceWithTimestamp });
 
   return update(serviceRef, serviceWithTimestamp);
+}
+
+export function deleteService(uid) {
+  console.log("delete");
+  const database = getDatabase();
+  const serviceRef = ref(database, `services/${uid}`);
+
+  return remove(serviceRef);
 }

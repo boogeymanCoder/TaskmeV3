@@ -13,7 +13,7 @@ import { DashboardLayout } from "src/components/dashboard-layout";
 import { ServiceCard } from "src/components/service/ServiceCard";
 import ServiceForm from "src/components/service/ServiceForm";
 import ServiceListToolbar from "src/components/service/ServiceToolbar";
-import { setService, updateService } from "src/services/service";
+import { setService, updateService, deleteService } from "src/services/service";
 
 const Services = () => {
   return (
@@ -52,6 +52,10 @@ export function ServicesPage() {
         return res;
       })
       .catch((err) => console.log({ err }));
+  }
+
+  async function handleDeleteService(uid) {
+    return deleteService(uid);
   }
 
   if (userLoading || !user || userError) {
@@ -93,6 +97,7 @@ export function ServicesPage() {
                             createdAt: service.createdAt,
                           });
                         }}
+                        onDelete={() => handleDeleteService(service.uid)}
                       />
                     </Grid>
                   ))}
