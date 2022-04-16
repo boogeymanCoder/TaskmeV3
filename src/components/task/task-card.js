@@ -7,6 +7,7 @@ import {
   Button,
   Card,
   CardContent,
+  CardHeader,
   Chip,
   Divider,
   Grid,
@@ -16,6 +17,7 @@ import {
   LinearProgress,
   Link,
   Skeleton,
+  Stack,
   Tab,
   Tooltip,
   Typography,
@@ -127,6 +129,24 @@ export const TaskCard = ({ taskData, ...rest }) => {
       }}
       {...rest}
     >
+      <CardHeader
+        avatar={
+          <Avatar src={employer ? employer.image : ""} width={40} height={40} sx={{ mr: 2 }} />
+        }
+        title={
+          <Link href={`/account/${task.employer}`}>
+            <Typography variant="body1">{employer ? employer.fullname : ""}</Typography>
+          </Link>
+        }
+        subheader={
+          <Stack direction="row" alignItems="center" gap={1}>
+            <ClockIcon fontSize="small" color="action" />
+            <Typography color="textSecondary" display="inline" variant="caption">
+              {updatedAt}
+            </Typography>
+          </Stack>
+        }
+      />
       <CardContent>
         <Grid container>
           <Grid
@@ -148,12 +168,10 @@ export const TaskCard = ({ taskData, ...rest }) => {
             </Button>
           </Grid>
           <Grid item xs>
-            <Typography align="center" color="textPrimary" gutterBottom variant="h4">
+            <Typography variant="h4" align="center">
               {task.title}
             </Typography>
-            <Typography align="center" color="textPrimary" variant="subtitle1">
-              {task.details}
-            </Typography>
+            <Typography align="center">{task.details}</Typography>
           </Grid>
         </Grid>
         <Grid container sx={{ mt: 3 }} spacing={2}>
@@ -211,62 +229,6 @@ export const TaskCard = ({ taskData, ...rest }) => {
                       <Chip size="small" label={tag} sx={{ mr: 1 }} color="primary" />
                     </Grid>
                   ))}
-                </Grid>
-              </Grid>
-
-              <Grid item xs={12} sx={{ justifyContent: "flex-end" }}>
-                <Grid container sx={{ mt: 3 }}>
-                  <Grid item>
-                    {employerLoading ? (
-                      <Skeleton variant="circular" width={40} height={40} sx={{ mr: 2 }} />
-                    ) : (
-                      <Avatar
-                        src={employer ? employer.image : ""}
-                        width={40}
-                        height={40}
-                        sx={{ mr: 2 }}
-                      />
-                    )}
-                  </Grid>
-                  <Grid item>
-                    <Grid container>
-                      <Grid
-                        item
-                        sx={{
-                          alignItems: "center",
-                        }}
-                        xs={12}
-                      >
-                        {employerLoading ? (
-                          <Skeleton width="100%" variant="text" />
-                        ) : (
-                          <Link href={`/account/${task.employer}`}>
-                            <Typography variant="body1">
-                              {employer ? employer.fullname : ""}
-                            </Typography>
-                          </Link>
-                        )}
-                      </Grid>
-                      <Grid
-                        item
-                        sx={{
-                          alignItems: "center",
-                          display: "flex",
-                        }}
-                        xs={12}
-                      >
-                        <ClockIcon fontSize="small" color="action" />
-                        <Typography
-                          color="textSecondary"
-                          display="inline"
-                          sx={{ pl: 1 }}
-                          variant="caption"
-                        >
-                          {updatedAt}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
                 </Grid>
               </Grid>
             </Grid>

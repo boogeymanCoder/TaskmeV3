@@ -1,4 +1,4 @@
-import { TasksPage } from "/src/pages/tasks";
+import { TasksPage } from "/src/pages/tasks/index.js";
 import StorybookCheckAuth from "/src/components/sb/StorybookCheckAuth";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
