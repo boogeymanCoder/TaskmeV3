@@ -168,9 +168,11 @@ export const TaskCard = ({ taskData, ...rest }) => {
             </Button>
           </Grid>
           <Grid item xs>
-            <Typography variant="h4" align="center">
-              {task.title}
-            </Typography>
+            <Link href={`/tasks/${task.uid}`}>
+              <Typography variant="h4" align="center">
+                {task.title}
+              </Typography>
+            </Link>
             <Typography align="center">{task.details}</Typography>
           </Grid>
         </Grid>
