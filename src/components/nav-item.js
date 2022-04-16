@@ -23,8 +23,9 @@ export const NavItem = ({ href, icon, title, isnew, ...props }) => {
         <Badge
           badgeContent={isnew ? "New" : ""}
           invisible={!isnew}
-          overlap="circular"
           color="secondary"
+          overlap="circular"
+          style={{ width: "100%" }}
         >
           <Button
             component="a"
