@@ -54,12 +54,11 @@ export function ServiceCard({ serviceData }) {
     return <LinearProgress />;
   }
 
-  // TODO replace placeholder date
   return (
     <ServiceCardView
       avatar={owner.image}
       owner={owner.fullname}
-      lastUpdated={moment("2022-04-16T04:50:21.630Z").fromNow()}
+      lastUpdated={moment(JSON.parse(serviceData.updatedAt)).fromNow()}
       title={serviceData.title}
       details={serviceData.details}
       tags={serviceData.tags}
