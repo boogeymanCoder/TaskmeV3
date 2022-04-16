@@ -27,7 +27,8 @@ export function ServicesPage() {
 
   async function handleAddService(values) {
     console.log({ values });
-    return setService(values, user.uid)
+    console.log("before add service:", { user });
+    return setService({ ...values, owner: user?.uid })
       .then((res) => setNewServiceOpen(false))
       .catch((err) => console.log(err));
   }

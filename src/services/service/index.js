@@ -1,10 +1,8 @@
 import { getDatabase, push, ref } from "firebase/database";
 
-export function setService(service, uid) {
-  if (!uid) return Promise.reject("setService Error: uid required");
-
+export function setService(service) {
   const database = getDatabase();
-  const servicesRef = ref(database, `services/${uid}`);
+  const servicesRef = ref(database, `services/`);
   const now = new Date();
   const createdAt = JSON.stringify(now);
   const updatedAt = JSON.stringify(now);
