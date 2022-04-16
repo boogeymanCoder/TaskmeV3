@@ -9,6 +9,7 @@ export function setApplication(application) {
     ...application,
     createdAt: JSON.stringify(now),
     updatedAt: JSON.stringify(now),
+    task_accepted: `${application.task}_${application.accepted}`,
   };
 
   return push(applicationsRef, applicationWithTimestamp);
@@ -23,6 +24,7 @@ export function updateApplication(uid, application, timestamp = true) {
     ...application,
     createdAt: JSON.stringify(application.createdAt),
     updatedAt: timestamp ? JSON.stringify(now) : JSON.stringify(application.updatedAt),
+    task_accepted: `${application.task}_${application.accepted}`,
   };
 
   return update(applicationsRef, applicationWithTimestamp);

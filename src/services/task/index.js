@@ -1,4 +1,4 @@
-import { getDatabase, push, ref, update } from "firebase/database";
+import { getDatabase, push, ref, remove, update } from "firebase/database";
 
 export function setTask(task) {
   const database = getDatabase();
@@ -36,4 +36,12 @@ export function updateTaskUps(uid, ups) {
   console.log("update ups:", ups);
 
   return update(taskRef, { ups: ups });
+}
+
+export function deleteTask(uid) {
+  console.log("delete");
+  const database = getDatabase();
+  const taskRef = ref(database, `tasks/${uid}`);
+
+  return remove(taskRef);
 }
