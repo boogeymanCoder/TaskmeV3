@@ -13,7 +13,7 @@ import { DashboardLayout } from "src/components/dashboard-layout";
 import { ServiceCard } from "src/components/service/ServiceCard";
 import ServiceForm from "src/components/service/ServiceForm";
 import ServiceListToolbar from "src/components/service/ServiceToolbar";
-import { setService } from "src/services/service";
+import { setService, updateService } from "src/services/service";
 
 const Services = () => {
   return (
@@ -28,6 +28,8 @@ export function ServicesPage() {
   const auth = getAuth();
   const [user, userLoading, userError] = useAuthState(auth);
   const [newServiceOpen, setNewServiceOpen] = useState(false);
+  const [editServiceOpen, setEditServiceOpen] = useState(false);
+  const [editServiceInitialValues, setEditServiceInitialValues] = useState(null);
   const [services, servicesLoading, servicesError] = useListVals(ref(database, "services"), {
     keyField: "uid",
   });
@@ -38,6 +40,18 @@ export function ServicesPage() {
     return setService({ ...values, owner: user?.uid })
       .then((res) => setNewServiceOpen(false))
       .catch((err) => console.log(err));
+  }
+
+  async function handleEditService(values) {
+    console.log({ editServiceInitialValues, values });
+    return updateService(editServiceInitialValues.uid, values)
+      .then((res) => {
+        console.log({ res });
+        setEditServiceInitialValues(undefined);
+        setEditServiceOpen(false);
+        return res;
+      })
+      .catch((err) => console.log({ err }));
   }
 
   if (userLoading || !user || userError) {
@@ -65,7 +79,21 @@ export function ServicesPage() {
                   {console.log({ services })}
                   {services.map((service) => (
                     <Grid item key={service.uid} xs={12}>
-                      <ServiceCard serviceData={service} />
+                      <ServiceCard
+                        serviceData={service}
+                        onEdit={() => {
+                          setEditServiceOpen(true);
+                          setEditServiceInitialValues({
+                            title: service.title,
+                            details: service.details,
+                            tags: service.tags,
+                            currency: service.currency,
+                            price: service.price,
+                            uid: service.uid,
+                            createdAt: service.createdAt,
+                          });
+                        }}
+                      />
                     </Grid>
                   ))}
                 </Grid>
@@ -91,6 +119,23 @@ export function ServicesPage() {
         onSubmit={handleAddService}
         onCancel={() => setNewServiceOpen(false)}
       />
+      {console.log("service:", editServiceInitialValues)}
+      {editServiceInitialValues && (
+        <ServiceForm
+          open={editServiceOpen}
+          title="Edit Service"
+          onClose={() => {
+            setEditServiceInitialValues(undefined);
+            setEditServiceOpen(false);
+          }}
+          onSubmit={handleEditService}
+          onCancel={() => {
+            setEditServiceInitialValues(undefined);
+            setEditServiceOpen(false);
+          }}
+          initialValues={editServiceInitialValues}
+        />
+      )}
     </>
   );
 }

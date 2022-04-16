@@ -21,6 +21,7 @@ import { useObjectVal } from "react-firebase-hooks/database";
 import { useEffect } from "react";
 import moment from "moment";
 import { Edit } from "@mui/icons-material";
+import ServiceForm from "./ServiceForm";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -33,7 +34,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export function ServiceCard({ serviceData }) {
+export function ServiceCard({ serviceData, onEdit }) {
   const database = getDatabase();
   const auth = getAuth();
 
@@ -42,7 +43,8 @@ export function ServiceCard({ serviceData }) {
   console.log({ serviceData });
   console.log(`accounts/${serviceData.owner}`);
   const [owner, ownerLoading, ownerError] = useObjectVal(
-    ref(database, `accounts/${serviceData.owner}`)
+    ref(database, `accounts/${serviceData.owner}`),
+    { keyField: "uid" }
   );
 
   useEffect(
@@ -64,6 +66,8 @@ export function ServiceCard({ serviceData }) {
       tags={serviceData.tags}
       currency={serviceData.currency}
       price={serviceData.price}
+      isOwned={user.uid === owner.uid}
+      onEdit={onEdit}
     />
   );
 }
