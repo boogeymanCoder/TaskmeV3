@@ -43,7 +43,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { MoreVert } from "@mui/icons-material";
 
-function TaskCardMenu() {
+function TaskCardMenu({ isOwned, onEdit }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -81,7 +81,7 @@ function TaskCardMenu() {
           horizontal: "right",
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        {isOwned && <MenuItem onClick={onEdit}>Edit</MenuItem>}
         <MenuItem onClick={handleClose}>My account</MenuItem>
         <MenuItem onClick={handleClose}>Logout</MenuItem>
       </Menu>
@@ -197,28 +197,12 @@ export const TaskCard = ({ taskData, ...rest }) => {
             </Typography>
           </Stack>
         }
-        action={<TaskCardMenu />}
+        action={
+          <TaskCardMenu isOwned={user.uid === task.employer} onEdit={() => setUpdateOpen(true)} />
+        }
       />
       <CardContent>
         <Grid container>
-          <Grid
-            item
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              display: user.uid !== task.employer ? "none" : "initial",
-            }}
-            sm="auto"
-            xs={12}
-          >
-            <Button
-              onClick={() => setUpdateOpen(true)}
-              variant="text"
-              disabled={userLoading || employerLoading}
-            >
-              Edit
-            </Button>
-          </Grid>
           <Grid item xs>
             <Typography variant="h4" align="center">
               <Link href={`/tasks/${task.uid}`}>{task.title}</Link>
