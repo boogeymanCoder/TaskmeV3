@@ -39,6 +39,55 @@ import ApplicationList from "../application/ApplicationList";
 import Ups from "../Ups";
 import { updateTask, updateTaskUps } from "/src/services/task";
 import { getDownloadURL, getStorage, list, ref as storageRef } from "firebase/storage";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { MoreVert } from "@mui/icons-material";
+
+function TaskCardMenu() {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <div>
+      <IconButton
+        id="basic-button"
+        aria-controls={open ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClick}
+      >
+        <MoreVert />
+      </IconButton>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <MenuItem onClick={handleClose}>My account</MenuItem>
+        <MenuItem onClick={handleClose}>Logout</MenuItem>
+      </Menu>
+    </div>
+  );
+}
 
 /**
  * Displays task information to the users.
@@ -148,6 +197,7 @@ export const TaskCard = ({ taskData, ...rest }) => {
             </Typography>
           </Stack>
         }
+        action={<TaskCardMenu />}
       />
       <CardContent>
         <Grid container>
