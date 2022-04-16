@@ -5,6 +5,9 @@ import { default as ServiceCardComponent } from "/src/components/service/Service
 const sb = {
   title: "Service/Service Card",
   component: ServiceCardComponent,
+  argTypes: {
+    onEdit: { action: "onEdit" },
+  },
 };
 export default sb;
 

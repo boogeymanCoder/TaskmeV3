@@ -20,6 +20,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useObjectVal } from "react-firebase-hooks/database";
 import { useEffect } from "react";
 import moment from "moment";
+import { Edit } from "@mui/icons-material";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -34,6 +35,9 @@ const ExpandMore = styled((props) => {
 
 export function ServiceCard({ serviceData }) {
   const database = getDatabase();
+  const auth = getAuth();
+
+  const [user, userLoading, userError] = useAuthState(auth);
 
   console.log({ serviceData });
   console.log(`accounts/${serviceData.owner}`);
@@ -46,8 +50,11 @@ export function ServiceCard({ serviceData }) {
     [owner, ownerLoading, ownerError]
   );
 
-  if (!owner || ownerLoading || ownerError) return <LinearProgress />;
+  if (!user || userLoading || userError || !owner || ownerLoading || ownerError) {
+    return <LinearProgress />;
+  }
 
+  // TODO replace placeholder date
   return (
     <ServiceCardView
       avatar={owner.image}
@@ -74,6 +81,8 @@ export default function ServiceCardView({
   tags,
   currency,
   price,
+  isOwned = false,
+  onEdit,
 }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -83,7 +92,21 @@ export default function ServiceCardView({
 
   return (
     <Card>
-      <CardHeader title={owner} avatar={<Avatar src={avatar} />} subheader={lastUpdated} />
+      <CardHeader
+        title={owner}
+        avatar={<Avatar src={avatar} />}
+        subheader={lastUpdated}
+        action={
+          <>
+            {isOwned && (
+              <IconButton onClick={onEdit}>
+                <Edit />
+              </IconButton>
+            )}
+          </>
+        }
+      />
+
       <CardContent>
         <Typography variant="h4" align="center">
           {title}
@@ -114,7 +137,7 @@ export default function ServiceCardView({
   );
 }
 
-ServiceCard.propTypes = {
+ServiceCardView.propTypes = {
   /**
    * The service owners image link.
    */
@@ -147,4 +170,14 @@ ServiceCard.propTypes = {
    * The proposed price of the service owner.
    */
   price: PropTypes.number.isRequired,
+  /**
+   * Whether the service is owned or not, shows edit button if owned else not.
+   */
+  isOwned: PropTypes.bool,
+  /**
+   * Function to call on edit, requires isOwned to be true.
+   */
+  onEdit: PropTypes.func,
 };
+
+ServiceCardView.default = { isOwned: false };
