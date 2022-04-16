@@ -28,7 +28,17 @@ import { Download as DownloadIcon } from "../../icons/download";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { useRef, useState } from "react";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
-import { getDatabase, ref } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  child,
+  equalTo,
+  limitToLast,
+  orderByChild,
+  orderByKey,
+  orderByValue,
+  query,
+} from "firebase/database";
 import { useObjectVal } from "react-firebase-hooks/database";
 import { useEffect } from "react";
 import UpdateTask from "./UpdateTask";
@@ -39,11 +49,117 @@ import ApplicationList from "../application/ApplicationList";
 import Ups from "../Ups";
 import { updateTask, updateTaskUps } from "/src/services/task";
 import { getDownloadURL, getStorage, list, ref as storageRef } from "firebase/storage";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { MoreVert } from "@mui/icons-material";
+import copy from "copy-to-clipboard";
+import SnackbarMessage from "../SnackbarMessage";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { useListVals } from "react-firebase-hooks/database";
+import ConfirmMessage from "../ConfirmMessage";
+import SnackbarErrorMessage from "../SnackbarErrorMessage";
+import { deleteTask } from "/src/services/task";
+
+function TaskCardMenu({ isOwned, onCopy, onEdit, onDelete }) {
+  const [showSuccessCopy, setShowSuccessCopy] = useState(false);
+  const [openConfirmation, setOpenConfirmation] = useState(false);
+  const [deleteError, setDeleteError] = useState();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <div>
+      <IconButton
+        id="basic-button"
+        aria-controls={open ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClick}
+      >
+        <MoreVert />
+      </IconButton>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <MenuItem
+          onClick={() => {
+            onCopy();
+            setShowSuccessCopy(true);
+            handleClose();
+          }}
+        >
+          Copy UID
+        </MenuItem>
+        {isOwned && <Divider />}
+        {isOwned && <MenuItem onClick={onEdit}>Edit</MenuItem>}
+        {isOwned && <MenuItem onClick={() => setOpenConfirmation(true)}>Delete</MenuItem>}
+      </Menu>
+
+      <SnackbarMessage
+        message="UID copied to clipboard"
+        snackbarProps={{ open: showSuccessCopy }}
+        alertProps={{
+          onClose: () => setShowSuccessCopy(false),
+          icon: <ContentCopyIcon fontSize="inherit" />,
+        }}
+      />
+
+      <SnackbarErrorMessage
+        error={deleteError}
+        alertProps={{ onClose: () => setDeleteError(null) }}
+      />
+
+      <ConfirmMessage
+        title="Delete Task?"
+        message="After deletion, this task can no longer be seen and and sent with applications from others."
+        onAgree={(e) => {
+          onDelete()
+            .then((res) => {
+              setOpenConfirmation(false);
+              handleClose();
+            })
+            .catch((err) => {
+              console.log({ err });
+              setOpenConfirmation(false);
+              handleClose();
+              setDeleteError(err);
+            });
+        }}
+        onDisagree={(e) => {
+          setOpenConfirmation(false);
+          handleClose();
+        }}
+        open={openConfirmation}
+        handleClose={(e) => setOpenConfirmation(false)}
+      />
+    </div>
+  );
+}
 
 /**
  * Displays task information to the users.
  */
-export const TaskCard = ({ taskData, ...rest }) => {
+export const TaskCard = ({ taskData, host, ...rest }) => {
   const [applicationCount, setApplicationCount] = useState(0);
   const [updateOpen, setUpdateOpen] = useState(false);
   const [tab, setTab] = useState("applications");
@@ -54,6 +170,17 @@ export const TaskCard = ({ taskData, ...rest }) => {
   const storage = getStorage();
   const [fetchingImage, setFetchingImage] = useState(true);
   const [filenames, setFilenames] = useState(new Map());
+  const [acceptedApplication, acceptedApplicationLoading, acceptedApplicationError] = useListVals(
+    query(
+      ref(database, "applications"),
+      orderByChild("task_accepted"),
+      equalTo(`${taskData.uid}_true`),
+      limitToLast(1)
+    ),
+    {
+      keyField: "uid",
+    }
+  );
 
   let task = {
     ...taskData,
@@ -74,6 +201,14 @@ export const TaskCard = ({ taskData, ...rest }) => {
   const [employer, employerLoading, employerError] = useObjectVal(
     ref(database, `accounts/${task.employer}`)
   );
+
+  useEffect(() => {
+    console.log({ employer, employerLoading, employerError });
+  }, [employer, employerLoading, employerError]);
+
+  useEffect(() => {
+    console.log({ acceptedApplication, acceptedApplicationLoading, acceptedApplicationError });
+  }, [acceptedApplication, acceptedApplicationLoading, acceptedApplicationError]);
 
   useEffect(() => {
     if (fetchingImage) {
@@ -118,7 +253,24 @@ export const TaskCard = ({ taskData, ...rest }) => {
       .catch((err) => console.log({ err }));
   }
 
+  function clipboardHandler() {
+    const copyResult = copy(task.uid);
+    console.log({ copyResult });
+  }
+
+  async function deleteHandler() {
+    return new Promise((resolve, reject) => {
+      if (acceptedApplicationError) reject(acceptedApplicationError.message);
+      if (acceptedApplication.length > 0) reject(new Error("Task has accepted application/s"));
+
+      return deleteTask(task.uid)
+        .then((res) => resolve(res))
+        .catch((err) => reject(err));
+    });
+  }
+
   if (fetchingImage) return <LinearProgress />;
+  if (acceptedApplicationLoading || acceptedApplicationError) return <LinearProgress />;
 
   return (
     <Card
@@ -148,27 +300,17 @@ export const TaskCard = ({ taskData, ...rest }) => {
             </Typography>
           </Stack>
         }
+        action={
+          <TaskCardMenu
+            isOwned={user.uid === task.employer}
+            onCopy={clipboardHandler}
+            onEdit={() => setUpdateOpen(true)}
+            onDelete={deleteHandler}
+          />
+        }
       />
       <CardContent>
         <Grid container>
-          <Grid
-            item
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              display: user.uid !== task.employer ? "none" : "initial",
-            }}
-            sm="auto"
-            xs={12}
-          >
-            <Button
-              onClick={() => setUpdateOpen(true)}
-              variant="text"
-              disabled={userLoading || employerLoading}
-            >
-              Edit
-            </Button>
-          </Grid>
           <Grid item xs>
             <Typography variant="h4" align="center">
               <Link href={`/tasks/${task.uid}`}>{task.title}</Link>
