@@ -8,6 +8,7 @@ const sb = {
   argTypes: {
     onEdit: { action: "onEdit" },
     onDelete: { action: "onDelete" },
+    onOffer: { action: "onOffer" },
   },
 };
 export default sb;

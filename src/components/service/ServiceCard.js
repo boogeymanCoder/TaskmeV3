@@ -22,7 +22,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useObjectVal } from "react-firebase-hooks/database";
 import { useEffect } from "react";
 import moment from "moment";
-import { Edit, MoreVert } from "@mui/icons-material";
+import { Edit, MoreVert, Handshake, Campaign } from "@mui/icons-material";
 import ServiceForm from "./ServiceForm";
 import ConfirmMessage from "../ConfirmMessage";
 
@@ -37,7 +37,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export function ServiceCard({ serviceData, onEdit, onDelete }) {
+export function ServiceCard({ serviceData, onEdit, onDelete, onOffer }) {
   const database = getDatabase();
   const auth = getAuth();
 
@@ -72,6 +72,7 @@ export function ServiceCard({ serviceData, onEdit, onDelete }) {
       isOwned={user.uid === owner.uid}
       onEdit={user.uid === owner.uid ? onEdit : undefined}
       onDelete={user.uid === owner.uid ? onDelete : undefined}
+      onOffer={onOffer}
     />
   );
 }
@@ -169,6 +170,7 @@ export default function ServiceCardView({
   isOwned = false,
   onEdit,
   onDelete,
+  onOffer,
 }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -202,6 +204,9 @@ export default function ServiceCardView({
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
+        <IconButton onClick={onOffer}>
+          <Campaign />
+        </IconButton>
         <ExpandMore expand={expanded} onClick={handleExpandClick}>
           <ExpandMoreIcon />
         </ExpandMore>
@@ -260,6 +265,10 @@ ServiceCardView.propTypes = {
    * Function to call on delete, requires isOwned to be true.
    */
   onDelete: PropTypes.func,
+  /**
+   * Function to call when adding an offer.
+   */
+  onOffer: PropTypes.func,
 };
 
 ServiceCardView.default = { isOwned: false };

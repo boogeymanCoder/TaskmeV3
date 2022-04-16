@@ -10,6 +10,7 @@ import { useListVals } from "react-firebase-hooks/database";
 import AccountCheck from "src/components/account/AccountCheck";
 import CheckAuth from "src/components/auth/CheckAuth";
 import { DashboardLayout } from "src/components/dashboard-layout";
+import OfferForm from "src/components/offer/OfferForm";
 import { ServiceCard } from "src/components/service/ServiceCard";
 import ServiceForm from "src/components/service/ServiceForm";
 import ServiceListToolbar from "src/components/service/ServiceToolbar";
@@ -33,6 +34,9 @@ export function ServicesPage() {
   const [services, servicesLoading, servicesError] = useListVals(ref(database, "services"), {
     keyField: "uid",
   });
+  const [newOfferOpen, setNewOfferOpen] = useState(false);
+
+  async function handleAddOffer(values) {}
 
   async function handleAddService(values) {
     console.log({ values });
@@ -98,6 +102,7 @@ export function ServicesPage() {
                           });
                         }}
                         onDelete={() => handleDeleteService(service.uid)}
+                        onOffer={() => setNewOfferOpen(true)}
                       />
                     </Grid>
                   ))}
@@ -117,11 +122,18 @@ export function ServicesPage() {
           </Container>
         </Box>
       </AccountCheck>
+      <OfferForm
+        open={newOfferOpen}
+        title="New Offer"
+        onClose={() => setNewOfferOpen(false)}
+        onSubmit={() => setNewOfferOpen(false)}
+        onCancel={() => setNewOfferOpen(false)}
+      />
       <ServiceForm
         open={newServiceOpen}
         title="New Service"
         onClose={() => setNewServiceOpen(false)}
-        onSubmit={handleAddService}
+        onSubmit={() => handleAddService}
         onCancel={() => setNewServiceOpen(false)}
       />
       {console.log("service:", editServiceInitialValues)}
