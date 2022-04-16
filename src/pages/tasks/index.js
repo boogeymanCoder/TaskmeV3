@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { Box, Container, Grid, LinearProgress, Pagination } from "@mui/material";
-import { products } from "../__mocks__/products";
-import { DashboardLayout } from "../components/dashboard-layout";
+import { products } from "../../__mocks__/products";
+import { DashboardLayout } from "../../components/dashboard-layout";
 import CheckAuth from "/src/components/auth/CheckAuth";
 import AccountCheck from "/src/components/account/AccountCheck";
 import { TaskListToolbar } from "/src/components/task/task-list-toolbar";
