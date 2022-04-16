@@ -42,8 +42,12 @@ import { getDownloadURL, getStorage, list, ref as storageRef } from "firebase/st
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { MoreVert } from "@mui/icons-material";
+import copy from "copy-to-clipboard";
+import SnackbarMessage from "../SnackbarMessage";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
-function TaskCardMenu({ isOwned, onEdit }) {
+function TaskCardMenu({ isOwned, onCopy, onEdit }) {
+  const [showSuccessCopy, setShowSuccessCopy] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -81,10 +85,27 @@ function TaskCardMenu({ isOwned, onEdit }) {
           horizontal: "right",
         }}
       >
+        <MenuItem
+          onClick={() => {
+            onCopy();
+            setShowSuccessCopy(true);
+            handleClose();
+          }}
+        >
+          Copy UID
+        </MenuItem>
+        {isOwned && <Divider />}
         {isOwned && <MenuItem onClick={onEdit}>Edit</MenuItem>}
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
       </Menu>
+
+      <SnackbarMessage
+        message="UID copied to clipboard"
+        snackbarProps={{ open: showSuccessCopy }}
+        alertProps={{
+          onClose: () => setShowSuccessCopy(false),
+          icon: <ContentCopyIcon fontSize="inherit" />,
+        }}
+      />
     </div>
   );
 }
@@ -92,7 +113,7 @@ function TaskCardMenu({ isOwned, onEdit }) {
 /**
  * Displays task information to the users.
  */
-export const TaskCard = ({ taskData, ...rest }) => {
+export const TaskCard = ({ taskData, host, ...rest }) => {
   const [applicationCount, setApplicationCount] = useState(0);
   const [updateOpen, setUpdateOpen] = useState(false);
   const [tab, setTab] = useState("applications");
@@ -167,6 +188,11 @@ export const TaskCard = ({ taskData, ...rest }) => {
       .catch((err) => console.log({ err }));
   }
 
+  function clipboardHandler() {
+    const copyResult = copy(task.uid);
+    console.log({ copyResult });
+  }
+
   if (fetchingImage) return <LinearProgress />;
 
   return (
@@ -198,7 +224,11 @@ export const TaskCard = ({ taskData, ...rest }) => {
           </Stack>
         }
         action={
-          <TaskCardMenu isOwned={user.uid === task.employer} onEdit={() => setUpdateOpen(true)} />
+          <TaskCardMenu
+            isOwned={user.uid === task.employer}
+            onCopy={clipboardHandler}
+            onEdit={() => setUpdateOpen(true)}
+          />
         }
       />
       <CardContent>
