@@ -16,7 +16,7 @@ import { XCircle as XCircleIcon } from "../icons/x-circle";
 import { Inbox } from "../icons/x-circle";
 import { Logo } from "./logo";
 import { NavItem } from "./nav-item";
-import { TaskAlt, Message } from "@mui/icons-material";
+import { TaskAlt, Message, Work } from "@mui/icons-material";
 
 const items = [
   {
@@ -43,6 +43,12 @@ const items = [
     href: "/tasks",
     icon: <TaskAlt fontSize="small" />,
     title: "Tasks",
+  },
+  {
+    href: "/services",
+    icon: <Work fontSize="small" />,
+    title: "Services",
+    isNew: true,
   },
   {
     href: "/account/me",
@@ -148,7 +154,13 @@ export const DashboardSidebar = (props) => {
         />
         <Box sx={{ flexGrow: 1 }}>
           {items.map((item) => (
-            <NavItem key={item.title} icon={item.icon} href={item.href} title={item.title} />
+            <NavItem
+              key={item.title}
+              icon={item.icon}
+              href={item.href}
+              title={item.title}
+              isNew={item?.isNew}
+            />
           ))}
         </Box>
         <Divider sx={{ borderColor: "#2D3748" }} />
