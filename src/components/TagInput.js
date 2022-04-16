@@ -7,7 +7,6 @@ import PropTypes from "prop-types";
  * Press space to enter a new tag.
  */
 export default function TagInput({ tags, setTags, label, chipProps, textFieldProps, ...props }) {
-  console.log({ tags });
   function addTag(tag) {
     const newTags = tags.filter((value) => value !== tag);
     setTags([...newTags, tag]);

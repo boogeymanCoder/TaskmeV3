@@ -21,6 +21,12 @@
         ".write": "newData.child('employee').val() === auth.uid || newData.child('employer').val() === auth.uid || data.child('employee').val() === auth.uid || data.child('employer').val() === auth.uid",
         ".validate": "newData.hasChildren(['task', 'employee', 'message', 'date', 'accepted', 'employer'])"
       }
+    },
+    "services": {
+      ".read": "auth !== null",
+      "$uid": {
+        ".write": true
+      }
     }
   }
 }

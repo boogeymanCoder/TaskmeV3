@@ -13,7 +13,8 @@
     "lint-fix": "next lint --fix",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "chromatic": "npx chromatic --project-token=2e45be8893e8"
+    "chromatic": "npx chromatic --project-token=2e45be8893e8",
+    "database:rules": "firebase deploy --only database"
   },
   "dependencies": {
     "@emotion/cache": "^11.5.0",
