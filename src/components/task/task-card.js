@@ -58,7 +58,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useListVals } from "react-firebase-hooks/database";
 import ConfirmMessage from "../ConfirmMessage";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";
-import { deleteTask } from "src/services/task";
+import { deleteTask } from "/src/services/task";
 
 function TaskCardMenu({ isOwned, onCopy, onEdit, onDelete }) {
   const [showSuccessCopy, setShowSuccessCopy] = useState(false);
