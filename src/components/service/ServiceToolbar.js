@@ -19,10 +19,10 @@ import { Search as SearchIcon } from "../../icons/search";
 import PropTypes from "prop-types";
 
 /**
- * Tasks toolbar allowing users to add, search or sort messages
+ * Services toolbar allowing users to add, search or sort services
  */
-export const TaskListToolbar = ({
-  handleAddTask,
+const ServiceListToolbar = ({
+  handleAddService,
   sortEnabled = false,
   searchEnabled = false,
   ...props
@@ -38,7 +38,7 @@ export const TaskListToolbar = ({
       }}
     >
       <Typography sx={{ m: 1 }} variant="h4">
-        Tasks
+        Services
       </Typography>
     </Box>
     <Box sx={{ mt: 3 }}>
@@ -59,7 +59,7 @@ export const TaskListToolbar = ({
                       </InputAdornment>
                     ),
                   }}
-                  placeholder="Search task"
+                  placeholder="Search services"
                   variant="outlined"
                 />
               </Tooltip>
@@ -77,7 +77,7 @@ export const TaskListToolbar = ({
       </Card>
     </Box>
     <Fab
-      onClick={handleAddTask}
+      onClick={handleAddService}
       size="large"
       sx={{
         position: "fixed",
@@ -94,11 +94,11 @@ export const TaskListToolbar = ({
   </Box>
 );
 
-TaskListToolbar.propTypes = {
+ServiceListToolbar.propTypes = {
   /**
    * Function to be called on clicking the floating action button.
    */
-  handleAddTask: PropTypes.func.isRequired,
+  handleAddService: PropTypes.func.isRequired,
   /**
    * Whether sort is enabled.
    */
@@ -108,3 +108,5 @@ TaskListToolbar.propTypes = {
    */
   searchEnabled: PropTypes.bool,
 };
+
+export default ServiceListToolbar;

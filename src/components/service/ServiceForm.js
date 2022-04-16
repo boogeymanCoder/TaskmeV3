@@ -43,14 +43,20 @@ export default function ServiceForm({
       currency: Yup.string().required("Currency is required"),
       price: Yup.number().required("Price is required"),
     }),
-    onSubmit: async (values) => {
-      return onSubmit(values);
+    onSubmit: async (values, { resetForm }) => {
+      return onSubmit(values).then((res) => {
+        resetForm();
+        return res;
+      });
     },
   });
+
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={(e) => {
+        onClose(e);
+      }}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
       fullWidth
@@ -142,7 +148,14 @@ export default function ServiceForm({
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={onCancel}>Cancel</Button>
+          <Button
+            onClick={(e) => {
+              formik.resetForm();
+              onCancel(e);
+            }}
+          >
+            Cancel
+          </Button>
           <Button type="submit">Submit</Button>
         </DialogActions>
       </form>
