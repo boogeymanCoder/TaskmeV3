@@ -4,6 +4,7 @@
     "Firestore",
     "formik",
     "fullname",
+    "isnew",
     "labelledby",
     "Mgmt",
     "taskme",

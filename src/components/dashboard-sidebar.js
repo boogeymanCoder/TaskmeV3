@@ -48,7 +48,7 @@ const items = [
     href: "/services",
     icon: <Work fontSize="small" />,
     title: "Services",
-    isNew: true,
+    isnew: true,
   },
   {
     href: "/account/me",
@@ -159,7 +159,7 @@ export const DashboardSidebar = (props) => {
               icon={item.icon}
               href={item.href}
               title={item.title}
-              isNew={item?.isNew}
+              isnew={item?.isnew}
             />
           ))}
         </Box>

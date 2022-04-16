@@ -3,11 +3,10 @@ import { useRouter } from "next/router";
 import PropTypes from "prop-types";
 import { Badge, Box, Button, ListItem } from "@mui/material";
 
-export const NavItem = (props) => {
-  const { href, icon, title, ...others } = props;
+export const NavItem = ({ href, icon, title, isnew, ...props }) => {
   const router = useRouter();
   const active = !router ? false : href ? router.pathname === href : false;
-  console.log({ href, icon, title, others, props });
+  console.log({ href, icon, title, props });
 
   return (
     <ListItem
@@ -18,12 +17,12 @@ export const NavItem = (props) => {
         py: 0,
         px: 2,
       }}
-      {...others}
+      {...props}
     >
       <NextLink href={href} passHref>
         <Badge
-          badgeContent={others.isNew ? "New" : ""}
-          invisible={!others.isNew}
+          badgeContent={isnew ? "New" : ""}
+          invisible={!isnew}
           overlap="circular"
           color="secondary"
         >
@@ -61,4 +60,5 @@ NavItem.propTypes = {
   href: PropTypes.string,
   icon: PropTypes.node,
   title: PropTypes.string,
+  isnew: PropTypes.bool,
 };

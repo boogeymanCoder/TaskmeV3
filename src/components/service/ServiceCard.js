@@ -112,13 +112,13 @@ export default function ServiceCardView({
         </Typography>
         <Grid container spacing={1}>
           {tags.map((tag) => (
-            <Grid item key="tag">
+            <Grid item key={tag}>
               <Chip color="primary" size="small" label={tag} />
             </Grid>
           ))}
         </Grid>
         <Typography>{details}</Typography>
-        <Typography align="end" variant="h5" color="primary">
+        <Typography align="right" variant="h5" color="primary">
           {currency} {price}
         </Typography>
       </CardContent>
