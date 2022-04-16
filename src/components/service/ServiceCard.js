@@ -8,11 +8,18 @@ import {
   Collapse,
   Divider,
   IconButton,
+  LinearProgress,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { getDatabase, ref } from "firebase/database";
+import { getAuth } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useObjectVal } from "react-firebase-hooks/database";
+import { useEffect } from "react";
+import moment from "moment";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -25,10 +32,40 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
+export function ServiceCard({ serviceData }) {
+  const database = getDatabase();
+
+  console.log({ serviceData });
+  console.log(`accounts/${serviceData.owner}`);
+  const [owner, ownerLoading, ownerError] = useObjectVal(
+    ref(database, `accounts/${serviceData.owner}`)
+  );
+
+  useEffect(
+    () => console.log({ owner, ownerLoading, ownerError }),
+    [owner, ownerLoading, ownerError]
+  );
+
+  if (!owner || ownerLoading || ownerError) return <LinearProgress />;
+
+  return (
+    <ServiceCardView
+      avatar={owner.image}
+      owner={owner.fullname}
+      lastUpdated={moment("2022-04-16T04:50:21.630Z").fromNow()}
+      title={serviceData.title}
+      details={serviceData.details}
+      tags={serviceData.tags}
+      currency={serviceData.currency}
+      price={serviceData.price}
+    />
+  );
+}
+
 /**
  * Displays Service information posted by user.
  */
-export default function ServiceCard({
+export default function ServiceCardView({
   avatar,
   owner,
   lastUpdated,
