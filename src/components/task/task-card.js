@@ -135,7 +135,9 @@ export const TaskCard = ({ taskData, ...rest }) => {
         }
         title={
           <Link href={`/account/${task.employer}`}>
-            <Typography variant="body1">{employer ? employer.fullname : ""}</Typography>
+            <Typography variant="body1" component="span">
+              {employer ? employer.fullname : ""}
+            </Typography>
           </Link>
         }
         subheader={
@@ -168,11 +170,9 @@ export const TaskCard = ({ taskData, ...rest }) => {
             </Button>
           </Grid>
           <Grid item xs>
-            <Link href={`/tasks/${task.uid}`}>
-              <Typography variant="h4" align="center">
-                {task.title}
-              </Typography>
-            </Link>
+            <Typography variant="h4" align="center">
+              <Link href={`/tasks/${task.uid}`}>{task.title}</Link>
+            </Typography>
             <Typography align="center">{task.details}</Typography>
           </Grid>
         </Grid>
