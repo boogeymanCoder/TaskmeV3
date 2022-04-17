@@ -14,6 +14,7 @@ import OfferForm from "src/components/offer/OfferForm";
 import { ServiceCard } from "src/components/service/ServiceCard";
 import ServiceForm from "src/components/service/ServiceForm";
 import ServiceListToolbar from "src/components/service/ServiceToolbar";
+import { setOffer } from "src/services/offer";
 import { setService, updateService, deleteService } from "src/services/service";
 
 const Services = () => {
@@ -35,8 +36,21 @@ export function ServicesPage() {
     keyField: "uid",
   });
   const [newOfferOpen, setNewOfferOpen] = useState(false);
+  const [serviceToOffer, setServiceToOffer] = useState();
 
-  async function handleAddOffer(values) {}
+  async function handleAddOffer(values) {
+    console.log({ values });
+    return setOffer({ ...values, owner: user?.uid, service: serviceToOffer.uid })
+      .then((res) => {
+        setServiceToOffer(null);
+        return setNewOfferOpen(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setServiceToOffer(null);
+        return err;
+      });
+  }
 
   async function handleAddService(values) {
     console.log({ values });
@@ -102,7 +116,10 @@ export function ServicesPage() {
                           });
                         }}
                         onDelete={() => handleDeleteService(service.uid)}
-                        onOffer={() => setNewOfferOpen(true)}
+                        onOffer={() => {
+                          setServiceToOffer(service);
+                          setNewOfferOpen(true);
+                        }}
                       />
                     </Grid>
                   ))}
@@ -126,7 +143,7 @@ export function ServicesPage() {
         open={newOfferOpen}
         title="New Offer"
         onClose={() => setNewOfferOpen(false)}
-        onSubmit={() => setNewOfferOpen(false)}
+        onSubmit={handleAddOffer}
         onCancel={() => setNewOfferOpen(false)}
       />
       <ServiceForm

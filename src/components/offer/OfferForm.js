@@ -47,7 +47,7 @@ export default function OfferForm({
             disabled={formik.isSubmitting}
             margin="dense"
             name="task"
-            label="Task"
+            label="Task UID"
             type="text"
             fullWidth
             variant="outlined"
