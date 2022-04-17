@@ -10,9 +10,11 @@ import { useListVals } from "react-firebase-hooks/database";
 import AccountCheck from "src/components/account/AccountCheck";
 import CheckAuth from "src/components/auth/CheckAuth";
 import { DashboardLayout } from "src/components/dashboard-layout";
+import OfferForm from "src/components/offer/OfferForm";
 import { ServiceCard } from "src/components/service/ServiceCard";
 import ServiceForm from "src/components/service/ServiceForm";
 import ServiceListToolbar from "src/components/service/ServiceToolbar";
+import { setOffer } from "src/services/offer";
 import { setService, updateService, deleteService } from "src/services/service";
 
 const Services = () => {
@@ -33,6 +35,22 @@ export function ServicesPage() {
   const [services, servicesLoading, servicesError] = useListVals(ref(database, "services"), {
     keyField: "uid",
   });
+  const [newOfferOpen, setNewOfferOpen] = useState(false);
+  const [serviceToOffer, setServiceToOffer] = useState();
+
+  async function handleAddOffer(values) {
+    console.log({ values });
+    return setOffer({ ...values, owner: user?.uid, service: serviceToOffer.uid })
+      .then((res) => {
+        setServiceToOffer(null);
+        return setNewOfferOpen(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setServiceToOffer(null);
+        return err;
+      });
+  }
 
   async function handleAddService(values) {
     console.log({ values });
@@ -98,6 +116,10 @@ export function ServicesPage() {
                           });
                         }}
                         onDelete={() => handleDeleteService(service.uid)}
+                        onOffer={() => {
+                          setServiceToOffer(service);
+                          setNewOfferOpen(true);
+                        }}
                       />
                     </Grid>
                   ))}
@@ -117,11 +139,18 @@ export function ServicesPage() {
           </Container>
         </Box>
       </AccountCheck>
+      <OfferForm
+        open={newOfferOpen}
+        title="New Offer"
+        onClose={() => setNewOfferOpen(false)}
+        onSubmit={handleAddOffer}
+        onCancel={() => setNewOfferOpen(false)}
+      />
       <ServiceForm
         open={newServiceOpen}
         title="New Service"
         onClose={() => setNewServiceOpen(false)}
-        onSubmit={handleAddService}
+        onSubmit={() => handleAddService}
         onCancel={() => setNewServiceOpen(false)}
       />
       {console.log("service:", editServiceInitialValues)}

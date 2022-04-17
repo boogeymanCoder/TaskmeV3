@@ -25,7 +25,13 @@
     "services": {
       ".read": "auth !== null",
       "$uid": {
-        ".write": true
+        ".write": "auth !== null"
+      }
+    },
+    "offers": {
+      ".read": "auth !== null",
+      "$uid": {
+        ".write": "auth !== null"
       }
     }
   }

@@ -14,7 +14,7 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "chromatic": "npx chromatic --project-token=2e45be8893e8",
-    "database:rules": "firebase deploy --only database"
+    "deploy:dbrules": "firebase deploy --only database"
   },
   "dependencies": {
     "@emotion/cache": "^11.5.0",

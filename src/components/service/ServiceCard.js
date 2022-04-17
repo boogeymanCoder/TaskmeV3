@@ -1,6 +1,7 @@
 import { CardHeader, Chip, Grid } from "@material-ui/core";
 import { styled } from "@mui/material/styles";
 import {
+  Alert,
   Avatar,
   Card,
   CardActions,
@@ -16,15 +17,18 @@ import {
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { getDatabase, ref } from "firebase/database";
+import { equalTo, getDatabase, orderByChild, query, ref } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useObjectVal } from "react-firebase-hooks/database";
+import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { useEffect } from "react";
 import moment from "moment";
-import { Edit, MoreVert } from "@mui/icons-material";
+import { Edit, MoreVert, Handshake, Campaign } from "@mui/icons-material";
 import ServiceForm from "./ServiceForm";
 import ConfirmMessage from "../ConfirmMessage";
+import { OfferCard } from "../offer/OfferCard";
+import OfferForm from "../offer/OfferForm";
+import { deleteOffer, updateOffer } from "/src/services/offer";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -37,11 +41,15 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export function ServiceCard({ serviceData, onEdit, onDelete }) {
+export function ServiceCard({ serviceData, onEdit, onDelete, onOffer }) {
   const database = getDatabase();
   const auth = getAuth();
+  const [offerList, setOfferList] = useState();
+  const [openEditOffer, setOpenEditOffer] = useState(false);
+  const [editOfferInitialValues, setEditOfferInitialValues] = useState();
 
   const [user, userLoading, userError] = useAuthState(auth);
+  // const offers = [<p key="1">Offer1</p>, <p key="2">Offer2</p>];
 
   console.log({ serviceData });
   console.log(`accounts/${serviceData.owner}`);
@@ -50,29 +58,111 @@ export function ServiceCard({ serviceData, onEdit, onDelete }) {
     { keyField: "uid" }
   );
 
+  const [offers, offersLoading, offersError] = useListVals(
+    query(ref(database, "offers"), orderByChild("service"), equalTo(serviceData.uid)),
+    {
+      keyField: "uid",
+    }
+  );
+
+  function editOfferHandler(offerUid, values) {
+    console.log({ offerUid, values });
+    return updateOffer(offerUid, values)
+      .then((res) => setOpenEditOffer(false))
+      .catch((err) => console.log({ err }));
+  }
+
+  async function deleteOfferHandler(uid) {
+    return deleteOffer(uid).catch((err) => console.log({ err }));
+  }
+
+  useEffect(() => console.log({ openEditOffer }), [openEditOffer]);
+  useEffect(() => console.log({ editOfferInitialValues }), [editOfferInitialValues]);
+
+  useEffect(() => {
+    if (offers.length < 1) {
+      setOfferList(null);
+      return;
+    }
+
+    setOfferList(
+      offers.map((offer) => (
+        <>
+          <OfferCard
+            key={offer.uid}
+            offerData={offer}
+            isOwned={offer.owner === user.uid}
+            onEdit={() => {
+              setEditOfferInitialValues(offer);
+              setOpenEditOffer(true);
+            }}
+            onDelete={() => deleteOfferHandler(offer.uid)}
+          />
+        </>
+      ))
+    );
+  }, [offers]);
+
   useEffect(
     () => console.log({ owner, ownerLoading, ownerError }),
     [owner, ownerLoading, ownerError]
   );
 
-  if (!user || userLoading || userError || !owner || ownerLoading || ownerError) {
+  useEffect(
+    () => console.log({ offers, offersLoading, offersError }),
+    [offers, offersLoading, offersError]
+  );
+
+  if (
+    !user ||
+    userLoading ||
+    userError ||
+    !owner ||
+    ownerLoading ||
+    ownerError ||
+    offersLoading ||
+    offersError
+  ) {
     return <LinearProgress />;
   }
 
   return (
-    <ServiceCardView
-      avatar={owner.image}
-      owner={owner.fullname}
-      lastUpdated={moment(JSON.parse(serviceData.updatedAt)).fromNow()}
-      title={serviceData.title}
-      details={serviceData.details}
-      tags={serviceData.tags}
-      currency={serviceData.currency}
-      price={serviceData.price}
-      isOwned={user.uid === owner.uid}
-      onEdit={user.uid === owner.uid ? onEdit : undefined}
-      onDelete={user.uid === owner.uid ? onDelete : undefined}
-    />
+    <>
+      {editOfferInitialValues && (
+        <OfferForm
+          title="Edit Offer"
+          open={openEditOffer}
+          onClose={() => {
+            setEditOfferInitialValues(null);
+            setOpenEditOffer(false);
+          }}
+          onCancel={() => {
+            setEditOfferInitialValues(null);
+            setOpenEditOffer(false);
+          }}
+          onSubmit={(values) => {
+            setEditOfferInitialValues(null);
+            return editOfferHandler(editOfferInitialValues.uid, values);
+          }}
+          initialValues={editOfferInitialValues}
+        />
+      )}
+      <ServiceCardView
+        avatar={owner.image}
+        owner={owner.fullname}
+        lastUpdated={moment(JSON.parse(serviceData.updatedAt)).fromNow()}
+        title={serviceData.title}
+        details={serviceData.details}
+        tags={serviceData.tags}
+        currency={serviceData.currency}
+        price={serviceData.price}
+        isOwned={user.uid === owner.uid}
+        onEdit={user.uid === owner.uid ? onEdit : undefined}
+        onDelete={user.uid === owner.uid ? onDelete : undefined}
+        onOffer={onOffer}
+        offers={offerList}
+      />
+    </>
   );
 }
 
@@ -169,6 +259,8 @@ export default function ServiceCardView({
   isOwned = false,
   onEdit,
   onDelete,
+  onOffer,
+  offers,
 }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -202,14 +294,22 @@ export default function ServiceCardView({
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
+        <IconButton onClick={onOffer}>
+          <Campaign />
+        </IconButton>
         <ExpandMore expand={expanded} onClick={handleExpandClick}>
           <ExpandMoreIcon />
         </ExpandMore>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography>Offers</Typography>
-        </CardContent>
+        {!offers && (
+          <CardContent style={{ border: "none", boxShadow: "none" }}>
+            <Alert severity="info">No Offers yet</Alert>
+          </CardContent>
+        )}
+        {offers && (
+          <CardContent style={{ border: "none", boxShadow: "none" }}>{offers}</CardContent>
+        )}
       </Collapse>
     </Card>
   );
@@ -260,6 +360,14 @@ ServiceCardView.propTypes = {
    * Function to call on delete, requires isOwned to be true.
    */
   onDelete: PropTypes.func,
+  /**
+   * Function to call when adding an offer.
+   */
+  onOffer: PropTypes.func,
+  /**
+   * Array of offers for this service, must have a key property.
+   */
+  offers: PropTypes.arrayOf(PropTypes.node),
 };
 
 ServiceCardView.default = { isOwned: false };

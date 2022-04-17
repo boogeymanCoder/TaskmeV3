@@ -6,7 +6,6 @@ import { Badge, Box, Button, ListItem } from "@mui/material";
 export const NavItem = ({ href, icon, title, isnew, ...props }) => {
   const router = useRouter();
   const active = !router ? false : href ? router.pathname === href : false;
-  console.log({ href, icon, title, props });
 
   return (
     <ListItem
@@ -25,10 +24,10 @@ export const NavItem = ({ href, icon, title, isnew, ...props }) => {
           invisible={!isnew}
           color="secondary"
           overlap="circular"
-          style={{ width: "100%" }}
+          style={{ width: "100%", textDecoration: "none" }}
+          component="a"
         >
           <Button
-            component="a"
             startIcon={icon}
             disableRipple
             sx={{
