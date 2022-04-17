@@ -15,7 +15,7 @@ export function setOffer(offer) {
 }
 
 export function updateOffer(uid, offer) {
-  console.log("update");
+  console.log("update", { uid, offer });
   const database = getDatabase();
   const offerRef = ref(database, `offers/${uid}`);
   const now = new Date();

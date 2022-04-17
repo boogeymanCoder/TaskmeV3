@@ -28,6 +28,7 @@ import ServiceForm from "./ServiceForm";
 import ConfirmMessage from "../ConfirmMessage";
 import { OfferCard } from "../offer/OfferCard";
 import OfferForm from "../offer/OfferForm";
+import { deleteOffer, updateOffer } from "/src/services/offer";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -64,8 +65,15 @@ export function ServiceCard({ serviceData, onEdit, onDelete, onOffer }) {
     }
   );
 
-  function editOfferHandler(values) {
-    return updateOffer(values)
+  function editOfferHandler(offerUid, values) {
+    console.log({ offerUid, values });
+    return updateOffer(offerUid, values)
+      .then((res) => setOpenEditOffer(false))
+      .catch((err) => console.log({ err }));
+  }
+
+  function deleteOfferHandler(values) {
+    return deleteOffer(values)
       .then((res) => setOpenEditOffer(false))
       .catch((err) => console.log({ err }));
   }
@@ -87,7 +95,7 @@ export function ServiceCard({ serviceData, onEdit, onDelete, onOffer }) {
             offerData={offer}
             isOwned={offer.owner === user.uid}
             onEdit={() => {
-              setEditOfferInitialValues({ task: offer.task, details: offer.details });
+              setEditOfferInitialValues(offer);
               setOpenEditOffer(true);
             }}
           />
@@ -135,7 +143,7 @@ export function ServiceCard({ serviceData, onEdit, onDelete, onOffer }) {
           }}
           onSubmit={(values) => {
             setEditOfferInitialValues(null);
-            return editOfferHandler(values);
+            return editOfferHandler(editOfferInitialValues.uid, values);
           }}
           initialValues={editOfferInitialValues}
         />
