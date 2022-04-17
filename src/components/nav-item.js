@@ -25,10 +25,10 @@ export const NavItem = ({ href, icon, title, isnew, ...props }) => {
           invisible={!isnew}
           color="secondary"
           overlap="circular"
-          style={{ width: "100%" }}
+          style={{ width: "100%", textDecoration: "none" }}
+          component="a"
         >
           <Button
-            component="a"
             startIcon={icon}
             disableRipple
             sx={{
