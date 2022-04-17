@@ -32,7 +32,7 @@ export function updateOffer(uid, offer) {
 }
 
 export function deleteOffer(uid) {
-  console.log("delete");
+  console.log("delete", { uid });
   const database = getDatabase();
   const offerRef = ref(database, `offers/${uid}`);
 

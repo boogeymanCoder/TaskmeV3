@@ -72,10 +72,8 @@ export function ServiceCard({ serviceData, onEdit, onDelete, onOffer }) {
       .catch((err) => console.log({ err }));
   }
 
-  function deleteOfferHandler(values) {
-    return deleteOffer(values)
-      .then((res) => setOpenEditOffer(false))
-      .catch((err) => console.log({ err }));
+  async function deleteOfferHandler(uid) {
+    return deleteOffer(uid).catch((err) => console.log({ err }));
   }
 
   useEffect(() => console.log({ openEditOffer }), [openEditOffer]);
@@ -98,6 +96,7 @@ export function ServiceCard({ serviceData, onEdit, onDelete, onOffer }) {
               setEditOfferInitialValues(offer);
               setOpenEditOffer(true);
             }}
+            onDelete={() => deleteOfferHandler(offer.uid)}
           />
         </>
       ))
