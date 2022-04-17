@@ -29,8 +29,11 @@ export default function OfferForm({
       task: Yup.string().max(255).required("Task is required"),
       details: Yup.string().required("Details is required"),
     }),
-    onSubmit: async (values) => {
-      return onSubmit(values);
+    onSubmit: async (values, { resetForm }) => {
+      return onSubmit(values).then((res) => {
+        resetForm();
+        return res;
+      });
     },
   });
   return (
@@ -70,7 +73,14 @@ export default function OfferForm({
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={onCancel}>Cancel</Button>
+          <Button
+            onClick={() => {
+              onCancel();
+              formik.resetForm();
+            }}
+          >
+            Cancel
+          </Button>
           <Button type="submit">Submit</Button>
         </DialogActions>
       </form>

@@ -6,7 +6,6 @@ import { Badge, Box, Button, ListItem } from "@mui/material";
 export const NavItem = ({ href, icon, title, isnew, ...props }) => {
   const router = useRouter();
   const active = !router ? false : href ? router.pathname === href : false;
-  console.log({ href, icon, title, props });
 
   return (
     <ListItem
