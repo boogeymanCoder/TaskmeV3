@@ -1,6 +1,7 @@
 import { CardHeader, Chip, Grid } from "@material-ui/core";
 import { styled } from "@mui/material/styles";
 import {
+  Alert,
   Avatar,
   Card,
   CardActions,
@@ -42,6 +43,7 @@ export function ServiceCard({ serviceData, onEdit, onDelete, onOffer }) {
   const auth = getAuth();
 
   const [user, userLoading, userError] = useAuthState(auth);
+  const offers = [<p key="1">Offer1</p>, <p key="2">Offer2</p>];
 
   console.log({ serviceData });
   console.log(`accounts/${serviceData.owner}`);
@@ -73,6 +75,7 @@ export function ServiceCard({ serviceData, onEdit, onDelete, onOffer }) {
       onEdit={user.uid === owner.uid ? onEdit : undefined}
       onDelete={user.uid === owner.uid ? onDelete : undefined}
       onOffer={onOffer}
+      offers={offers}
     />
   );
 }
@@ -171,6 +174,7 @@ export default function ServiceCardView({
   onEdit,
   onDelete,
   onOffer,
+  offers,
 }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -212,9 +216,14 @@ export default function ServiceCardView({
         </ExpandMore>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography>Offers</Typography>
-        </CardContent>
+        {!offers && (
+          <CardContent style={{ border: "none", boxShadow: "none" }}>
+            <Alert severity="info">No Offers yet</Alert>
+          </CardContent>
+        )}
+        {offers && (
+          <CardContent style={{ border: "none", boxShadow: "none" }}>{offers}</CardContent>
+        )}
       </Collapse>
     </Card>
   );
@@ -269,6 +278,10 @@ ServiceCardView.propTypes = {
    * Function to call when adding an offer.
    */
   onOffer: PropTypes.func,
+  /**
+   * Array of offers for this service, must have a key property.
+   */
+  offers: PropTypes.arrayOf(PropTypes.node),
 };
 
 ServiceCardView.default = { isOwned: false };
