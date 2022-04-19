@@ -56,7 +56,10 @@ export function ServicesPage() {
     console.log({ values });
     console.log("before add service:", { user });
     return setService({ ...values, owner: user?.uid })
-      .then((res) => setNewServiceOpen(false))
+      .then((res) => {
+        setNewServiceOpen(false);
+        return res;
+      })
       .catch((err) => console.log(err));
   }
 
@@ -150,7 +153,7 @@ export function ServicesPage() {
         open={newServiceOpen}
         title="New Service"
         onClose={() => setNewServiceOpen(false)}
-        onSubmit={() => handleAddService}
+        onSubmit={handleAddService}
         onCancel={() => setNewServiceOpen(false)}
       />
       {console.log("service:", editServiceInitialValues)}
