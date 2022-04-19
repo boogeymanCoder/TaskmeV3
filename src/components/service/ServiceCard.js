@@ -44,7 +44,7 @@ const ExpandMore = styled((props) => {
 export function ServiceCard({ serviceData, onEdit, onDelete, onOffer }) {
   const database = getDatabase();
   const auth = getAuth();
-  const [offerList, setOfferList] = useState();
+  const [offerList, setOfferList] = useState([]);
   const [openEditOffer, setOpenEditOffer] = useState(false);
   const [editOfferInitialValues, setEditOfferInitialValues] = useState();
 
@@ -153,7 +153,7 @@ export function ServiceCard({ serviceData, onEdit, onDelete, onOffer }) {
         lastUpdated={moment(JSON.parse(serviceData.updatedAt)).fromNow()}
         title={serviceData.title}
         details={serviceData.details}
-        tags={serviceData.tags}
+        tags={serviceData.tags ?? []}
         currency={serviceData.currency}
         price={serviceData.price}
         isOwned={user.uid === owner.uid}

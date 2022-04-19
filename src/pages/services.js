@@ -56,10 +56,7 @@ export function ServicesPage() {
     console.log({ values });
     console.log("before add service:", { user });
     return setService({ ...values, owner: user?.uid })
-      .then((res) => {
-        setNewServiceOpen(false);
-        return res;
-      })
+      .then((res) => setNewServiceOpen(false))
       .catch((err) => console.log(err));
   }
 
