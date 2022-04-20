@@ -50,7 +50,7 @@ export function PostCard({ postData }) {
     [account, accountLoading, accountError]
   );
 
-  function handleEdit(values) {
+  async function handleEdit(values) {
     console.log({ values });
     return updatePost(postData.uid, {
       ...values,
