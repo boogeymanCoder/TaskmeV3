@@ -4,6 +4,7 @@ import AccountCheck from "/src/components/account/AccountCheck";
 import { DashboardLayout } from "src/components/dashboard-layout";
 import { Box } from "@mui/system";
 import Head from "next/head";
+import PostListToolbar from "src/components/post/PostToolbar";
 
 export default function Posts() {
   return (
@@ -20,7 +21,7 @@ export default function Posts() {
           }}
         >
           <Container maxWidth={false}>
-            <div>Posts</div>
+            <PostListToolbar handleAddPost={() => alert("open create post form")} />
             <Box
               sx={{
                 display: "flex",
