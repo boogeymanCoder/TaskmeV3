@@ -5,9 +5,6 @@ import { default as PostToolbarComponent } from "/src/components/post/PostToolba
 const sb = {
   title: "Post/Post Toolbar",
   component: PostToolbarComponent,
-  argTypes: {
-    handleAddPost: { action: "handleAddPost" },
-  },
 };
 export default sb;
 

@@ -21,12 +21,7 @@ import PropTypes from "prop-types";
 /**
  * Posts toolbar allowing users to add, search or sort Posts
  */
-const PostListToolbar = ({
-  handleAddPost,
-  sortEnabled = false,
-  searchEnabled = false,
-  ...props
-}) => (
+const PostListToolbar = ({ sortEnabled = false, searchEnabled = false, ...props }) => (
   <Box {...props}>
     <Box
       sx={{
@@ -76,29 +71,10 @@ const PostListToolbar = ({
         </CardContent>
       </Card>
     </Box>
-    <Fab
-      onClick={handleAddPost}
-      size="large"
-      sx={{
-        position: "fixed",
-        bottom: "5%",
-        right: "5%",
-        boxShadow: 3,
-        zIndex: "page_fab",
-      }}
-      color="primary"
-      aria-label="add"
-    >
-      <Add />
-    </Fab>
   </Box>
 );
 
 PostListToolbar.propTypes = {
-  /**
-   * Function to be called on clicking the floating action button.
-   */
-  handleAddPost: PropTypes.func.isRequired,
   /**
    * Whether sort is enabled.
    */
