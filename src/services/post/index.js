@@ -29,3 +29,11 @@ export function updatePost(uid, post) {
 
   return update(postRef, postWithTimestamp);
 }
+
+export function deletePost(uid) {
+  console.log("delete");
+  const database = getDatabase();
+  const postRef = ref(database, `posts/${uid}`);
+
+  return remove(postRef);
+}

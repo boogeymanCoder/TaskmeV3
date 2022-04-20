@@ -27,6 +27,7 @@ import PostForm from "./PostForm";
 import { updatePost } from "/src/services/post";
 import ConfirmMessage from "../ConfirmMessage";
 import { MoreVert } from "@mui/icons-material";
+import { deletePost } from "src/services/post";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -54,7 +55,7 @@ export function PostCard({ postData }) {
     [account, accountLoading, accountError]
   );
 
-  async function handleEdit(values) {
+  async function handlePostEdit(values) {
     console.log({ values });
     return updatePost(postData.uid, {
       ...values,
@@ -63,6 +64,10 @@ export function PostCard({ postData }) {
       setEdit(false);
       return res;
     });
+  }
+
+  async function handlePostDelete() {
+    return deletePost(postData.uid);
   }
 
   if (!user || userLoading || userError || !account || accountLoading || accountError) {
@@ -77,6 +82,7 @@ export function PostCard({ postData }) {
         lastUpdate={moment(JSON.parse(postData.updatedAt)).fromNow()}
         details={postData.details}
         onEdit={() => setEdit(true)}
+        onDelete={handlePostDelete}
         isOwned={user.uid === postData.owner}
       />
     );
@@ -87,7 +93,7 @@ export function PostCard({ postData }) {
         name={account.fullname}
         lastUpdate={moment(JSON.parse(postData.updatedAt)).fromNow()}
         detailsInitialValue={postData.details}
-        onSubmit={handleEdit}
+        onSubmit={handlePostEdit}
       />
     );
   }
