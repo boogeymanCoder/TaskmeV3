@@ -19,7 +19,14 @@ import * as Yup from "yup";
 /**
  * Displays forum post.
  */
-export default function Post({ avatar, name, lastUpdate, detailsInitialValue, onSubmit }) {
+export default function PostForm({
+  avatar,
+  name,
+  lastUpdate,
+  detailsInitialValue,
+  onSubmit,
+  ...props
+}) {
   const formik = useFormik({
     initialValues: {
       details: detailsInitialValue ?? "",
@@ -32,7 +39,7 @@ export default function Post({ avatar, name, lastUpdate, detailsInitialValue, on
     },
   });
   return (
-    <Card>
+    <Card {...props}>
       <form onSubmit={formik.handleSubmit} noValidate>
         <CardHeader avatar={<Avatar src={avatar} />} title={name} subheader={lastUpdate} />
         <CardContent>
@@ -60,7 +67,7 @@ export default function Post({ avatar, name, lastUpdate, detailsInitialValue, on
   );
 }
 
-Post.propTypes = {
+PostForm.propTypes = {
   /**
    * The users avatar URL.
    */
