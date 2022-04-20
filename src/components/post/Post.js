@@ -24,7 +24,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useObjectVal } from "react-firebase-hooks/database";
 import moment from "moment";
 import PostForm from "./PostForm";
-import { updatePost } from "src/services/post";
+import { updatePost } from "/src/services/post";
 import ConfirmMessage from "../ConfirmMessage";
 import { MoreVert } from "@mui/icons-material";
 
