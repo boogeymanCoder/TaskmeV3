@@ -6,15 +6,21 @@ import {
   CardHeader,
   Collapse,
   IconButton,
+  LinearProgress,
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ForumIcon from "@mui/icons-material/Forum";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EditIcon from "@mui/icons-material/Edit";
+import { getAuth } from "firebase/auth";
+import { getDatabase, ref } from "firebase/database";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useObjectVal } from "react-firebase-hooks/database";
+import moment from "moment";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -28,7 +34,30 @@ const ExpandMore = styled((props) => {
 }));
 
 export function PostCard({ postData }) {
-  return <Post lastUpdate={postData.updatedAt} details={postData.details} />;
+  const auth = getAuth();
+  const database = getDatabase();
+  const [user, userLoading, userError] = useAuthState(auth);
+  const [account, accountLoading, accountError] = useObjectVal(
+    ref(database, `accounts/${user?.uid}`)
+  );
+
+  useEffect(() => console.log({ user, userLoading, userError }), [user, userLoading, userError]);
+  useEffect(
+    () => console.log({ account, accountLoading, accountError }),
+    [account, accountLoading, accountError]
+  );
+
+  if (!user || userLoading || userError || !account || accountLoading || accountError) {
+    return <LinearProgress />;
+  }
+  return (
+    <Post
+      avatar={account.image}
+      name={account.fullname}
+      lastUpdate={moment(JSON.parse(postData.updatedAt)).fromNow()}
+      details={postData.details}
+    />
+  );
 }
 
 /**
