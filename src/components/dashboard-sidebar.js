@@ -51,6 +51,12 @@ const items = [
     isnew: true,
   },
   {
+    href: "/posts",
+    icon: <Work fontSize="small" />,
+    title: "Posts",
+    isnew: true,
+  },
+  {
     href: "/account/me",
     icon: <UserIcon fontSize="small" />,
     title: "Account",
