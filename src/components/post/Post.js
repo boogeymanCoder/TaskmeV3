@@ -22,6 +22,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useObjectVal } from "react-firebase-hooks/database";
 import moment from "moment";
 import PostForm from "./PostForm";
+import { updatePost } from "src/services/post";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -51,7 +52,13 @@ export function PostCard({ postData }) {
 
   function handleEdit(values) {
     console.log({ values });
-    alert("edit!");
+    return updatePost(postData.uid, {
+      ...values,
+      createdAt: new Date(JSON.parse(postData.createdAt)),
+    }).then((res) => {
+      setEdit(false);
+      return res;
+    });
   }
 
   if (!user || userLoading || userError || !account || accountLoading || accountError) {

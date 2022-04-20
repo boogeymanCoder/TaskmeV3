@@ -12,3 +12,20 @@ export function setPost(post) {
 
   return push(postsRef, postWithTimestamp);
 }
+
+export function updatePost(uid, post) {
+  console.log("update");
+  const database = getDatabase();
+  const postRef = ref(database, `posts/${uid}`);
+  const now = new Date();
+  const updatedAt = JSON.stringify(now);
+
+  const postWithTimestamp = {
+    ...post,
+    createdAt: JSON.stringify(post.createdAt),
+    updatedAt: updatedAt,
+  };
+  console.log({ postWithTimestamp });
+
+  return update(postRef, postWithTimestamp);
+}
