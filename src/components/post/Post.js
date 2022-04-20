@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ForumIcon from "@mui/icons-material/Forum";
@@ -21,6 +21,7 @@ import { getDatabase, ref } from "firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useObjectVal } from "react-firebase-hooks/database";
 import moment from "moment";
+import PostForm from "./PostForm";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -34,6 +35,7 @@ const ExpandMore = styled((props) => {
 }));
 
 export function PostCard({ postData }) {
+  const [edit, setEdit] = useState(false);
   const auth = getAuth();
   const database = getDatabase();
   const [user, userLoading, userError] = useAuthState(auth);
@@ -47,18 +49,48 @@ export function PostCard({ postData }) {
     [account, accountLoading, accountError]
   );
 
+  function handleEdit(values) {
+    console.log({ values });
+    alert("edit!");
+  }
+
   if (!user || userLoading || userError || !account || accountLoading || accountError) {
     return <LinearProgress />;
   }
-  return (
-    <Post
-      avatar={account.image}
-      name={account.fullname}
-      lastUpdate={moment(JSON.parse(postData.updatedAt)).fromNow()}
-      details={postData.details}
-    />
-  );
+
+  if (!edit) {
+    return (
+      <Post
+        avatar={account.image}
+        name={account.fullname}
+        lastUpdate={moment(JSON.parse(postData.updatedAt)).fromNow()}
+        details={postData.details}
+        onEdit={() => setEdit(true)}
+      />
+    );
+  } else {
+    return (
+      <PostForm
+        avatar={account.image}
+        name={account.fullname}
+        lastUpdate={moment(JSON.parse(postData.updatedAt)).fromNow()}
+        detailsInitialValue={postData.details}
+        onSubmit={handleEdit}
+      />
+    );
+  }
 }
+
+PostCard.propTypes = {
+  /**
+   * Post data from database.
+   */
+  postData: PropTypes.object.isRequired,
+};
+
+PostCard.default = {
+  edit: false,
+};
 
 /**
  * Displays forum post.
