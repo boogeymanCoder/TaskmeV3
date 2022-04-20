@@ -27,7 +27,7 @@ import PostForm from "./PostForm";
 import { updatePost } from "/src/services/post";
 import ConfirmMessage from "../ConfirmMessage";
 import { MoreVert } from "@mui/icons-material";
-import { deletePost } from "src/services/post";
+import { deletePost } from "/src/services/post";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
