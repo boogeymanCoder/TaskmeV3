@@ -9,9 +9,10 @@ import PostForm from "src/components/post/PostForm";
 import { getAuth } from "firebase/auth";
 import { LinearProgress } from "@material-ui/core";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useObjectVal } from "react-firebase-hooks/database";
+import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { getDatabase, ref } from "firebase/database";
 import { setPost } from "../../services/post";
+import { PostCard } from "src/components/post/Post";
 
 export default function Posts() {
   const auth = getAuth();
@@ -21,18 +22,36 @@ export default function Posts() {
     ref(database, `accounts/${user?.uid}`)
   );
 
+  const [posts, postsLoading, postsError] = useListVals(ref(database, "posts"), {
+    keyField: "uid",
+  });
+
   useEffect(() => console.log({ user, userLoading, userError }), [user, userLoading, userError]);
   useEffect(
     () => console.log({ account, accountLoading, accountError }),
     [account, accountLoading, accountError]
   );
+  useEffect(
+    () => console.log({ posts, postsLoading, postsError }),
+    [posts, postsLoading, postsError]
+  );
 
-  if (!user || userLoading || userError || !account || accountLoading || accountError) {
+  if (
+    !user ||
+    userLoading ||
+    userError ||
+    !account ||
+    accountLoading ||
+    accountError ||
+    !posts ||
+    postsLoading ||
+    postsError
+  ) {
     return <LinearProgress />;
   }
 
   function handleAddPost(post) {
-    return setPost(post);
+    return setPost({ ...post, owner: user.uid });
   }
 
   return (
@@ -61,6 +80,13 @@ export default function Posts() {
                     onSubmit={handleAddPost}
                   />
                 </Grid>
+                {posts?.map((post) => {
+                  return (
+                    <Grid item key={post.uid} xs={12}>
+                      <PostCard postData={post} />
+                    </Grid>
+                  );
+                })}
               </Grid>
             </Box>
             <Box

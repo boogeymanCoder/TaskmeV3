@@ -27,6 +27,10 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
+export function PostCard({ postData }) {
+  return <Post lastUpdate={postData.updatedAt} details={postData.details} />;
+}
+
 /**
  * Displays forum post.
  */
