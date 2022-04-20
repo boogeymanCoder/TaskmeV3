@@ -7,6 +7,8 @@ import {
   Collapse,
   IconButton,
   LinearProgress,
+  Menu,
+  MenuItem,
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -23,6 +25,8 @@ import { useObjectVal } from "react-firebase-hooks/database";
 import moment from "moment";
 import PostForm from "./PostForm";
 import { updatePost } from "src/services/post";
+import ConfirmMessage from "../ConfirmMessage";
+import { MoreVert } from "@mui/icons-material";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -73,6 +77,7 @@ export function PostCard({ postData }) {
         lastUpdate={moment(JSON.parse(postData.updatedAt)).fromNow()}
         details={postData.details}
         onEdit={() => setEdit(true)}
+        isOwned={user.uid === postData.owner}
       />
     );
   } else {
@@ -99,10 +104,97 @@ PostCard.default = {
   edit: false,
 };
 
+export function PostMenu({ onEdit, onDelete }) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [openConfirmation, setOpenConfirmation] = useState(false);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <>
+      <IconButton
+        id="basic-button"
+        aria-controls={open ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClick}
+      >
+        <MoreVert />
+      </IconButton>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <MenuItem
+          onClick={() => {
+            onEdit();
+            handleClose();
+          }}
+        >
+          Edit
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            setOpenConfirmation(true);
+          }}
+        >
+          Delete
+        </MenuItem>
+      </Menu>
+
+      <ConfirmMessage
+        title="Delete Post?"
+        message="After deletion, this post can no longer be seen and  sent with comments from others."
+        onAgree={(e) => {
+          onDelete()
+            .then((res) => {
+              setOpenConfirmation(false);
+              handleClose();
+            })
+            .catch((err) => console.log({ err }));
+        }}
+        onDisagree={(e) => {
+          setOpenConfirmation(false);
+          handleClose();
+        }}
+        open={openConfirmation}
+        handleClose={(e) => setOpenConfirmation(false)}
+      />
+    </>
+  );
+}
 /**
  * Displays forum post.
  */
-export default function Post({ avatar, name, lastUpdate, details, onEdit, onLike, onComment }) {
+export default function Post({
+  avatar,
+  name,
+  lastUpdate,
+  details,
+  onEdit,
+  onLike,
+  onComment,
+  isOwned,
+  onDelete,
+}) {
   const [expanded, setExpanded] = React.useState(false);
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -112,11 +204,7 @@ export default function Post({ avatar, name, lastUpdate, details, onEdit, onLike
     <Card>
       <CardHeader
         avatar={<Avatar src={avatar} />}
-        action={
-          <IconButton onClick={onEdit}>
-            <EditIcon />
-          </IconButton>
-        }
+        action={<>{isOwned && <PostMenu onEdit={onEdit} onDelete={onDelete} />}</>}
         title={name}
         subheader={lastUpdate}
       />
@@ -177,4 +265,16 @@ Post.propTypes = {
    * Function to call on comment.
    */
   onComment: PropTypes.func.isRequired,
+  /**
+   * Whether the post is owned or not.
+   */
+  isOwned: PropTypes.bool,
+  /**
+   * Function to call on delete.
+   */
+  onDelete: PropTypes.func,
+};
+
+Post.default = {
+  isOwned: false,
 };
