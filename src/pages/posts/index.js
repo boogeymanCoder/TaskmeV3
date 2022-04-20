@@ -11,6 +11,7 @@ import { LinearProgress } from "@material-ui/core";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useObjectVal } from "react-firebase-hooks/database";
 import { getDatabase, ref } from "firebase/database";
+import { setPost } from "../../services/post";
 
 export default function Posts() {
   const auth = getAuth();
@@ -29,6 +30,11 @@ export default function Posts() {
   if (!user || userLoading || userError || !account || accountLoading || accountError) {
     return <LinearProgress />;
   }
+
+  function handleAddPost(post) {
+    return setPost(post);
+  }
+
   return (
     <>
       <AccountCheck>
@@ -52,6 +58,7 @@ export default function Posts() {
                     name={account.fullname}
                     lastUpdate="New Post"
                     sx={{ my: 1 }}
+                    onSubmit={handleAddPost}
                   />
                 </Grid>
               </Grid>

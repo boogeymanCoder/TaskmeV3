@@ -33,6 +33,12 @@
       "$uid": {
         ".write": "auth !== null"
       }
+    },
+    "posts": {
+      ".read": "auth !== null",
+      "$uid": {
+        ".write": "auth !== null"
+      }
     }
   }
 }
