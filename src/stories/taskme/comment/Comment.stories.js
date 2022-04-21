@@ -5,18 +5,34 @@ import { default as CommentComponent } from "/src/components/comment/Comment";
 const sb = {
   title: "Comment/Comment",
   component: CommentComponent,
+  argTypes: {
+    onEdit: { action: "onEdit" },
+    onDelete: { action: "onDelete" },
+  },
 };
 export default sb;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template = (args) => <CommentComponent {...args} />;
 
-export const Comment = Template.bind({});
+export const NotOwned = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-Comment.args = {
+NotOwned.args = {
   avatar:
     "https://images.unsplash.com/photo-1532074205216-d0e1f4b87368?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=741&q=80",
   name: "Kailee Frey",
   lastUpdate: "Just now",
   body: "I am good at math and has experience with being a tutor, maybe I can help you with that.",
+  isOwned: false,
+};
+
+export const Owned = Template.bind({});
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Owned.args = {
+  avatar:
+    "https://images.unsplash.com/photo-1532074205216-d0e1f4b87368?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=741&q=80",
+  name: "Kailee Frey",
+  lastUpdate: "Just now",
+  body: "I am good at math and has experience with being a tutor, maybe I can help you with that.",
+  isOwned: true,
 };

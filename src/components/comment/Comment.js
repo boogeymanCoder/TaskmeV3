@@ -117,7 +117,15 @@ export function CommentMenu({ onEdit, onDelete }) {
 /**
  * Shows users comment on forum page.
  */
-export default function CommentView({ avatar, name, lastUpdate, body }) {
+export default function CommentView({
+  avatar,
+  name,
+  lastUpdate,
+  body,
+  isOwned = false,
+  onEdit,
+  onDelete,
+}) {
   return (
     <Card>
       <CardHeader
@@ -133,13 +141,16 @@ export default function CommentView({ avatar, name, lastUpdate, body }) {
           </>
         }
         subheader={body}
-        action={<CommentMenu />}
+        action={<>{isOwned && <CommentMenu onEdit={onEdit} onDelete={onDelete} />}</>}
       />
     </Card>
   );
 }
 
-Comment.propTypes = {
+CommentView.default = {
+  isOwned: false,
+};
+CommentView.propTypes = {
   /**
    * The users image url.
    */
@@ -156,4 +167,16 @@ Comment.propTypes = {
    * The comment body.
    */
   body: PropTypes.string.isRequired,
+  /**
+   * Whether the comment is owned or not.
+   */
+  isOwned: PropTypes.bool,
+  /**
+   * Function to call on edit, requires isOwned = true.
+   */
+  onEdit: PropTypes.func,
+  /**
+   * Function to call on delete, requires isOwned = true.
+   */
+  onDelete: PropTypes.func,
 };
