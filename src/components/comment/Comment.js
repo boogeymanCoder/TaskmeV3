@@ -20,7 +20,7 @@ import { MoreVert } from "@mui/icons-material";
 import { CommentForm } from "./CommentForm";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { removeComment } from "src/services/comment";
+import { removeComment } from "/src/services/comment";
 
 export function Comment({ commentData }) {
   const auth = getAuth();

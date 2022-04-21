@@ -218,7 +218,6 @@ export default function Post({
   details,
   onEdit,
   onLike,
-  onComment,
   isOwned,
   onDelete,
   comments,
@@ -243,9 +242,6 @@ export default function Post({
       <CardActions disableSpacing>
         <IconButton onClick={onLike}>
           <ThumbUpIcon />
-        </IconButton>
-        <IconButton onClick={onComment}>
-          <ForumIcon />
         </IconButton>
         <ExpandMore
           expand={expanded}
@@ -296,10 +292,6 @@ Post.propTypes = {
    * Function to call on like.
    */
   onLike: PropTypes.func.isRequired,
-  /**
-   * Function to call on comment.
-   */
-  onComment: PropTypes.func.isRequired,
   /**
    * Whether the post is owned or not.
    */

@@ -9,7 +9,6 @@ const sb = {
   argTypes: {
     onEdit: { action: "onEdit" },
     onLike: { action: "onLike" },
-    onComment: { action: "onComment" },
     onDelete: { action: "onDelete" },
   },
 };
