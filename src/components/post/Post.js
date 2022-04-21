@@ -1,4 +1,5 @@
 import {
+  Alert,
   Avatar,
   Card,
   CardActions,
@@ -200,6 +201,7 @@ export default function Post({
   onComment,
   isOwned,
   onDelete,
+  comments,
 }) {
   const [expanded, setExpanded] = React.useState(false);
   const handleExpandClick = () => {
@@ -234,9 +236,14 @@ export default function Post({
         </ExpandMore>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography>Comments</Typography>
-        </CardContent>
+        {!comments && (
+          <CardContent style={{ border: "none", boxShadow: "none" }}>
+            <Alert severity="info">No Comments yet</Alert>
+          </CardContent>
+        )}
+        {comments && (
+          <CardContent style={{ border: "none", boxShadow: "none" }}>{comments}</CardContent>
+        )}
       </Collapse>
     </Card>
   );
@@ -279,6 +286,10 @@ Post.propTypes = {
    * Function to call on delete.
    */
   onDelete: PropTypes.func,
+  /**
+   * List of comments
+   */
+  comments: PropTypes.arrayOf(PropTypes.node),
 };
 
 Post.default = {
