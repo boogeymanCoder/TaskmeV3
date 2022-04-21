@@ -1,4 +1,5 @@
 import React from "react";
+import CommentFormView from "/src/components/comment/CommentForm";
 import Comment from "/src/components/comment/Comment";
 import { default as PostComponent } from "/src/components/post/Post";
 
@@ -27,7 +28,13 @@ NotOwned.args = {
   details:
     "Hello, I am a student from San Francisco. I am currently having a hard time with math and I was wondering can anyone here help me with, algebra?",
   isOwned: false,
-  comments: [<p key="1">Comment1</p>, <p key="2">Comment2</p>],
+  commentForm: (
+    <CommentFormView
+      avatar="https://images.unsplash.com/photo-1532074205216-d0e1f4b87368?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=741&q=80"
+      name="Kailee Frey"
+      onSubmit={() => {}}
+    />
+  ),
 };
 
 export const Owned = Template.bind({});
@@ -40,6 +47,13 @@ Owned.args = {
   details:
     "Hello, I am a student from San Francisco. I am currently having a hard time with math and I was wondering can anyone here help me with, algebra?",
   isOwned: true,
+  commentForm: (
+    <CommentFormView
+      avatar="https://images.unsplash.com/photo-1532074205216-d0e1f4b87368?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=741&q=80"
+      name="Kailee Frey"
+      onSubmit={() => {}}
+    />
+  ),
 };
 
 export const WithComments = Template.bind({});
@@ -68,4 +82,11 @@ WithComments.args = {
       name="Kailee Frey"
     />,
   ],
+  commentForm: (
+    <CommentFormView
+      avatar="https://images.unsplash.com/photo-1532074205216-d0e1f4b87368?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=741&q=80"
+      name="Kailee Frey"
+      onSubmit={() => {}}
+    />
+  ),
 };
