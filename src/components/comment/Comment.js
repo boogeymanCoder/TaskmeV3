@@ -5,13 +5,17 @@ import {
   CardHeader,
   IconButton,
   LinearProgress,
+  Menu,
+  MenuItem,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PropTypes from "prop-types";
 import { getDatabase, ref } from "firebase/database";
 import { useObjectVal } from "react-firebase-hooks/database";
+import ConfirmMessage from "../ConfirmMessage";
+import { MoreVert } from "@mui/icons-material";
 
 export function Comment({ commentData }) {
   const database = getDatabase();
@@ -29,6 +33,84 @@ export function Comment({ commentData }) {
       body={commentData.body}
       lastUpdate="2 minutes ago"
     />
+  );
+}
+
+export function CommentMenu({ onEdit, onDelete }) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [openConfirmation, setOpenConfirmation] = useState(false);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <>
+      <IconButton
+        id="basic-button"
+        aria-controls={open ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClick}
+      >
+        <MoreVert />
+      </IconButton>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <MenuItem
+          onClick={() => {
+            onEdit();
+            handleClose();
+          }}
+        >
+          Edit
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            setOpenConfirmation(true);
+          }}
+        >
+          Delete
+        </MenuItem>
+      </Menu>
+
+      <ConfirmMessage
+        title="Delete Comment?"
+        message="After deletion, this comment can no longer be seen."
+        onAgree={(e) => {
+          onDelete()
+            .then((res) => {
+              setOpenConfirmation(false);
+              handleClose();
+            })
+            .catch((err) => console.log({ err }));
+        }}
+        onDisagree={(e) => {
+          setOpenConfirmation(false);
+          handleClose();
+        }}
+        open={openConfirmation}
+        handleClose={(e) => setOpenConfirmation(false)}
+      />
+    </>
   );
 }
 
@@ -51,11 +133,7 @@ export default function CommentView({ avatar, name, lastUpdate, body }) {
           </>
         }
         subheader={body}
-        action={
-          <IconButton>
-            <MoreVertIcon />
-          </IconButton>
-        }
+        action={<CommentMenu />}
       />
     </Card>
   );
