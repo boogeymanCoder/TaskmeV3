@@ -29,6 +29,7 @@ import { updatePost } from "/src/services/post";
 import ConfirmMessage from "../ConfirmMessage";
 import { MoreVert } from "@mui/icons-material";
 import { deletePost } from "/src/services/post";
+import { CommentForm } from "../comment/CommentForm";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -85,6 +86,7 @@ export function PostCard({ postData }) {
         onEdit={() => setEdit(true)}
         onDelete={handlePostDelete}
         isOwned={user.uid === postData.owner}
+        commentForm={<CommentForm targetUid={postData.uid} />}
       />
     );
   } else {
@@ -202,6 +204,7 @@ export default function Post({
   isOwned,
   onDelete,
   comments,
+  commentForm,
 }) {
   const [expanded, setExpanded] = React.useState(false);
   const handleExpandClick = () => {
@@ -236,6 +239,7 @@ export default function Post({
         </ExpandMore>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
+        {commentForm}
         {!comments && (
           <CardContent style={{ border: "none", boxShadow: "none" }}>
             <Alert severity="info">No Comments yet</Alert>
@@ -290,6 +294,10 @@ Post.propTypes = {
    * List of comments
    */
   comments: PropTypes.arrayOf(PropTypes.node),
+  /**
+   * The comment form component.
+   */
+  commentForm: PropTypes.node,
 };
 
 Post.default = {

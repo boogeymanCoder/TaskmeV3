@@ -6,14 +6,42 @@ import {
   CardContent,
   CardHeader,
   IconButton,
+  LinearProgress,
   TextField,
 } from "@mui/material";
 import React from "react";
 import PropTypes from "prop-types";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { getAuth } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useObjectVal } from "react-firebase-hooks/database";
+import { getDatabase, ref } from "firebase/database";
+import { setComment } from "src/services/comment";
 
-export default function CommentForm({ avatar, name, onSubmit, bodyInitialValue }) {
+export function CommentForm({ targetUid }) {
+  const auth = getAuth();
+  const database = getDatabase();
+  const [user, userLoading, userError] = useAuthState(auth);
+  const [account, accountLoading, accountError] = useObjectVal(
+    ref(database, `accounts/${user?.uid}`),
+    { keyField: "uid" }
+  );
+
+  async function handleAddComment(values) {
+    return setComment({ ...values, owner: account.uid, target: targetUid });
+  }
+
+  if (!user || userLoading || userError || !account || accountLoading || accountError) {
+    return <LinearProgress />;
+  }
+
+  return (
+    <CommentFormView avatar={account.image} name={account.fullname} onSubmit={handleAddComment} />
+  );
+}
+
+export default function CommentFormView({ avatar, name, onSubmit, bodyInitialValue }) {
   const formik = useFormik({
     initialValues: {
       body: bodyInitialValue ?? "",
