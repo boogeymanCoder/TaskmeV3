@@ -1,18 +1,18 @@
 import { Container, Grid, Pagination } from "@mui/material";
 import React, { useEffect } from "react";
 import AccountCheck from "/src/components/account/AccountCheck";
-import { DashboardLayout } from "src/components/dashboard-layout";
+import { DashboardLayout } from "/src/components/dashboard-layout";
 import { Box } from "@mui/system";
 import Head from "next/head";
-import PostListToolbar from "src/components/post/PostToolbar";
-import PostForm from "src/components/post/PostForm";
+import PostListToolbar from "/src/components/post/PostToolbar";
+import PostForm from "/src/components/post/PostForm";
 import { getAuth } from "firebase/auth";
 import { LinearProgress } from "@material-ui/core";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { getDatabase, ref } from "firebase/database";
 import { setPost } from "../../services/post";
-import { PostCard } from "src/components/post/Post";
+import { PostCard } from "/src/components/post/Post";
 
 export default function Posts() {
   const auth = getAuth();

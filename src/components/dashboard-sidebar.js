@@ -16,7 +16,7 @@ import { XCircle as XCircleIcon } from "../icons/x-circle";
 import { Inbox } from "../icons/x-circle";
 import { Logo } from "./logo";
 import { NavItem } from "./nav-item";
-import { TaskAlt, Message, Work } from "@mui/icons-material";
+import { TaskAlt, Message, Work, Feed } from "@mui/icons-material";
 
 const items = [
   {
@@ -52,7 +52,7 @@ const items = [
   },
   {
     href: "/posts",
-    icon: <Work fontSize="small" />,
+    icon: <Feed fontSize="small" />,
     title: "Posts",
     isnew: true,
   },

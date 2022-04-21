@@ -39,6 +39,12 @@
       "$uid": {
         ".write": "auth !== null"
       }
+    },
+    "comments": {
+      ".read": "auth !== null",
+      "$uid": {
+        ".write": "auth !== null"
+      }
     }
   }
 }

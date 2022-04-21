@@ -1,4 +1,5 @@
 import {
+  Alert,
   Avatar,
   Card,
   CardActions,
@@ -19,15 +20,17 @@ import ForumIcon from "@mui/icons-material/Forum";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EditIcon from "@mui/icons-material/Edit";
 import { getAuth } from "firebase/auth";
-import { getDatabase, ref } from "firebase/database";
+import { equalTo, getDatabase, orderByChild, query, ref } from "firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useObjectVal } from "react-firebase-hooks/database";
+import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import moment from "moment";
 import PostForm from "./PostForm";
 import { updatePost } from "/src/services/post";
 import ConfirmMessage from "../ConfirmMessage";
 import { MoreVert } from "@mui/icons-material";
 import { deletePost } from "/src/services/post";
+import { CommentForm } from "../comment/CommentForm";
+import { Comment } from "../comment/Comment";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -48,12 +51,28 @@ export function PostCard({ postData }) {
   const [account, accountLoading, accountError] = useObjectVal(
     ref(database, `accounts/${user?.uid}`)
   );
+  const [comments, commentsLoading, commentsError] = useListVals(
+    query(ref(database, "comments"), orderByChild("target"), equalTo(postData.uid)),
+    {
+      keyField: "uid",
+    }
+  );
+  const [commentList, setCommentList] = useState();
 
   useEffect(() => console.log({ user, userLoading, userError }), [user, userLoading, userError]);
   useEffect(
     () => console.log({ account, accountLoading, accountError }),
     [account, accountLoading, accountError]
   );
+  useEffect(
+    () => console.log({ comments, commentsLoading, commentsError }),
+    [comments, commentsLoading, commentsError]
+  );
+
+  useEffect(() => {
+    if (!comments || comments.length < 1) return setCommentList(null);
+    setCommentList(comments.map((comment) => <Comment key={comment.uid} commentData={comment} />));
+  }, [comments]);
 
   async function handlePostEdit(values) {
     console.log({ values });
@@ -84,6 +103,8 @@ export function PostCard({ postData }) {
         onEdit={() => setEdit(true)}
         onDelete={handlePostDelete}
         isOwned={user.uid === postData.owner}
+        commentForm={<CommentForm targetUid={postData.uid} />}
+        comments={commentList}
       />
     );
   } else {
@@ -197,9 +218,10 @@ export default function Post({
   details,
   onEdit,
   onLike,
-  onComment,
   isOwned,
   onDelete,
+  comments,
+  commentForm,
 }) {
   const [expanded, setExpanded] = React.useState(false);
   const handleExpandClick = () => {
@@ -221,9 +243,6 @@ export default function Post({
         <IconButton onClick={onLike}>
           <ThumbUpIcon />
         </IconButton>
-        <IconButton onClick={onComment}>
-          <ForumIcon />
-        </IconButton>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -234,9 +253,15 @@ export default function Post({
         </ExpandMore>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography>Comments</Typography>
-        </CardContent>
+        {commentForm}
+        {!comments && (
+          <CardContent style={{ border: "none", boxShadow: "none" }}>
+            <Alert severity="info">No Comments yet</Alert>
+          </CardContent>
+        )}
+        {comments && (
+          <CardContent style={{ border: "none", boxShadow: "none" }}>{comments}</CardContent>
+        )}
       </Collapse>
     </Card>
   );
@@ -268,10 +293,6 @@ Post.propTypes = {
    */
   onLike: PropTypes.func.isRequired,
   /**
-   * Function to call on comment.
-   */
-  onComment: PropTypes.func.isRequired,
-  /**
    * Whether the post is owned or not.
    */
   isOwned: PropTypes.bool,
@@ -279,6 +300,14 @@ Post.propTypes = {
    * Function to call on delete.
    */
   onDelete: PropTypes.func,
+  /**
+   * List of comments
+   */
+  comments: PropTypes.arrayOf(PropTypes.node),
+  /**
+   * The comment form component.
+   */
+  commentForm: PropTypes.node,
 };
 
 Post.default = {
