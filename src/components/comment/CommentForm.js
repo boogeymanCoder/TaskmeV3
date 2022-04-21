@@ -17,7 +17,7 @@ import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useObjectVal } from "react-firebase-hooks/database";
 import { getDatabase, ref } from "firebase/database";
-import { setComment } from "src/services/comment";
+import { setComment } from "/src/services/comment";
 
 export function CommentForm({ targetUid }) {
   const auth = getAuth();

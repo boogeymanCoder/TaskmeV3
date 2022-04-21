@@ -7,15 +7,15 @@ import Head from "next/head";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useListVals } from "react-firebase-hooks/database";
-import AccountCheck from "src/components/account/AccountCheck";
-import CheckAuth from "src/components/auth/CheckAuth";
-import { DashboardLayout } from "src/components/dashboard-layout";
-import OfferForm from "src/components/offer/OfferForm";
-import { ServiceCard } from "src/components/service/ServiceCard";
-import ServiceForm from "src/components/service/ServiceForm";
-import ServiceListToolbar from "src/components/service/ServiceToolbar";
-import { setOffer } from "src/services/offer";
-import { setService, updateService, deleteService } from "src/services/service";
+import AccountCheck from "/src/components/account/AccountCheck";
+import CheckAuth from "/src/components/auth/CheckAuth";
+import { DashboardLayout } from "/src/components/dashboard-layout";
+import OfferForm from "/src/components/offer/OfferForm";
+import { ServiceCard } from "/src/components/service/ServiceCard";
+import ServiceForm from "/src/components/service/ServiceForm";
+import ServiceListToolbar from "/src/components/service/ServiceToolbar";
+import { setOffer } from "/src/services/offer";
+import { setService, updateService, deleteService } from "/src/services/service";
 
 const Services = () => {
   return (
