@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Dialog,
   IconButton,
   LinearProgress,
   Menu,
@@ -16,23 +17,42 @@ import { getDatabase, ref } from "firebase/database";
 import { useObjectVal } from "react-firebase-hooks/database";
 import ConfirmMessage from "../ConfirmMessage";
 import { MoreVert } from "@mui/icons-material";
+import { CommentForm } from "./CommentForm";
+import { getAuth } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export function Comment({ commentData }) {
+  const auth = getAuth();
   const database = getDatabase();
+  const [user, userLoading, userError] = useAuthState(auth);
   const [account, accountLoading, accountError] = useObjectVal(
     ref(database, `accounts/${commentData?.owner}`),
     { keyField: "uid" }
   );
+  const [commentFormOpen, setCommentFormOpen] = useState(false);
 
-  if (!account || accountLoading || accountError) return <LinearProgress />;
+  if (!account || accountLoading || accountError || !user || userLoading || userError)
+    return <LinearProgress />;
 
   return (
-    <CommentView
-      avatar={account.image}
-      name={account.fullname}
-      body={commentData.body}
-      lastUpdate="2 minutes ago"
-    />
+    <>
+      <CommentView
+        avatar={account.image}
+        name={account.fullname}
+        body={commentData.body}
+        lastUpdate="2 minutes ago"
+        isOwned={user.uid === account.uid}
+        onEdit={() => setCommentFormOpen(true)}
+      />
+      <Dialog open={commentFormOpen} onClose={() => setCommentFormOpen(false)}>
+        <CommentForm
+          targetUid={commentData.target}
+          mode="edit"
+          commentData={commentData}
+          onFinish={() => setCommentFormOpen(false)}
+        />
+      </Dialog>
+    </>
   );
 }
 
