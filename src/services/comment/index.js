@@ -30,3 +30,11 @@ export function updateComment(uid, comment) {
 
   return update(commentRef, commentWithTimestamp);
 }
+
+export function removeComment(uid) {
+  console.log({ uid });
+  const database = getDatabase();
+  const commentsRef = ref(database, `comments/${uid}`);
+
+  return remove(commentsRef);
+}

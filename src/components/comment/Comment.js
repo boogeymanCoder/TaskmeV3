@@ -20,6 +20,7 @@ import { MoreVert } from "@mui/icons-material";
 import { CommentForm } from "./CommentForm";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { removeComment } from "src/services/comment";
 
 export function Comment({ commentData }) {
   const auth = getAuth();
@@ -30,6 +31,10 @@ export function Comment({ commentData }) {
     { keyField: "uid" }
   );
   const [commentFormOpen, setCommentFormOpen] = useState(false);
+
+  async function handleDeleteComment() {
+    return removeComment(commentData.uid);
+  }
 
   if (!account || accountLoading || accountError || !user || userLoading || userError)
     return <LinearProgress />;
@@ -43,6 +48,7 @@ export function Comment({ commentData }) {
         lastUpdate="2 minutes ago"
         isOwned={user.uid === account.uid}
         onEdit={() => setCommentFormOpen(true)}
+        onDelete={handleDeleteComment}
       />
       <Dialog open={commentFormOpen} onClose={() => setCommentFormOpen(false)}>
         <CommentForm
