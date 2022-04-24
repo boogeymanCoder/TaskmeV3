@@ -62,7 +62,7 @@ export function AccountProfileDetails({ publicView = false, id, ...props }) {
       gender: Yup.string().oneOf(["Male", "Female"]).required("Gender is required"),
     }),
     onSubmit: async (values) => {
-      return setAccount(user.uid, values)
+      return setAccount(user.uid, values, user, account !== null)
         .then(async (res) => {
           console.log({ res });
           await updateProfile({ displayName: values.fullname }).then(() =>

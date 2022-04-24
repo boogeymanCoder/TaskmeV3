@@ -12,6 +12,10 @@ import { getAnalytics } from "firebase/analytics";
 import { useRouter } from "next/router";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { SendBirdProvider, withSendBird } from "sendbird-uikit";
+import "sendbird-uikit";
+import "sendbird-uikit/dist/index.css";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
