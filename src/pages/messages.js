@@ -21,22 +21,35 @@ function Messages() {
   }, [user, userLoading, userError]);
 
   if (!user || userLoading || userError) return <LinearProgress />;
-  try {
-    return (
-      <CheckAuth>
-        <MessagesPage userId={user.uid} />
-      </CheckAuth>
-    );
-  } catch (err) {
-    console.log({ err });
-    router.push("/");
+
+  return (
+    <CheckAuth>
+      <MessagesPage user={user} />
+    </CheckAuth>
+  );
+}
+
+class CustomUserPaginatedQuery {
+  constructor() {
+    // Required public property to determine if more data is available.
+    this.hasNext = false;
+  }
+
+  // Required public property.
+  next(callback) {
+    // Make async call and get list of users
+    const [users, error] = myAsyncCallToGenerateMembers();
+    // Set this.hasNext
+    this.hasNext = setTrueIfMoreMembersCanBeFetched();
+    callback(users, error);
   }
 }
 
 /**
  * Here the user can view their messages.
  */
-export function MessagesPage({ userId }) {
+export function MessagesPage({ user }) {
+  const [selectedChannel, setSelectedChannel] = useState();
   return (
     <CheckAuth>
       <AccountCheck>
@@ -45,10 +58,13 @@ export function MessagesPage({ userId }) {
         </Head>
 
         <SendBirdApp
-          // Add the two lines below.
           appId={process.env.NEXT_PUBLIC_SENDBIRD_APPLICATION_ID} // Specify your Sendbird application ID.
-          userId={userId} // Specify your user ID.
+          userId={user.uid} // Specify your user ID.
           config={{ logLevel: "all" }}
+          nickname={user.fullname}
+          profileUrl={user.photoURL}
+          disableAutoSelect={true}
+          replyType="QUOTE_REPLY"
         />
       </AccountCheck>
     </CheckAuth>
