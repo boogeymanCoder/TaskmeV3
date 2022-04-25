@@ -12,6 +12,7 @@ const DashboardLayoutRoot = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("lg")]: {
     paddingLeft: 280,
   },
+  height: "100vh",
 }));
 
 /**
@@ -23,7 +24,7 @@ export const DashboardLayout = (props) => {
 
   return (
     <>
-      <DashboardLayoutRoot>
+      <DashboardLayoutRoot s>
         <Box
           sx={{
             display: "flex",
