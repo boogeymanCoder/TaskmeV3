@@ -20,6 +20,7 @@ import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { getDatabase, ref as dbRef, update } from "firebase/database";
 import { useObjectVal } from "react-firebase-hooks/database";
+import { updateSendBirdAccount } from "../../services/send_bird/account";
 
 import PropTypes from "prop-types";
 
@@ -98,6 +99,9 @@ export function AccountProfile({ publicView = false, id, onMessage, ...props }) 
     getDownloadURL(result.ref).then(async (res) => {
       if (account) update(accountRef, { image: res });
       await updateProfile({ photoURL: res });
+      updateSendBirdAccount(user.uid, {
+        profile_url: res,
+      });
     });
     console.log({ result });
   }
