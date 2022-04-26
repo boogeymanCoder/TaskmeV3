@@ -6,13 +6,14 @@ import CheckAuth from "/src/components/auth/CheckAuth";
 import AccountCheck from "/src/components/account/AccountCheck";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
-import { getDatabase, ref } from "firebase/database";
+import { getDatabase, ref as dbRef, update } from "firebase/database";
 import { useObjectVal } from "react-firebase-hooks/database";
 import { App as SendBirdApp, Channel, SendBirdProvider } from "sendbird-uikit";
 import { Avatar, CardHeader, LinearProgress } from "@mui/material";
 
 function Messages() {
   const router = useRouter();
+  console.log({ router });
   // get currently logged in user
   const auth = getAuth();
   const [user, userLoading, userError] = useAuthState(auth);
@@ -20,11 +21,17 @@ function Messages() {
     console.log({ user, userLoading, userError });
   }, [user, userLoading, userError]);
 
-  if (!user || userLoading || userError) return <LinearProgress />;
+  const database = getDatabase();
+  const taskRef = dbRef(database, `tasks/${router.query?.uid}`);
+  const [task, taskLoading, taskError] = useObjectVal(taskRef);
+
+  if (!user || userLoading || userError || !task || taskLoading || taskError) {
+    return <LinearProgress />;
+  }
 
   return (
     <CheckAuth>
-      <MessagesPage user={user} />
+      <MessagesPage user={user} task={task} />
     </CheckAuth>
   );
 }
@@ -32,7 +39,7 @@ function Messages() {
 /**
  * Here the user can view their messages.
  */
-export function MessagesPage({ user }) {
+export function MessagesPage({ user, task }) {
   return (
     <CheckAuth>
       <AccountCheck>
@@ -51,7 +58,7 @@ export function MessagesPage({ user }) {
         /> */}
         <SendBirdProvider appId={process.env.NEXT_PUBLIC_SENDBIRD_APPLICATION_ID} userId={user.uid}>
           <Channel
-            channelUrl="sendbird_group_channel_360893774_bda67db4538814ac19ef98082371e2feaffc5c86"
+            channelUrl={task.channel_url}
             renderChatHeader={({ channel, user }) => {
               return (
                 <CardHeader
