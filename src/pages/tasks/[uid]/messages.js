@@ -51,7 +51,7 @@ export function MessagesPage({ user }) {
         /> */}
         <SendBirdProvider appId={process.env.NEXT_PUBLIC_SENDBIRD_APPLICATION_ID} userId={user.uid}>
           <Channel
-            channelUrl="sendbird_group_channel_360893774_f62df09095dcc8402f586790c8463e1461485fa3"
+            channelUrl="sendbird_group_channel_360893774_bda67db4538814ac19ef98082371e2feaffc5c86"
             renderChatHeader={({ channel, user }) => {
               return (
                 <CardHeader

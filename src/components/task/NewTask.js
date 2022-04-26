@@ -74,41 +74,58 @@ export default function NewTask({ open, handleClose }) {
     }),
     onSubmit: async (values) => {
       const employer = user.uid;
-      const promise = setTask({
-        ...values,
-        employer,
-        date: JSON.stringify(values.date),
-        ups: JSON.stringify(values.ups),
-        comments: JSON.stringify(values.comments),
-        skills: JSON.stringify(values.skills),
-        tags: JSON.stringify(values.tags),
+      const channel = await createSendBirdChannel({
+        user_ids: [user.uid],
+        name: values.title,
+        operator_ids: [user.uid],
       })
         .then(async (res) => {
-          const taskUid = (await get(res)).key;
-
-          await uploadImages(taskUid)
+          console.log({ res });
+          const channel = res.data;
+          await sendSendBirdMessage("group_channels", channel.channel_url, {
+            message_type: "ADMM",
+            message: "Welcome!",
+          });
+          return res;
+        })
+        .catch((err) => console.log({ err }));
+      console.log({ channel });
+      const promise = createSendBirdChannel({
+        user_ids: [user.uid],
+        name: values.title,
+        operator_ids: [user.uid],
+      })
+        .then(async (res) => {
+          console.log({ res });
+          const channel = res.data;
+          await sendSendBirdMessage("group_channels", channel.channel_url, {
+            message_type: "ADMM",
+            message: "Welcome!",
+          });
+          return setTask({
+            ...values,
+            employer,
+            date: JSON.stringify(values.date),
+            ups: JSON.stringify(values.ups),
+            comments: JSON.stringify(values.comments),
+            skills: JSON.stringify(values.skills),
+            tags: JSON.stringify(values.tags),
+            channel_url: channel.channel_url,
+          })
             .then(async (res) => {
-              await createSendBirdChannel({
-                user_ids: [user.uid],
-                name: values.title,
-                operator_ids: [user.uid],
-              })
+              const taskUid = (await get(res)).key;
+
+              await uploadImages(taskUid)
                 .then(async (res) => {
                   console.log({ res });
-                  const channel = res.data;
-                  await sendSendBirdMessage("group_channels", channel.channel_url, {
-                    message_type: "ADMM",
-                    message: "Welcome!",
-                  });
+                  handleClose();
+                  formik.resetForm();
+                  setShowSuccessAdd(true);
                 })
                 .catch((err) => console.log({ err }));
-              console.log({ res });
-              handleClose();
-              formik.resetForm();
-              setShowSuccessAdd(true);
+              console.log({ images });
             })
             .catch((err) => console.log({ err }));
-          console.log({ images });
         })
         .catch((err) => console.log({ err }));
       return promise;
