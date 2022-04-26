@@ -35,6 +35,7 @@ import Application from "./Application";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { removeApplication, updateApplication } from "/src/services/application";
 import PropTypes from "prop-types";
+import { inviteSendBirdChannelMember } from "/src/services/send_bird/channel";
 
 /**
  * Displays the list of applications.
@@ -56,10 +57,16 @@ export default function ApplicationList({ taskId, isEmployer, setApplicationCoun
 
   if (applicationsLoading) return <LinearProgress />;
 
-  function handleAccept(application) {
+  async function handleAccept(application) {
     console.log("Accepted!");
-    updateApplication(application.uid, { ...application, accepted: true }, false)
-      .then((res) => console.log({ res }))
+    await updateApplication(application.uid, { ...application, accepted: true }, false)
+      .then(async (res) => {
+        console.log({ res });
+        inviteSendBirdChannelMember(
+          "sendbird_group_channel_360893774_f62df09095dcc8402f586790c8463e1461485fa3",
+          { user_ids: [application.employee] }
+        );
+      })
       .catch((err) => console.log({ err }));
   }
 

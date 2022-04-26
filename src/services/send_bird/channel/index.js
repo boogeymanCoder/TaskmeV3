@@ -41,3 +41,28 @@ export async function createSendBirdChannel(channel) {
       return err;
     });
 }
+
+/**
+ * https://sendbird.com/docs/chat/v3/platform-api/channel/inviting-a-user/invite-as-members-channel
+ */
+export async function inviteSendBirdChannelMember(channel_url, invitation) {
+  return axios
+    .post(
+      `https://api-${process.env.NEXT_PUBLIC_SENDBIRD_APPLICATION_ID}.sendbird.com/v3/group_channels/${channel_url}/invite`,
+      invitation,
+      {
+        headers: {
+          "Content-Type": "application/json; charset=utf8",
+          "Api-Token": process.env.NEXT_PUBLIC_SENDBIRD_API_TOKEN,
+        },
+      }
+    )
+    .then((res) => {
+      console.log({ res });
+      return res;
+    })
+    .catch((err) => {
+      console.log({ err });
+      return err;
+    });
+}
