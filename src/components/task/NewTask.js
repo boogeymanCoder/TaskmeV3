@@ -33,7 +33,7 @@ import { useUploadFile } from "react-firebase-hooks/storage";
 import UIDGenerator from "uid-generator";
 import PropTypes from "prop-types";
 import { createSendBirdChannel } from "../../services/send_bird/channel";
-import { sendSendBirdMessage } from "src/services/send_bird/message";
+import { sendSendBirdMessage } from "/src/services/send_bird/message";
 
 /**
  * Allows the user to create a task.
