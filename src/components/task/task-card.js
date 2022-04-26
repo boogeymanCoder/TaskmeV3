@@ -59,8 +59,9 @@ import { useListVals } from "react-firebase-hooks/database";
 import ConfirmMessage from "../ConfirmMessage";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";
 import { deleteTask } from "/src/services/task";
+import { useRouter } from "next/router";
 
-function TaskCardMenu({ isOwned, onCopy, onEdit, onDelete }) {
+function TaskCardMenu({ isOwned, onCopy, onEdit, onDelete, openMessages }) {
   const [showSuccessCopy, setShowSuccessCopy] = useState(false);
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [deleteError, setDeleteError] = useState();
@@ -110,6 +111,8 @@ function TaskCardMenu({ isOwned, onCopy, onEdit, onDelete }) {
         >
           Copy UID
         </MenuItem>
+        <Divider />
+        <MenuItem onClick={openMessages}>Messages</MenuItem>
         {isOwned && <Divider />}
         {isOwned && <MenuItem onClick={onEdit}>Edit</MenuItem>}
         {isOwned && <MenuItem onClick={() => setOpenConfirmation(true)}>Delete</MenuItem>}
@@ -170,6 +173,7 @@ export const TaskCard = ({ taskData, host, ...rest }) => {
   const storage = getStorage();
   const [fetchingImage, setFetchingImage] = useState(true);
   const [filenames, setFilenames] = useState(new Map());
+  const router = useRouter();
   const [acceptedApplication, acceptedApplicationLoading, acceptedApplicationError] = useListVals(
     query(
       ref(database, "applications"),
@@ -306,6 +310,7 @@ export const TaskCard = ({ taskData, host, ...rest }) => {
             onCopy={clipboardHandler}
             onEdit={() => setUpdateOpen(true)}
             onDelete={deleteHandler}
+            openMessages={() => router.push(`/tasks/${task.uid}/messages`)}
           />
         }
       />
