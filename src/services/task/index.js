@@ -1,6 +1,7 @@
 import { getDatabase, push, ref, remove, update } from "firebase/database";
 
 export function setTask(task) {
+  console.log("setTask:", { task });
   const database = getDatabase();
   const tasksRef = ref(database, `tasks`);
   const now = new Date();
