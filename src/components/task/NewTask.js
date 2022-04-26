@@ -32,6 +32,8 @@ import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage"
 import { useUploadFile } from "react-firebase-hooks/storage";
 import UIDGenerator from "uid-generator";
 import PropTypes from "prop-types";
+import { createSendBirdChannel } from "../../services/send_bird/channel";
+import { sendSendBirdMessage } from "src/services/send_bird/message";
 
 /**
  * Allows the user to create a task.
@@ -86,6 +88,20 @@ export default function NewTask({ open, handleClose }) {
 
           await uploadImages(taskUid)
             .then(async (res) => {
+              await createSendBirdChannel({
+                user_ids: [user.uid],
+                name: values.title,
+                operator_ids: [user.uid],
+              })
+                .then(async (res) => {
+                  console.log({ res });
+                  const channel = res.data;
+                  await sendSendBirdMessage("group_channels", channel.channel_url, {
+                    message_type: "ADMM",
+                    message: "Welcome!",
+                  });
+                })
+                .catch((err) => console.log({ err }));
               console.log({ res });
               handleClose();
               formik.resetForm();
