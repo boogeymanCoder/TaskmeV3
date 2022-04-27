@@ -5,14 +5,17 @@ import PropTypes from "prop-types";
 /**
  * Displays receipt fields with an avatar, title, subtitle and an action.
  */
-export default function ReceiptField({ avatar, title, subtitle, action }) {
+export default function ReceiptField({ avatar, title, subtitle, action, ...props }) {
   return (
-    <CardHeader
-      avatar={<Avatar src={avatar} />}
-      title={title}
-      subheader={subtitle}
-      action={action}
-    />
+    <Card {...props}>
+      <CardHeader
+        sx={{ p: 1 }}
+        avatar={<Avatar alt={title} src={avatar} />}
+        title={title}
+        subheader={subtitle}
+        action={action}
+      />
+    </Card>
   );
 }
 
@@ -20,7 +23,7 @@ ReceiptField.propTypes = {
   /**
    * A photo url to display on the receipt fields right side.
    */
-  avatar: PropTypes.string.isRequired,
+  avatar: PropTypes.string,
   /**
    * Title of the  receipt field.
    */
