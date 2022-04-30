@@ -26,9 +26,9 @@ import { Visibility } from "@material-ui/icons";
 import { MoreVert, Upload } from "@mui/icons-material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { getDatabase, ref } from "firebase/database";
+import { equalTo, getDatabase, limitToLast, orderByChild, query, ref } from "firebase/database";
 import { useEffect } from "react";
-import { useObjectVal } from "react-firebase-hooks/database";
+import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { useRouter } from "next/router";
 import { setReceipt } from "/src/services/receipt";
 
@@ -56,6 +56,16 @@ export function EmployeeForm({ application, onFinish }) {
   const [task, taskLoading, taskError] = useObjectVal(taskRef, { keyField: "uid" });
   useEffect(() => console.log({ task, taskLoading, taskError }), [task, taskLoading, taskError]);
 
+  const receiptRef = ref(database, "receipts");
+  const [receipt, receiptLoading, receiptError] = useListVals(
+    query(receiptRef, orderByChild("application"), equalTo(application.uid), limitToLast(1)),
+    { keyField: "uid" }
+  );
+  useEffect(
+    () => console.log({ receipt, receiptLoading, receiptError }),
+    [receipt, receiptLoading, receiptError]
+  );
+
   if (
     !employer ||
     employerLoading ||
@@ -65,7 +75,10 @@ export function EmployeeForm({ application, onFinish }) {
     employerError ||
     !task ||
     taskLoading ||
-    taskError
+    taskError ||
+    !receipt ||
+    receiptLoading ||
+    receiptError
   )
     return <LinearProgress />;
 
@@ -79,14 +92,24 @@ export function EmployeeForm({ application, onFinish }) {
     router.push(`/account/${employee.uid}`);
   }
 
-  function onSubmit(values) {
+  function onCreate(values) {
     console.log("Submitted:", { values });
-    const receipt = {
+    const receiptValues = {
       application: application.uid,
       payment_received: values.payment_received,
     };
 
-    return setReceipt(receipt).then(onFinish);
+    return setReceipt(receiptValues).then(onFinish);
+  }
+
+  function onEdit(values) {
+    console.log("Submitted:", { values });
+    const receiptValues = {
+      application: application.uid,
+      payment_received: values.payment_received,
+    };
+
+    return updateReceipt(receipt[0].uid, receiptValues).then(onFinish);
   }
 
   const images = [
@@ -105,7 +128,8 @@ export function EmployeeForm({ application, onFinish }) {
       onViewEmployer={onViewEmployer}
       onViewTask={onViewTask}
       onViewEmployee={onViewEmployee}
-      onSubmit={onSubmit}
+      onSubmit={receipt.length > 0 ? onEdit : onCreate}
+      initialPaymentReceived={receipt.length > 0 ? receipt[0].payment_received : undefined}
     />
   );
 }
@@ -119,10 +143,11 @@ export default function EmployeeFormView({
   onViewEmployer,
   onViewTask,
   onViewEmployee,
+  initialPaymentReceived,
 }) {
   const formik = useFormik({
     initialValues: {
-      payment_received: 0,
+      payment_received: initialPaymentReceived ?? 0,
     },
     validationSchema: Yup.object({
       payment_received: Yup.number().required("Payment received is required"),
@@ -314,6 +339,10 @@ EmployeeFormView.propTypes = {
    * Function to call when viewing employee.
    */
   onViewEmployee: PropTypes.func.isRequired,
+  /**
+   * The initial value of payment received, requires mode = "update".
+   */
+  initialPaymentReceived: PropTypes.number,
 };
 
 EmployeeFormView.default = { images: [] };

@@ -12,3 +12,20 @@ export function setReceipt(receipt) {
 
   return push(receiptsRef, receiptWithTimestamp);
 }
+
+export function updateReceipt(uid, receipt) {
+  console.log("update");
+  const database = getDatabase();
+  const receiptRef = ref(database, `receipts/${uid}`);
+  const now = new Date();
+  const updatedAt = JSON.stringify(now);
+
+  const receiptWithTimestamp = {
+    ...receipt,
+    createdAt: JSON.stringify(receipt.createdAt),
+    updatedAt: updatedAt,
+  };
+  console.log({ receiptWithTimestamp });
+
+  return update(receiptRef, receiptWithTimestamp);
+}
