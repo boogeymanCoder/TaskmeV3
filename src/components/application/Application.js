@@ -31,6 +31,7 @@ import moment from "moment";
 import PropTypes from "prop-types";
 import { EmployeeForm } from "../receipt/EmployeeForm";
 import { ReceiptConfirmation } from "../receipt/ReceiptConfirmation";
+import { ConfirmedReceipt } from "../receipt/ConfirmedReceipt";
 
 /**
  * Displays application data to the user.
@@ -242,10 +243,13 @@ export default function Application({
 
       <Dialog open={openReceipt} onClose={() => setOpenReceipt(false)}>
         <DialogContent>
-          {isEmployer && (
+          {receipt.length > 0 && receipt[0].confirmed && (
+            <ConfirmedReceipt application={application} />
+          )}
+          {!(receipt.length > 0 && receipt[0].confirmed) && isEmployer && (
             <ReceiptConfirmation application={application} onFinish={() => setOpenReceipt(false)} />
           )}
-          {!isEmployer && (
+          {!(receipt.length > 0 && receipt[0].confirmed) && !isEmployer && (
             <EmployeeForm application={application} onFinish={() => setOpenReceipt(false)} />
           )}
         </DialogContent>
