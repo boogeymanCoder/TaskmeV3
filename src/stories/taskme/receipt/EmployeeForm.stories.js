@@ -8,6 +8,9 @@ const sb = {
   component: EmployeeFormComponent,
   argTypes: {
     onSubmit: { action: "onSubmit" },
+    onViewEmployer: { action: "onViewEmployer" },
+    onViewTask: { action: "onViewTask" },
+    onViewEmployee: { action: "onViewEmployee" },
   },
 };
 export default sb;
@@ -19,9 +22,9 @@ export const EmployeeForm = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 EmployeeForm.args = {
   employer: {
-    avatar:
+    image:
       "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-    name: "Brother John",
+    fullname: "Brother John",
   },
   task: {
     title: "Walk my dog",
@@ -29,9 +32,9 @@ EmployeeForm.args = {
     currency: "USD",
   },
   employee: {
-    avatar:
+    image:
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-    name: "Melisa Mayers",
+    fullname: "Melisa Mayers",
   },
   images: [
     "https://images.unsplash.com/photo-1603796846097-bee99e4a601f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",

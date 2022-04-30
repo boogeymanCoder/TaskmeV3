@@ -10,7 +10,7 @@ export default function ReceiptField({ avatar, title, subtitle, action, ...props
     <Card {...props}>
       <CardHeader
         sx={{ p: 1 }}
-        avatar={<Avatar alt={title} src={avatar} />}
+        avatar={avatar ? <Avatar alt={title} src={avatar} /> : undefined}
         title={title}
         subheader={subtitle}
         action={action}
