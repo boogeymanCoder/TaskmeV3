@@ -174,7 +174,7 @@ export default function ReceiptConfirmationView({
                 title={employer.fullname}
                 subtitle="Employer"
                 action={
-                  <IconButton sx={{ m: 1 }} onClick={() => alert("View Employer!")}>
+                  <IconButton sx={{ m: 1 }} onClick={onViewEmployer}>
                     <Visibility />
                   </IconButton>
                 }
@@ -187,7 +187,7 @@ export default function ReceiptConfirmationView({
                 title={task.title}
                 subtitle="Task"
                 action={
-                  <IconButton sx={{ m: 1 }} onClick={() => alert("View Task!")}>
+                  <IconButton sx={{ m: 1 }} onClick={onViewTask}>
                     <Visibility />
                   </IconButton>
                 }
@@ -201,7 +201,7 @@ export default function ReceiptConfirmationView({
                 title={employee.fullname}
                 subtitle="Employee"
                 action={
-                  <IconButton sx={{ m: 1 }} onClick={() => alert("View Employee!")}>
+                  <IconButton sx={{ m: 1 }} onClick={onViewEmployee}>
                     <Visibility />
                   </IconButton>
                 }
@@ -322,6 +322,18 @@ ReceiptConfirmationView.propTypes = {
    * The uploaded images.
    */
   images: PropTypes.array,
+  /**
+   * Function to call when viewing employer.
+   */
+  onViewEmployer: PropTypes.func.isRequired,
+  /**
+   * Function to call when viewing task.
+   */
+  onViewTask: PropTypes.func.isRequired,
+  /**
+   * Function to call when viewing employee.
+   */
+  onViewEmployee: PropTypes.func.isRequired,
   /**
    * The function to call on submit.
    */
