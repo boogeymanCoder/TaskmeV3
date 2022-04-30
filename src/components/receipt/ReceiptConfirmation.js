@@ -211,15 +211,7 @@ export default function ReceiptConfirmationView({
 
             <Grid item xs={12}>
               <Card>
-                <CardHeader
-                  title="Photos"
-                  subheader="(optional)"
-                  action={
-                    <IconButton onClick={() => alert("Upload File!")}>
-                      <Upload />
-                    </IconButton>
-                  }
-                />
+                <CardHeader title="Photos" subheader="(optional)" />
                 <CardMedia>
                   <List
                     style={{

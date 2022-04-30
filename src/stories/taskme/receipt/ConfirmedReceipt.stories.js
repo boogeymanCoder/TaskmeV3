@@ -1,11 +1,11 @@
 import { RemoveRedEyeRounded } from "@mui/icons-material";
 import React from "react";
-import { default as EmployeeFormComponent } from "/src/components/receipt/EmployeeForm";
+import { default as ConfirmedReceiptComponent } from "/src/components/receipt/ConfirmedReceipt";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const sb = {
-  title: "Receipt/Employee Form",
-  component: EmployeeFormComponent,
+  title: "Receipt/Confirmed Receipt",
+  component: ConfirmedReceiptComponent,
   argTypes: {
     onSubmit: { action: "onSubmit" },
     onViewEmployer: { action: "onViewEmployer" },
@@ -16,11 +16,11 @@ const sb = {
 export default sb;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template = (args) => <EmployeeFormComponent {...args} />;
+const Template = (args) => <ConfirmedReceiptComponent {...args} />;
 
-export const EmployeeForm = Template.bind({});
+export const ConfirmedReceipt = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-EmployeeForm.args = {
+ConfirmedReceipt.args = {
   employer: {
     image:
       "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
@@ -36,6 +36,7 @@ EmployeeForm.args = {
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
     fullname: "Melisa Mayers",
   },
+  receivedPayment: 23.54,
   images: [
     "https://images.unsplash.com/photo-1603796846097-bee99e4a601f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
     "https://images.unsplash.com/photo-1554224155-1696413565d3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
