@@ -12,6 +12,7 @@ import {
   ImageList,
   ImageListItem,
   InputAdornment,
+  LinearProgress,
   List,
   ListItem,
   Stack,
@@ -25,8 +26,100 @@ import { Visibility } from "@material-ui/icons";
 import { MoreVert, Upload } from "@mui/icons-material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { getDatabase, ref } from "firebase/database";
+import { useEffect } from "react";
+import { useObjectVal } from "react-firebase-hooks/database";
+import { useRouter } from "next/router";
+import { setReceipt } from "/src/services/receipt";
 
-export default function EmployeeForm({ employer, task, employee, images = [], onSubmit }) {
+export function EmployeeForm({ application, onFinish }) {
+  console.log({ application });
+  const router = useRouter();
+
+  const database = getDatabase();
+
+  const employerRef = ref(database, `accounts/${application.employer}`);
+  const [employer, employerLoading, employerError] = useObjectVal(employerRef, { keyField: "uid" });
+  useEffect(
+    () => console.log({ employer, employerLoading, employerError }),
+    [employer, employerLoading, employerError]
+  );
+
+  const employeeRef = ref(database, `accounts/${application.employee}`);
+  const [employee, employeeLoading, employeeError] = useObjectVal(employeeRef, { keyField: "uid" });
+  useEffect(
+    () => console.log({ employee, employeeLoading, employeeError }),
+    [employee, employeeLoading, employeeError]
+  );
+
+  const taskRef = ref(database, `tasks/${application.task}`);
+  const [task, taskLoading, taskError] = useObjectVal(taskRef, { keyField: "uid" });
+  useEffect(() => console.log({ task, taskLoading, taskError }), [task, taskLoading, taskError]);
+
+  if (
+    !employer ||
+    employerLoading ||
+    employerError ||
+    !employee ||
+    employerLoading ||
+    employerError ||
+    !task ||
+    taskLoading ||
+    taskError
+  )
+    return <LinearProgress />;
+
+  function onViewEmployer() {
+    router.push(`/account/${employer.uid}`);
+  }
+  function onViewTask() {
+    router.push(`/tasks/${task.uid}`);
+  }
+  function onViewEmployee() {
+    router.push(`/account/${employee.uid}`);
+  }
+
+  function onSubmit(values) {
+    console.log("Submitted:", { values });
+    const receipt = {
+      application: application.uid,
+      payment_received: values.payment_received,
+    };
+
+    return setReceipt(receipt).then(onFinish);
+  }
+
+  const images = [
+    "https://images.unsplash.com/photo-1603796846097-bee99e4a601f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
+    "https://images.unsplash.com/photo-1554224155-1696413565d3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+    "https://images.unsplash.com/photo-1583521214690-73421a1829a9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+    "https://images.unsplash.com/flagged/photo-1558963675-94dc9c4a66a9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=686&q=80",
+  ];
+
+  return (
+    <EmployeeFormView
+      employer={employer}
+      task={task}
+      employee={employee}
+      images={images}
+      onViewEmployer={onViewEmployer}
+      onViewTask={onViewTask}
+      onViewEmployee={onViewEmployee}
+      onSubmit={onSubmit}
+    />
+  );
+}
+
+export default function EmployeeFormView({
+  employer,
+  task,
+  employee,
+  images = [],
+  onSubmit,
+  onViewEmployer,
+  onViewTask,
+  onViewEmployee,
+}) {
   const formik = useFormik({
     initialValues: {
       payment_received: 0,
@@ -54,11 +147,11 @@ export default function EmployeeForm({ employer, task, employee, images = [], on
           <Grid container direction={"row"} spacing={1}>
             <Grid item xs={12} sm={6}>
               <ReceiptField
-                avatar={employer.avatar}
-                title={employer.name}
+                avatar={employer.image}
+                title={employer.fullname}
                 subtitle="Employer"
                 action={
-                  <IconButton sx={{ m: 1 }} onClick={() => alert("View Employer!")}>
+                  <IconButton sx={{ m: 1 }} onClick={onViewEmployer}>
                     <Visibility />
                   </IconButton>
                 }
@@ -71,7 +164,7 @@ export default function EmployeeForm({ employer, task, employee, images = [], on
                 title={task.title}
                 subtitle="Task"
                 action={
-                  <IconButton sx={{ m: 1 }} onClick={() => alert("View Task!")}>
+                  <IconButton sx={{ m: 1 }} onClick={onViewTask}>
                     <Visibility />
                   </IconButton>
                 }
@@ -81,11 +174,11 @@ export default function EmployeeForm({ employer, task, employee, images = [], on
 
             <Grid item xs={12} sm={6}>
               <ReceiptField
-                avatar={employee.avatar}
-                title={employee.name}
+                avatar={employee.image}
+                title={employee.fullname}
                 subtitle="Employee"
                 action={
-                  <IconButton sx={{ m: 1 }} onClick={() => alert("View Employee!")}>
+                  <IconButton sx={{ m: 1 }} onClick={onViewEmployee}>
                     <Visibility />
                   </IconButton>
                 }
@@ -188,7 +281,7 @@ export default function EmployeeForm({ employer, task, employee, images = [], on
   );
 }
 
-EmployeeForm.propTypes = {
+EmployeeFormView.propTypes = {
   /**
    * The tasks employer data.
    */
@@ -209,6 +302,18 @@ EmployeeForm.propTypes = {
    * The function to call on submit.
    */
   onSubmit: PropTypes.func.isRequired,
+  /**
+   * Function to call when viewing employer.
+   */
+  onViewEmployer: PropTypes.func.isRequired,
+  /**
+   * Function to call when viewing task.
+   */
+  onViewTask: PropTypes.func.isRequired,
+  /**
+   * Function to call when viewing employee.
+   */
+  onViewEmployee: PropTypes.func.isRequired,
 };
 
-EmployeeForm.default = { images: [] };
+EmployeeFormView.default = { images: [] };

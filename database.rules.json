@@ -45,6 +45,12 @@
       "$uid": {
         ".write": "auth !== null"
       }
+    },
+    "receipts": {
+      ".read": "auth !== null",
+      "$uid": {
+        ".write": "auth !== null"
+      }
     }
   }
 }

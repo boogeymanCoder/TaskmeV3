@@ -1,9 +1,11 @@
-import { CheckCircle, Clear, Delete, Edit } from "@mui/icons-material";
+import { CheckCircle, Clear, Delete, Edit, Receipt, ReceiptLong } from "@mui/icons-material";
 import {
   Avatar,
   Box,
   Chip,
   CircularProgress,
+  Dialog,
+  DialogContent,
   Grid,
   IconButton,
   LinearProgress,
@@ -13,6 +15,7 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Skeleton,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { getAuth } from "firebase/auth";
@@ -26,6 +29,7 @@ import PromptMessage from "../PromptMessage";
 import SnackbarErrorMessage from "../SnackbarErrorMessage";
 import moment from "moment";
 import PropTypes from "prop-types";
+import { EmployeeForm } from "../receipt/EmployeeForm";
 
 /**
  * Displays application data to the user.
@@ -53,6 +57,7 @@ export default function Application({
   const database = getDatabase();
   const employeeRef = ref(database, `accounts/${application.employee}`);
   const [employee, employeeLoading, employeeError] = useObjectVal(employeeRef, { keyField: "uid" });
+  const [openReceipt, setOpenReceipt] = useState(false);
   console.log({ application, user, employee, employeeLoading, employeeError });
 
   const [updatedAt, setUpdatedAt] = useState(moment(application.updatedAt).fromNow());
@@ -133,14 +138,21 @@ export default function Application({
         </Grid>
         <Grid item sm="auto" xs={12}>
           {application.accepted && (
-            <Chip
-              label="Accepted"
-              sx={{ mr: 1 }}
-              color="success"
-              onDelete={
-                employee.uid === user.uid || isEmployer ? () => handleReject(application) : false
-              }
-            />
+            <>
+              <Chip
+                label="Accepted"
+                sx={{ mr: 1 }}
+                color="success"
+                onDelete={
+                  employee.uid === user.uid || isEmployer ? () => handleReject(application) : false
+                }
+              />
+              <Tooltip title="Receipt">
+                <IconButton onClick={() => setOpenReceipt(true)}>
+                  <ReceiptLong />
+                </IconButton>
+              </Tooltip>
+            </>
           )}
           {isEmployer && !application.accepted && (
             <Grid container spacing={1}>
@@ -210,6 +222,12 @@ export default function Application({
         type="text"
         value={message}
       />
+
+      <Dialog open={openReceipt} onClose={() => setOpenReceipt(false)}>
+        <DialogContent>
+          <EmployeeForm application={application} onFinish={() => setOpenReceipt(false)} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
