@@ -95,6 +95,7 @@ export function EmployeeForm({ application, onFinish }) {
   function onCreate(values) {
     console.log("Submitted:", { values });
     const receiptValues = {
+      confirmed: false,
       application: application.uid,
       payment_received: values.payment_received,
     };
@@ -105,6 +106,7 @@ export function EmployeeForm({ application, onFinish }) {
   function onEdit(values) {
     console.log("Submitted:", { values });
     const receiptValues = {
+      confirmed: false,
       application: application.uid,
       payment_received: values.payment_received,
     };

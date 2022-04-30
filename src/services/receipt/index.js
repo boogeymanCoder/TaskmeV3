@@ -14,7 +14,7 @@ export function setReceipt(receipt) {
 }
 
 export function updateReceipt(uid, receipt) {
-  console.log("update");
+  console.log("update:", { uid, receipt });
   const database = getDatabase();
   const receiptRef = ref(database, `receipts/${uid}`);
   const now = new Date();
