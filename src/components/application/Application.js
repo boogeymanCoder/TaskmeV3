@@ -19,10 +19,10 @@ import {
   Typography,
 } from "@mui/material";
 import { getAuth } from "firebase/auth";
-import { getDatabase, ref } from "firebase/database";
+import { equalTo, getDatabase, limitToLast, orderByChild, query, ref } from "firebase/database";
 import React, { useEffect, useMemo, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useObjectVal } from "react-firebase-hooks/database";
+import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { Clock } from "/src/icons/clock";
 import { removeApplication, updateApplication } from "/src/services/application";
 import PromptMessage from "../PromptMessage";
@@ -60,6 +60,17 @@ export default function Application({
   const [openReceipt, setOpenReceipt] = useState(false);
   console.log({ application, user, employee, employeeLoading, employeeError });
 
+  const receiptRef = ref(database, "receipts");
+  const [receipt, receiptLoading, receiptError] = useListVals(
+    query(receiptRef, orderByChild("application"), equalTo(application.uid), limitToLast(1)),
+    { keyField: "uid" }
+  );
+
+  useEffect(
+    () => console.log({ receipt, receiptLoading, receiptError }),
+    [receipt, receiptLoading, receiptError]
+  );
+
   const [updatedAt, setUpdatedAt] = useState(moment(application.updatedAt).fromNow());
   setInterval(() => {
     setUpdatedAt(moment(application.updatedAt).fromNow());
@@ -70,7 +81,7 @@ export default function Application({
     setUpdatedAt(moment(application.updatedAt).fromNow());
   }, [application]);
 
-  if (employeeLoading || userLoading) return <LinearProgress />;
+  if (employeeLoading || userLoading || receiptLoading) return <LinearProgress />;
   if (!employeeLoading && !employee) {
     console.log({ application });
     // removeApplication(application.uid);
@@ -148,7 +159,12 @@ export default function Application({
                 }
               />
               <Tooltip title="Receipt">
-                <IconButton onClick={() => setOpenReceipt(true)}>
+                <IconButton
+                  onClick={() => setOpenReceipt(true)}
+                  color={
+                    receipt.length > 0 ? (receipt[0].confirmed ? "success" : "warning") : undefined
+                  }
+                >
                   <ReceiptLong />
                 </IconButton>
               </Tooltip>
