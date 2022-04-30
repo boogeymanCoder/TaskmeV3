@@ -1,4 +1,5 @@
 import {
+  Alert,
   Avatar,
   Button,
   Card,
@@ -12,6 +13,7 @@ import {
   ImageList,
   ImageListItem,
   InputAdornment,
+  LinearProgress,
   List,
   ListItem,
   Stack,
@@ -25,16 +27,129 @@ import { Visibility } from "@material-ui/icons";
 import { MoreVert, Upload } from "@mui/icons-material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { equalTo, getDatabase, limitToLast, orderByChild, query, ref } from "firebase/database";
+import { useEffect } from "react";
+import { useListVals, useObjectVal } from "react-firebase-hooks/database";
+import { useRouter } from "next/router";
+import { setReceipt } from "/src/services/receipt";
+import SnackbarErrorMessage from "../SnackbarErrorMessage";
+import SnackbarMessage from "../SnackbarMessage";
+import { updateReceipt } from "/src/services/receipt";
 
-export default function ReceiptConfirmation({
+export function ReceiptConfirmation({ application, onFinish }) {
+  console.log({ application });
+  const router = useRouter();
+
+  const database = getDatabase();
+
+  const employerRef = ref(database, `accounts/${application.employer}`);
+  const [employer, employerLoading, employerError] = useObjectVal(employerRef, { keyField: "uid" });
+  useEffect(
+    () => console.log({ employer, employerLoading, employerError }),
+    [employer, employerLoading, employerError]
+  );
+
+  const employeeRef = ref(database, `accounts/${application.employee}`);
+  const [employee, employeeLoading, employeeError] = useObjectVal(employeeRef, { keyField: "uid" });
+  useEffect(
+    () => console.log({ employee, employeeLoading, employeeError }),
+    [employee, employeeLoading, employeeError]
+  );
+
+  const taskRef = ref(database, `tasks/${application.task}`);
+  const [task, taskLoading, taskError] = useObjectVal(taskRef, { keyField: "uid" });
+  useEffect(() => console.log({ task, taskLoading, taskError }), [task, taskLoading, taskError]);
+
+  const receiptRef = ref(database, "receipts");
+  const [receipt, receiptLoading, receiptError] = useListVals(
+    query(receiptRef, orderByChild("application"), equalTo(application.uid), limitToLast(1)),
+    { keyField: "uid" }
+  );
+  useEffect(
+    () => console.log({ receipt, receiptLoading, receiptError }),
+    [receipt, receiptLoading, receiptError]
+  );
+
+  if (
+    !employer ||
+    employerLoading ||
+    employerError ||
+    !employee ||
+    employerLoading ||
+    employerError ||
+    !task ||
+    taskLoading ||
+    taskError ||
+    !receipt ||
+    receiptLoading ||
+    receiptError
+  )
+    return <LinearProgress />;
+
+  if (receipt.length < 1) {
+    return <Alert severity="info">No receipt found</Alert>;
+  }
+
+  function onViewEmployer() {
+    router.push(`/account/${employer.uid}`);
+  }
+  function onViewTask() {
+    router.push(`/tasks/${task.uid}`);
+  }
+  function onViewEmployee() {
+    router.push(`/account/${employee.uid}`);
+  }
+
+  function confirmHandler(values) {
+    console.log("Submitted:", { values });
+    const receiptValues = {
+      ...receipt[0],
+      confirmed: values.confirmed,
+    };
+
+    return updateReceipt(receipt[0].uid, receiptValues).then(onFinish);
+  }
+
+  const images = [
+    "https://images.unsplash.com/photo-1603796846097-bee99e4a601f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
+    "https://images.unsplash.com/photo-1554224155-1696413565d3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+    "https://images.unsplash.com/photo-1583521214690-73421a1829a9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+    "https://images.unsplash.com/flagged/photo-1558963675-94dc9c4a66a9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=686&q=80",
+  ];
+
+  return (
+    <ReceiptConfirmationView
+      employer={employer}
+      task={task}
+      employee={employee}
+      images={images}
+      onViewEmployer={onViewEmployer}
+      onViewTask={onViewTask}
+      onViewEmployee={onViewEmployee}
+      onSubmit={confirmHandler}
+      receivedPayment={receipt.length > 0 ? receipt[0].payment_received : undefined}
+    />
+  );
+}
+
+export default function ReceiptConfirmationView({
   employer,
   task,
   employee,
   receivedPayment,
   images = [],
+  onViewEmployer,
+  onViewTask,
+  onViewEmployee,
   onSubmit,
 }) {
   const formik = useFormik({
+    initialValues: {
+      confirmed: true,
+    },
+    validationSchema: Yup.object({
+      confirmed: Yup.bool().required(),
+    }),
     onSubmit: async (values) => {
       return onSubmit(values);
     },
@@ -55,8 +170,8 @@ export default function ReceiptConfirmation({
           <Grid container direction={"row"} spacing={1}>
             <Grid item xs={12} sm={6}>
               <ReceiptField
-                avatar={employer.avatar}
-                title={employer.name}
+                avatar={employer.image}
+                title={employer.fullname}
                 subtitle="Employer"
                 action={
                   <IconButton sx={{ m: 1 }} onClick={() => alert("View Employer!")}>
@@ -82,8 +197,8 @@ export default function ReceiptConfirmation({
 
             <Grid item xs={12} sm={6}>
               <ReceiptField
-                avatar={employee.avatar}
-                title={employee.name}
+                avatar={employee.image}
+                title={employee.fullname}
                 subtitle="Employee"
                 action={
                   <IconButton sx={{ m: 1 }} onClick={() => alert("View Employee!")}>
@@ -186,7 +301,7 @@ export default function ReceiptConfirmation({
   );
 }
 
-ReceiptConfirmation.propTypes = {
+ReceiptConfirmationView.propTypes = {
   /**
    * The tasks employer data.
    */
@@ -213,4 +328,4 @@ ReceiptConfirmation.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };
 
-ReceiptConfirmation.default = { images: [] };
+ReceiptConfirmationView.default = { images: [] };

@@ -30,6 +30,7 @@ import SnackbarErrorMessage from "../SnackbarErrorMessage";
 import moment from "moment";
 import PropTypes from "prop-types";
 import { EmployeeForm } from "../receipt/EmployeeForm";
+import { ReceiptConfirmation } from "../receipt/ReceiptConfirmation";
 
 /**
  * Displays application data to the user.
@@ -241,7 +242,12 @@ export default function Application({
 
       <Dialog open={openReceipt} onClose={() => setOpenReceipt(false)}>
         <DialogContent>
-          <EmployeeForm application={application} onFinish={() => setOpenReceipt(false)} />
+          {isEmployer && (
+            <ReceiptConfirmation application={application} onFinish={() => setOpenReceipt(false)} />
+          )}
+          {!isEmployer && (
+            <EmployeeForm application={application} onFinish={() => setOpenReceipt(false)} />
+          )}
         </DialogContent>
       </Dialog>
     </>
